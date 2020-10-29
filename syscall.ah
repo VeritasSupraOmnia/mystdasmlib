@@ -1,0 +1,21 @@
+
+;-1 for return checking
+%define	err		0xffffffffffffffff
+
+;standard file descriptions
+%define	stdin		0
+%define	stdout		1
+%define	stderr		2
+
+;standard file access values
+%define	readonly	0
+%define	writeonly	1
+%define	readwrite	2
+
+;all sys_ functions put ther id numbers (0 for sys_read, 1 for sys_write, etc) into rax and are called with the syscall instruction
+%define	sys_read	0	;rdi:file descriptor	rsi:char buffer address	rdx:byte count
+%define	sys_write	1	;rdi:fd			rsi:char buffer address	rdx:byte count
+%define	sys_open	2	;rdi:filename address	rsi:flags
+%define	sys_close	3	;rdi:file descriptor
+%define	sys_brk		12
+%define	sys_ret		60

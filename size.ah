@@ -1,0 +1,8 @@
+;header for predefining sizes for increased legibility on size relevant incrementing addresses
+%define	bsize	1
+%define	wsize	2
+%define	dsize	4
+%define	qsize	8
+%define	xsize	16
+%define	ysize	32
+%define	zsize	64

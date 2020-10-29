@@ -1,0 +1,146 @@
+;needs genreg.ah
+
+;To HEX Uppercase Byte
+%macro	thexub	3	;to uppercase hex - byte. Slow and large but more modular version.
+	dgr	%1,	a	;output
+	dgr	%2,	b	;arithmatic value-holder
+	dgr	%3,	c	;input, must be al, bl, cl or dl for high byte
+	;split	nibbles into two bytes in input
+	mov	gch,	gcb
+	shr	gcb,	4
+	and	gcw,	0x0f0f
+	mov	gbw,	gcw
+	sub	gbw,	0x0202
+	and	gbw,	gcw
+	and	gbw,	0x0808
+	shr	gbw,	1
+	mov	gaw,	gbw
+	shr	gaw,	1
+	or	gaw,	gbw
+	shr	gaw,	1
+	or	gaw,	gbw
+	add	gaw,	gcw
+	add	gaw,	0x3030
+	udgr	a
+	udgr	b
+	udgr	c
+%endmacro
+%macro	thexub	2	;to uppercase hex - byte. Fast and small but less modular version.
+	;output on ax
+	dgr	%1,	b	;arithmatic value-holder
+	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
+	;split	nibbles into two bytes in input
+	mov	gch,	gcb
+	shr	gcb,	4
+	and	gcw,	0x0f0f
+	mov	gbw,	gcw
+	sub	gbw,	0x0202
+	and	gbw,	gcw
+	and	gbw,	0x0808
+	mov	ax,	gbw
+	mul	7
+	add	gaw,	gcw
+	add	gaw,	0x3030
+	udgr	b
+	udgr	c
+%endmacro
+
+;note: alt versions that are slower. Made only for use in registers r8 to r15
+;To HEX Uppercase Byte Alternative
+%macro	thexuba	3	;to uppercase hex - byte. Slow and large but more modular alt version for r8 to 15.
+	dgr	%1,	a	;output
+	dgr	%2,	b	;arithmatic value-holder
+	dgr	%3,	c	;input, must be al, bl, cl or dl for high byte
+	;split	nibbles into two bytes in input
+	mov	gbb,	gcb
+	shr	gcb,	4
+	shl	gbw,	8
+	or	gcw,	gbw
+	and	gcw,	0x0f0f
+	mov	gbw,	gcw
+	sub	gbw,	0x0202
+	and	gbw,	gcw
+	and	gbw,	0x0808
+	shr	gbw,	1
+	mov	gaw,	gbw
+	shr	gaw,	1
+	or	gaw,	gbw
+	shr	gaw,	1
+	or	gaw,	gbw
+	add	gaw,	gcw
+	add	gaw,	0x3030
+	udgr	a
+	udgr	b
+	udgr	c
+%endmacro
+
+%macro	thexuba	2	;to uppercase hex - byte. Fast and small but less modular alt version for r8-15.
+	;output on ax
+	dgr	%1,	b	;arithmatic value-holder
+	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
+	;split	nibbles into two bytes in input
+	mov	gbb,	gcb
+	shr	gcb,	4
+	shl	gbw,	8
+	or	gcw,	gbw
+	and	gcw,	0x0f0f
+	mov	gbw,	gcw
+	sub	gbw,	0x0202
+	and	gbw,	gcw
+	and	gbw,	0x0808
+	mov	ax,	gbw
+	mul	7
+	add	gaw,	gcw
+	add	gaw,	0x3030
+	udgr	b
+	udgr	c
+%endmacro
+
+;To HEX Lowercase Byte
+%macro thexlb	3
+	dgr	a,	%1	;out on gab
+	dgr	b,	%2
+	dgr	c,	%3	;in on gcw
+	mov	gch,	gcb
+	shr	gcb,	4
+	and	gcw,	0x0f0f
+	mov	gbw,	gcw
+	sub	gbw,	0x0202
+	and	gbw,	gcw
+	and	gbw,	0x0808
+	shr	gbw,	3
+	mov	gaw,	gbw
+	shl	gaw,	2
+	or	gaw,	gbw
+	shl	gaw,	1
+	or	gaw,	gbw
+	shl	gaw,	1
+	or	gaw,	gbw
+	add	gaw,	gcw
+	add	gaw,	0x30
+	udgr	a
+	udgr	b
+	udgr	c
+%endmacro
+
+;callable variants
+%macro f_t_hex_u_b 2
+F_THEXUB_%1_%2:
+	thexub %1, %2
+	ret
+%endmacro
+;%macro f_t_hex_u_b 3
+;F_THEXUBA_%1_%2_%3:
+;	thexub %1 %2 %3
+;	ret
+;%endmacro
+%macro f_t_hex_u_b_a 2
+F_THEXUBA_%1_%2:
+	thexub %1, %2
+	ret
+%endmacro
+%macro f_t_hex_u_b_a 3
+F_THEXUBA_%1_%2_%3:
+	thexub %1, %2, %3
+	ret
+%endmacro

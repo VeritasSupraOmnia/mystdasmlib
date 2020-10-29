@@ -1,0 +1,691 @@
+;generalized registers in nasm assembly.
+;Written by Keaton G.C. Hatcher
+
+;purpose: Less headache for developing assembly macro libraries with optimized register fill.
+
+;use - basic dgr and udgr:
+;
+;
+;Example 1:
+;
+;	dgr	_reg_	rax
+;
+;Makes the following assignments:
+;
+;	g_reg_	<-	rax
+;	g_reg_d	<-	eax
+;	g_reg_w	<-	ax
+;	g_reg_b	<-	al
+;	g_reg_h	<-	ah
+;
+;Example 2:
+;
+;	dgr	a	cl
+;
+;Makes the following assignments:
+;
+;	ga	<-	rcx
+;	gad	<-	ecx
+;	gaw	<-	cx
+;	gab	<-	cl
+;	gah	<-	ch
+;
+;For the above examples, udgr unassigns the general register, making them output an error if used.
+;This is to limit unintentional assignments and mistaken register use.
+;
+;	udgr	_reg_
+;	udgr	a
+;
+;Use - Non-inline functions:
+;
+;
+;To write modular functions using this system, please loosely follow this format when writing functions for generalized registers for improved modularity of assembly code, 
+;if you are writing headers that you intend to use in many different places.
+;
+;Inline func example:
+;%macro	some_func_name	2
+;	dgr	a	%1
+;	dgr	b	%2
+;	;code here
+;	udgr	a
+;	udgr	b
+;%endmacro
+;
+;Non-inline func declaration, based on above inline version:
+;%macro	f_some_func_name	2
+;f_some_func_name_%1_%2:
+;	some_func_name %1 %2
+;ret
+;%endmacro
+;
+;This format allows you to redeclare the same function with different registers whenever you need them like, for example, "f_some_func_name rax r8".
+;This way, you don't need to go copy-paste and edit a function whenever you need a new, callable variant using different registers.
+;You can use whatever syntax you want to support the differentiation of arguments, such as "%1-%2-%3" or "%1|%2|%3", and the "f_" is just for clearly separating the inline
+;and non-inline versions of the code
+
+
+%define	genregs	1	;for doing conditional assembly in libraries that include both genreg and non genreg macros, because of dependency optimizing, so one can obtain kino build speeds.
+;for targeting certain cpu hardware. IMPORTANT!!! MAKE SURE YOU HAVE THE CPU CAPABILITY FOR THESE SIZES
+%define	use32b		0
+%define	use64b		0
+%define	use512		0	;avx512
+%define	use256		0	;avx2
+%define	use128		0	;avx
+
+;I use this system to allow build scripts to target specific features from the command line, with a single %define
+;use "%define	cpu_arch	architecture_name" to define the architecture
+;valid:
+;x86
+;x86_64
+%ifdef	cpu_arch
+	%ifidni		cpu_arch	x86
+		%define	use32b	1
+	%elifidni	cpu_arch	x86_64
+		%define	use32b	1
+		%define	use64b	1
+	%endif
+%else
+	%define	cpu_arch	x86_64		;Assumes 64 bit general registers by default unless otherwise defined
+	%define	use32b	1
+	%define	use64b	1
+%endif
+
+%ifdef	cpu_fset
+	%ifidni			cpu_fset	avx512
+		%define	use512	1
+		%define	use256	1
+		%define	use128	1
+	%elifidni		cpu_fset	avx2
+		%define	use256	1
+		%define	use128	1
+	%elifidni 		cpu_fset	avx
+		%define	use128	1
+	%endif
+%else						;To change the default featureset, copy paste the features you want from above and overwrite the cpu_fset definition with the feature-set you want
+	%define	cpu_fset	avx2
+	%define	use256		1
+	%define	use128		1
+%endif
+;Assumes at least avx2 feature set but sets up the preprocessor to handle different arch sizes and feature sets.
+;use %define cpu_fset avx512 
+;to get access to avx 512 registers
+;This will lead to less debugging and easier build systems later, as avx512 is still not so common.
+;Only x86_64 so far.
+
+%macro featerror 1
+	%error Register %1 is not supported by genreg buildflag cpu_fset.
+%endmacro
+%macro archerror 1
+	%error Register %1 is not supported by genreg buildflag cpu_arch.
+%endmacro
+
+;Because stack and base pointers have distinct functions, I do not generalize them.
+%macro	d_rax	1
+	%if	use64b = 1	%define	g%1	rax
+	%else	%define g%1	archerror(rax)	
+	%endif
+	%if	use32b = 1	%define	g%1d	eax
+	%else	%define g%1d	archerror(eax)	
+	%endif
+	%define	g%1w	ax
+	%define	g%1b	al
+	%define	g%1h	ah
+%endmacro
+%macro	d_rbx	1
+	%if	use64b = 1	%define	g%1	rbx
+	%else %define g%1	archerror(rbx)	
+	%endif
+	%if use32b = 1	%define	g%1d	ebx
+	%else %define g%1d	archerror(ebx)	
+	%endif
+	%define	g%1w	bx
+	%define	g%1b	bl
+	%define	g%1h	bh
+%endmacro
+%macro	d_rcx	1
+	%if	use64b = 1	%define	g%1	rcx
+	%else %define g%1	archerror(rcx)	
+	%endif
+	%if use32b = 1	%define	g%1d	ecx
+	%else %define g%1d	archerror(ecx)	
+	%endif
+	%define	g%1w	cx
+	%define	g%1b	cl
+	%define	g%1h	ch
+%endmacro
+%macro	d_rdx	1
+	%if	use64b = 1	%define	g%1	rdx
+	%else %define g%1	archerror(rdx)	
+	%endif
+	%if use32b = 1	%define	g%1d	edx
+	%else %define g%1d	archerror(edx)	
+	%endif
+	%define	g%1w	dx
+	%define	g%1b	dl
+	%define	g%1h	dh
+%endmacro
+%macro	d_rdi	1
+	%if	use64b = 1	%define	g%1	rdi
+	%else %define g%1	archerror(rdi)	
+	%endif
+	%if use32b = 1	%define	g%1d	edi
+	%else %define g%1d	archerror(edi)	
+	%endif
+	%define	g%1w	di
+	%define	g%1b	dil
+%endmacro
+%macro	d_rsi	1
+	%if	use64b = 1	%define	g%1	rsi
+	%else %define g%1	archerror(rsi)	
+	%endif
+	%if use32b = 1	%define	g%1d	esi
+	%else %define g%1d	archerror(esi)	
+	%endif
+	%define	g%1w	si
+	%define	g%1b	sil
+%endmacro
+%macro	d_r8	1
+	%if	use64b = 1	
+		%define	g%1	r8
+		%define	g%1d	r8d
+		%define	g%1w	r8w
+		%define	g%1b	r8b
+	%else 
+		%define	g%1	archerror(r8)
+		%define	g%1d	archerror(r8d)
+		%define	g%1w	archerror(r8w)
+		%define	g%1b	archerror(r8b)
+	%endif
+%endmacro
+%macro	d_r9	1
+	%if	use64b = 1
+		%define	g%1	r9
+		%define	g%1d	r9d
+		%define	g%1w	r9w
+		%define	g%1b	r9b
+	%else 
+		%define	g%1	archerror(r9)
+		%define	g%1d	archerror(r9d)
+		%define	g%1w	archerror(r9w)
+		%define	g%1b	archerror(r9b)
+	%endif
+%endmacro
+%macro	d_r10	1
+	%if	use64b = 1
+		%define	g%1	r10
+		%define	g%1d	r10d
+		%define	g%1w	r10w
+		%define	g%1b	r10b
+	%else 
+		%define	g%1	archerror(r10)
+		%define	g%1d	archerror(r10d)
+		%define	g%1w	archerror(r10w)
+		%define	g%1b	archerror(r10b)
+	%endif
+%endmacro
+%macro	d_r11	1
+	%if	use64b = 1
+		%define	g%1	r11
+		%define	g%1d	r11d
+		%define	g%1w	r11w
+		%define	g%1b	r11b
+	%else 
+		%define	g%1	archerror(r11)
+		%define	g%1d	archerror(r11d)
+		%define	g%1w	archerror(r11w)
+		%define	g%1b	archerror(r11b)
+	%endif
+%endmacro
+%macro	d_r12	1
+	%if	use64b = 1
+		%define	g%1	r12
+		%define	g%1d	r12d
+		%define	g%1w	r12w
+		%define	g%1b	r12b
+	%else 
+		%define	g%1	archerror(r12)
+		%define	g%1d	archerror(r12d)
+		%define	g%1w	archerror(r12w)
+		%define	g%1b	archerror(r12b)
+	%endif
+%endmacro
+%macro	d_r13	1
+	%if	use64b = 1
+		%define	g%1	r13
+		%define	g%1d	r13d
+		%define	g%1w	r13w
+		%define	g%1b	r13b
+	%else 
+		%define	g%1	archerror(r13)
+		%define	g%1d	archerror(r13d)
+		%define	g%1w	archerror(r13w)
+		%define	g%1b	archerror(r13b)
+	%endif
+%endmacro
+%macro	d_r14	1
+	%if	use64b = 1
+		%define	g%1	r14
+		%define	g%1d	r14d
+		%define	g%1w	r14w
+		%define	g%1b	r14b
+	%else 
+		%define	g%1	archerror(r14)
+		%define	g%1d	archerror(r14d)
+		%define	g%1w	archerror(r14w)
+		%define	g%1b	archerror(r14b
+	%endif
+%endmacro
+%macro	d_r15	1
+	%if	use64b = 1
+		%define	g%1	r15
+		%define	g%1d	r15d
+		%define	g%1w	r15w
+		%define	g%1b	r15b
+	%else 
+		%define	g%1	archerror(r15)
+		%define	g%1d	archerror(r15d)
+		%define	g%1w	archerror(r15w)
+		%define	g%1b	archerror(r15b
+	%endif
+%endmacro
+
+;conditionally generalize extensions
+
+%macro	d_v0	1
+	%if	use128 = 1	%define	g%1x	xmm0
+		%else 	%define	g%1x	featerror(xmm0,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm0	
+		%else	%define	g%1y	featerror(ymm0,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm0
+		%else	%define	g%1z	featerror(zmm0,cpu_fset)	%endif
+%endmacro
+%macro	d_v1	1
+	%if	use128 = 1	%define	g%1x	xmm1
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm1	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm1
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v2	1
+	%if	use128 = 1	%define	g%1x	xmm2
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm2	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm2
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v3	1
+	%if	use128 = 1	%define	g%1x	xmm3
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm3	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm3
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v4	1
+	%if	use128 = 1	%define	g%1x	xmm4
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm4	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm4
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v5	1
+	%if	use128 = 1	%define	g%1x	xmm5
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm5	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm5
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v6	1
+	%if	use128 = 1	%define	g%1x	xmm6
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm6	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm6
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v7	1
+	%if	use128 = 1	%define	g%1x	xmm7
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm7	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm7
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v8	1
+	%if	use128 = 1	%define	g%1x	xmm8
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm8	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm8
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v9	1
+	%if	use128 = 1	%define	g%1x	xmm9
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm9	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm9
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v10	1
+	%if	use128 = 1	%define	g%1x	xmm10
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm10	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm10
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v11	1
+	%if	use128 = 1	%define	g%1x	xmm11
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm11	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm11
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v12	1
+	%if	use128 = 1	%define	g%1x	xmm12
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm12	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm12
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v13	1
+	%if	use128 = 1	%define	g%1x	xmm13
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm13	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm13
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v14	1
+	%if	use128 = 1	%define	g%1x	xmm14
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm14	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm14
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+%macro	d_v15	1
+	%if	use128 = 1	%define	g%1x	xmm15
+		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+	%if	use256 = 1	%define	g%1y	ymm15	
+		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+	%if	use512 = 1	%define	g%1z	zmm15
+		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+%endmacro
+
+%macro	dgr 2
+	%ifidni		%1,	rax
+		d_rax	%2
+	%elifdni	%1,	rbx
+		d_rbx	%2
+	%elifidni	%1,	rcx
+		d_rcx	%2
+	%elifidni	%1,	rdx
+		d_rdx	%2
+	%elifidni	%1,	rsi
+		d_rsi	%2
+	%elifidni	%1,	rdi
+		d_rdi	%2
+	%elifidni	%1,	r8
+		d_r8	%2
+	%elifidni	%1,	r9
+		d_r9	%2
+	%elifidni	%1,	r10
+		d_r10	%2
+	%elifidni	%1,	r11
+		d_r11	%2
+	%elifidni	%1,	r12
+		d_r12	%2
+	%elifidni	%1,	r13
+		d_r13	%2
+	%elifidni	%1,	r14
+		d_r14	%2
+	%elifidni	%1,	r15
+		d_r15	%2
+	%elifidni	%1,	eax
+		d_rax	%2
+	%elifidni	%1,	ebx
+		d_rbx	%2
+	%elifidni	%1,	ecx
+		d_rcx	%2
+	%elifidni	%1,	edx
+		d_rdx	%2
+	%elifidni	%1,	esi
+		d_rsi	%2
+	%elifidni	%1,	edi
+		d_rdi	%2
+	%elifidni	%1,	r8d
+		d_r8	%2
+	%elifidni	%1,	r9d
+		d_r9x	%2
+	%elifidni	%1,	r10d
+		d_r10	%2
+	%elifidni	%1,	r11d
+		d_r11	%2
+	%elifidni	%1,	r12d
+		d_r12	%2
+	%elifidni	%1,	r13d
+		d_r13	%2
+	%elifidni	%1,	r14d
+		d_r14	%2
+	%elifidni	%1,	r15d
+		d_r15	%2
+	%elifidni	%1,	ax
+		d_rax	%2
+	%elifidni	%1,	bx
+		d_rbx	%2
+	%elifidni	%1,	cx
+		d_rcx	%2
+	%elifidni	%1,	dx
+		d_rdx	%2
+	%elifidni	%1,	si
+		d_rsi	%2
+	%elifidni	%1,	di
+		d_rdi	%2
+	%elifidni	%1,	r8w
+		d_r8	%2
+	%elifidni	%1,	r9w
+		d_r9	%2
+	%elifidni	%1,	r10w
+		d_r10	%2
+	%elifidni	%1,	r11w
+		d_r11	%2
+	%elifidni	%1,	r12w
+		d_r12	%2
+	%elifidni	%1,	r13w
+		d_r13	%2
+	%elifidni	%1,	r14w
+		d_r14	%2
+	%elifidni	%1,	r15w
+		d_r15	%2
+	%elifidni	%1,	al
+		d_rax	%2
+	%elifidni	%1,	bl
+		d_rbx	%2
+	%elifidni	%1,	cl
+		d_rcx	%2
+	%elifidni	%1,	dl
+		d_rdx	%2
+	%elifidni	%1,	ah
+		d_rax	%2
+	%elifidni	%1,	bh
+		d_rbx	%2
+	%elifidni	%1,	ch
+		d_rcx	%2
+	%elifidni	%1,	dh
+		d_rdx	%2
+	%elifidni	%1,	sil
+		d_rsi	%2
+	%elifidni	%1,	dil
+		d_rdi	%2
+	%elifidni	%1,	r8b
+		d_r8	%2
+	%elifidni	%1,	r9b
+		d_r9	%2
+	%elifidni	%1,	r10b
+		d_r10	%2
+	%elifidni	%1,	r11b
+		d_r11	%2
+	%elifidni	%1,	r12b
+		d_r12	%2
+	%elifidni	%1,	r13b
+		d_r13	%2
+	%elifidni	%1,	r14b
+		d_r14	%2
+	%elifidni	%1,	r15b
+		d_r15	%2
+	%elifidni	%1,	xmm0
+		d_v0	%2
+	%elifidni	%1,	xmm1
+		d_v1	%2
+	%elifidni	%1,	xmm2
+		d_v2	%2
+	%elifidni	%1,	xmm3
+		d_v3	%2
+	%elifidni	%1,	xmm4
+		d_v4	%2
+	%elifidni	%1,	xmm5
+		d_v5	%2
+	%elifidni	%1,	xmm6
+		d_v6	%2
+	%elifidni	%1,	xmm7
+		d_v7	%2
+	%elifidni	%1,	xmm8
+		d_v8	%2
+	%elifidni	%1,	xmm9
+		d_v9	%2
+	%elifidni	%1,	xmm10	
+		d_v10	%2
+	%elifidni	%1,	xmm11
+		d_v11	%2
+	%elifidni	%1,	xmm12	
+		d_v12	%2
+	%elifidni	%1,	xmm13
+		d_v13	%2
+	%elifidni	%1,	xmm14
+		d_v14	%2
+	%elifidni	%1,	xmm15
+		d_v15	%2
+	%elifidni	%1,	ymm0
+		d_v0	%2
+	%elifidni	%1,	ymm1
+		d_v1	%2
+	%elifidni	%1,	ymm2
+		d_v2	%2
+	%elifidni	%1,	ymm3
+		d_v3	%2
+	%elifidni	%1,	ymm4
+		d_v4	%2
+	%elifidni	%1,	ymm5
+		d_v5	%2
+	%elifidni	%1,	ymm6
+		d_v6	%2
+	%elifidni	%1,	ymm7
+		d_v7	%2
+	%elifidni	%1,	ymm8
+		d_v8	%2
+	%elifidni	%1,	ymm9
+		d_v9	%2
+	%elifidni	%1,	ymm10
+		d_v10	%2
+	%elifidni	%1,	ymm11
+		d_v11	%2
+	%elifidni	%1,	ymm12
+		d_v12	%2
+	%elifidni	%1,	ymm13
+		d_v13	%2
+	%elifidni	%1,	ymm14
+		d_v14	%2
+	%elifidni	%1,	ymm15
+		d_v15	%2
+	%elifidni	%1,	zmm0
+		d_v0	%2
+	%elifidni	%1,	zmm1
+		d_v1	%2
+	%elifidni	%1,	zmm2
+		d_v2	%2
+	%elifidni	%1,	zmm3
+		d_v3	%2
+	%elifidni	%1,	zmm4
+		d_v4	%2
+	%elifidni	%1,	zmm5
+		d_v5	%2
+	%elifidni	%1,	zmm6
+		d_v6	%2
+	%elifidni	%1,	zmm7
+		d_v7	%2
+	%elifidni	%1,	zmm8
+		d_v8	%2
+	%elifidni	%1,	zmm9
+		d_v9	%2
+	%elifidni	%1,	zmm10
+		d_v10	%2
+	%elifidni	%1,	zmm11
+		d_v11	%2
+	%elifidni	%1,	zmm12
+		d_v12	%2
+	%elifidni	%1,	zmm13
+		d_v13	%2
+	%elifidni	%1,	zmm14
+		d_v14	%2
+	%elifidni	%1,	zmm15
+		d_v15	%2
+	%endif
+%endmacro
+
+%macro	udgr	1
+	%ifdef	g%1
+		%undef g%1
+		%undef g%1d
+		%undef g%1w
+		%undef g%1b
+		%ifdef	g%1h
+			%undef g%1h
+		%endif
+	%elifdef	g%1d
+		%if use64b = 1
+			%undef g%1
+		%endif
+		%undef	g%1d
+		%undef	g%1w
+		%undef	g%1b
+		%ifdef	g%1h
+			%undef	g%1h
+		%endif
+	%elifdef	g%1w
+		%if use64b = 1
+			%undef	g%1
+		%endif
+		%if use32b = 1
+			%undef	g%1d
+		%endif
+		%undef	g%1w
+		%undef	g%1b
+		%ifdef	g%1h
+			%undef	g%1h
+		%endif
+	%elifdef	g%1x
+		%undef	g%1x
+		%if use256 = 1
+			%undef	g%1y
+		%endif
+		%if use512 = 1
+			%undef g%1z
+		%endif
+	%elifdef g%1z
+		%undef	g%1x
+		%undef	g%1y
+		%undef	g%1z
+	%endif
+%endmacro
+
+;runtime register selection
+;Using a word-sized register-busy switch and special generalized macros, one can keep track of which register is in use.
+;Therefor, one can programmatically select which registers to use during runtime, so as to not need to worry as much about specific registers all the time, but how many registers of each type one has available.
