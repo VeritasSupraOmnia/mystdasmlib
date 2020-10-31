@@ -4,32 +4,45 @@
 %include	'../syscall.ah'
 global	main
 section .data
-	%define	tfm	"cstring.ah test failure!"
-	%define	tsm	"cstring.ah test success!"
+	%define	tfm	'cstring.ah test failure!'
+	%define	tsm	'cstring.ah test success!'
 	%strlen	trcl	tfm
 	tf:	db	tfm,0x0A
 	ts:	db	tsm,0x0A
 
 	control:	db	"Test str"
 	newstr	test,	"Test str"
+	controlla:	db	'Teststr',0x0A
+	newstrla	testla,	"Teststr"
+	controllp:	db	0x0A,'Teststr'
+	newstrlp	testlp,	"Teststr"
 section .code
 main:	mov	rax,	[control]
 	mov	rdi,	[stest]
 	cmp	rax,	rdi
-	je	ctest
-	mov	rax,	sys_write
-	mov	rdi,	stdout
-	mov	rsi,	tf
-	mov	rdx,	trcl+1
-	syscall
-	mov	rax,	sys_ret
-	mov	rdi,	1
-	syscall
-ctest:	mov	rax,	8
+	jne	failure
+	mov	rax,	8
 	mov	rdi,	[ltest]
 	cmp	rax,	rdi
-	je	success
-	mov	rax,	sys_write
+	jne	failure
+	mov	rax,	[controlla]
+	mov	rdi,	[stestla]
+	cmp	rax,	rdi
+	jne	failure
+	mov	rax,	8
+	mov	rdi,	[ltestla]
+	cmp	rax,	rdi
+	jne	failure
+	mov	rax,	[controllp]
+	mov	rdi,	[stestlp]
+	cmp	rax,	rdi
+	jne	failure
+	mov	rax,	8
+	mov	rdi,	[ltestlp]
+	cmp	rax,	rdi
+	jne	failure
+	jmp	success
+failure:mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	tf
 	mov	rdx,	trcl+1

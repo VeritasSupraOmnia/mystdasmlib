@@ -1,6 +1,32 @@
+;macro for handling easy string constants in the .data section
+
+;example:	
+;	newstr	string_name,	"string you want here"
+
+;output:
+;sstringname:	db	"string you want here"
+;lstringname:	dq	20
+
+;base newstring macro
 %macro	newstr	2
 s%1:	db	%2
 %strlen	lstr	%2
 l%1:	dq	lstr
+%undef	lstr
+%endmacro
+
+;appends a linebreak to the end
+%macro	newstrla	2
+s%1:	db	%2,0x0A
+%strlen	lstr	%2
+l%1:	dq	lstr + 1
+%undef	lstr
+%endmacro
+
+;prepends a linebreak to the beginning
+%macro	newstrlp	2
+s%1:	db	0x0A,%2
+%strlen	lstr	%2
+l%1:	dq	lstr + 1
 %undef	lstr
 %endmacro

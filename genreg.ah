@@ -101,7 +101,7 @@
 	%elifidni 		cpu_fset	avx
 		%define	use128	1
 	%endif
-%else						;To change the default featureset, copy paste the features you want from above and overwrite the cpu_fset definition with the feature-set you want
+%else	;To change the default featureset, copy paste the features you want from above and overwrite the cpu_fset definition with the feature-set you want
 	%define	cpu_fset	avx2
 	%define	use256		1
 	%define	use128		1
@@ -121,65 +121,65 @@
 
 ;Because stack and base pointers have distinct functions, I do not generalize them.
 %macro	d_rax	1
-	%if	use64b = 1	%define	g%1	rax
-	%else	%define g%1	archerror(rax)	
+	%if	use64b = 1
+	%define	g%1	rax
 	%endif
-	%if	use32b = 1	%define	g%1d	eax
-	%else	%define g%1d	archerror(eax)	
+	%if	use32b = 1
+	%define	g%1d	eax
 	%endif
 	%define	g%1w	ax
 	%define	g%1b	al
 	%define	g%1h	ah
 %endmacro
 %macro	d_rbx	1
-	%if	use64b = 1	%define	g%1	rbx
-	%else %define g%1	archerror(rbx)	
+	%if	use64b = 1
+	%define	g%1	rbx
 	%endif
-	%if use32b = 1	%define	g%1d	ebx
-	%else %define g%1d	archerror(ebx)	
+	%if	use32b = 1	
+	%define	g%1d	ebx
 	%endif
 	%define	g%1w	bx
 	%define	g%1b	bl
 	%define	g%1h	bh
 %endmacro
 %macro	d_rcx	1
-	%if	use64b = 1	%define	g%1	rcx
-	%else %define g%1	archerror(rcx)	
+	%if	use64b = 1
+	%define	g%1	rcx
 	%endif
-	%if use32b = 1	%define	g%1d	ecx
-	%else %define g%1d	archerror(ecx)	
+	%if use32b = 1
+	%define	g%1d	ecx
 	%endif
 	%define	g%1w	cx
 	%define	g%1b	cl
 	%define	g%1h	ch
 %endmacro
 %macro	d_rdx	1
-	%if	use64b = 1	%define	g%1	rdx
-	%else %define g%1	archerror(rdx)	
+	%if	use64b = 1
+	%define	g%1	rdx
 	%endif
-	%if use32b = 1	%define	g%1d	edx
-	%else %define g%1d	archerror(edx)	
+	%if use32b = 1
+	%define	g%1d	edx
 	%endif
 	%define	g%1w	dx
 	%define	g%1b	dl
 	%define	g%1h	dh
 %endmacro
 %macro	d_rdi	1
-	%if	use64b = 1	%define	g%1	rdi
-	%else %define g%1	archerror(rdi)	
+	%if	use64b = 1
+	%define	g%1	rdi
 	%endif
-	%if use32b = 1	%define	g%1d	edi
-	%else %define g%1d	archerror(edi)	
+	%if use32b = 1
+	%define	g%1d	edi
 	%endif
 	%define	g%1w	di
 	%define	g%1b	dil
 %endmacro
 %macro	d_rsi	1
-	%if	use64b = 1	%define	g%1	rsi
-	%else %define g%1	archerror(rsi)	
+	%if	use64b = 1
+	%define	g%1	rsi
 	%endif
-	%if use32b = 1	%define	g%1d	esi
-	%else %define g%1d	archerror(esi)	
+	%if use32b = 1
+	%define	g%1d	esi
 	%endif
 	%define	g%1w	si
 	%define	g%1b	sil
@@ -190,11 +190,6 @@
 		%define	g%1d	r8d
 		%define	g%1w	r8w
 		%define	g%1b	r8b
-	%else 
-		%define	g%1	archerror(r8)
-		%define	g%1d	archerror(r8d)
-		%define	g%1w	archerror(r8w)
-		%define	g%1b	archerror(r8b)
 	%endif
 %endmacro
 %macro	d_r9	1
@@ -203,11 +198,6 @@
 		%define	g%1d	r9d
 		%define	g%1w	r9w
 		%define	g%1b	r9b
-	%else 
-		%define	g%1	archerror(r9)
-		%define	g%1d	archerror(r9d)
-		%define	g%1w	archerror(r9w)
-		%define	g%1b	archerror(r9b)
 	%endif
 %endmacro
 %macro	d_r10	1
@@ -216,11 +206,6 @@
 		%define	g%1d	r10d
 		%define	g%1w	r10w
 		%define	g%1b	r10b
-	%else 
-		%define	g%1	archerror(r10)
-		%define	g%1d	archerror(r10d)
-		%define	g%1w	archerror(r10w)
-		%define	g%1b	archerror(r10b)
 	%endif
 %endmacro
 %macro	d_r11	1
@@ -229,11 +214,6 @@
 		%define	g%1d	r11d
 		%define	g%1w	r11w
 		%define	g%1b	r11b
-	%else 
-		%define	g%1	archerror(r11)
-		%define	g%1d	archerror(r11d)
-		%define	g%1w	archerror(r11w)
-		%define	g%1b	archerror(r11b)
 	%endif
 %endmacro
 %macro	d_r12	1
@@ -242,11 +222,6 @@
 		%define	g%1d	r12d
 		%define	g%1w	r12w
 		%define	g%1b	r12b
-	%else 
-		%define	g%1	archerror(r12)
-		%define	g%1d	archerror(r12d)
-		%define	g%1w	archerror(r12w)
-		%define	g%1b	archerror(r12b)
 	%endif
 %endmacro
 %macro	d_r13	1
@@ -255,11 +230,6 @@
 		%define	g%1d	r13d
 		%define	g%1w	r13w
 		%define	g%1b	r13b
-	%else 
-		%define	g%1	archerror(r13)
-		%define	g%1d	archerror(r13d)
-		%define	g%1w	archerror(r13w)
-		%define	g%1b	archerror(r13b)
 	%endif
 %endmacro
 %macro	d_r14	1
@@ -268,11 +238,6 @@
 		%define	g%1d	r14d
 		%define	g%1w	r14w
 		%define	g%1b	r14b
-	%else 
-		%define	g%1	archerror(r14)
-		%define	g%1d	archerror(r14d)
-		%define	g%1w	archerror(r14w)
-		%define	g%1b	archerror(r14b
 	%endif
 %endmacro
 %macro	d_r15	1
@@ -281,11 +246,6 @@
 		%define	g%1d	r15d
 		%define	g%1w	r15w
 		%define	g%1b	r15b
-	%else 
-		%define	g%1	archerror(r15)
-		%define	g%1d	archerror(r15d)
-		%define	g%1w	archerror(r15w)
-		%define	g%1b	archerror(r15b
 	%endif
 %endmacro
 
@@ -293,137 +253,137 @@
 
 %macro	d_v0	1
 	%if	use128 = 1	%define	g%1x	xmm0
-		%else 	%define	g%1x	featerror(xmm0,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm0	
-		%else	%define	g%1y	featerror(ymm0,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm0
-		%else	%define	g%1z	featerror(zmm0,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v1	1
 	%if	use128 = 1	%define	g%1x	xmm1
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm1	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm1
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v2	1
 	%if	use128 = 1	%define	g%1x	xmm2
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm2	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm2
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v3	1
 	%if	use128 = 1	%define	g%1x	xmm3
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm3	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm3
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v4	1
 	%if	use128 = 1	%define	g%1x	xmm4
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm4	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm4
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v5	1
 	%if	use128 = 1	%define	g%1x	xmm5
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm5	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm5
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v6	1
 	%if	use128 = 1	%define	g%1x	xmm6
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm6	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm6
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v7	1
 	%if	use128 = 1	%define	g%1x	xmm7
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm7	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm7
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v8	1
 	%if	use128 = 1	%define	g%1x	xmm8
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm8	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm8
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v9	1
 	%if	use128 = 1	%define	g%1x	xmm9
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm9	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm9
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v10	1
 	%if	use128 = 1	%define	g%1x	xmm10
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm10	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm10
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v11	1
 	%if	use128 = 1	%define	g%1x	xmm11
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm11	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm11
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v12	1
 	%if	use128 = 1	%define	g%1x	xmm12
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm12	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm12
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v13	1
 	%if	use128 = 1	%define	g%1x	xmm13
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm13	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm13
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v14	1
 	%if	use128 = 1	%define	g%1x	xmm14
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm14	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm14
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 %macro	d_v15	1
 	%if	use128 = 1	%define	g%1x	xmm15
-		%else 	%define	g%1x	featerror(xmm1,cpu_fset)	%endif
+		%endif
 	%if	use256 = 1	%define	g%1y	ymm15	
-		%else	%define	g%1y	featerror(ymm1,cpu_fset)	%endif
+		%endif
 	%if	use512 = 1	%define	g%1z	zmm15
-		%else	%define	g%1z	featerror(zmm1,cpu_fset)	%endif
+		%endif
 %endmacro
 
 %macro	dgr 2
 	%ifidni		%1,	rax
 		d_rax	%2
-	%elifdni	%1,	rbx
+	%elifidni	%1,	rbx
 		d_rbx	%2
 	%elifidni	%1,	rcx
 		d_rcx	%2
@@ -676,6 +636,12 @@
 		%if use256 = 1
 			%undef	g%1y
 		%endif
+		%if use512 = 1
+			%undef g%1z
+		%endif
+	%elifdef	g%1y
+		%undef	g%1x
+		%undef	g%1y
 		%if use512 = 1
 			%undef g%1z
 		%endif

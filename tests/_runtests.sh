@@ -7,7 +7,7 @@ tcc teststring.o -o teststring
 rm ./teststring ./teststring.o
 
 #test genreg.ah
-#nasm testgenreg.a -o testgenreg.o -felf64
-#tcc testgenreg.o -o testgenreg
-#./testgenreg
-#rm testgenreg testgenreg.o
+nasm testgenreg.a -o testgenreg.o -felf64
+tcc testgenreg.o -o testgenreg
+./testgenreg
+rm testgenreg testgenreg.o
