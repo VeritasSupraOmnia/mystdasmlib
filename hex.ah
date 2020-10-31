@@ -27,7 +27,7 @@
 %endmacro
 
 ;TODO: Fix this preproccessed out macro
-#if	0
+%if	0
 %macro	tohexbu	2	;to uppercase hex - byte. Fast and small but less modular version.
 	;output on ax
 	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
