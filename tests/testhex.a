@@ -35,7 +35,7 @@ main:
 	mov	ax,	[brtu]
 	cmp	ax,	di
 	jne	failure
-
+%if	0
 	mov	dl,	[btt]
 	xor	rax,	rax
 	xor	rdi,	rdi
@@ -43,7 +43,7 @@ main:
 	mov	dx,	[brtu]
 	cmp	ax,	dx
 	jne	failure
-
+%endif
 	jmp	success
 failure:mov	rax,	sys_write
 	mov	rdi,	stdout
