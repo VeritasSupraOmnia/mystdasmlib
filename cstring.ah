@@ -1,0 +1,6 @@
+%macro	newstr	2
+s%1:	db	%2
+%strlen	lstr	%2
+l%1:	dq	lstr
+%undef	lstr
+%endmacro
