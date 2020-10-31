@@ -13,5 +13,5 @@ Q:	WTF is a general register?
 A:	It's kind of like a cuda register but for x86_64.
 
 Q:	Why is everything either simplistic or hacked-together?
-A:	I am an amateur programmer but even I know "Simplicitas divinitatum est" or "Keep it simple stupid"
-	If it looks cobbled together or broken that's because it is and I am too egotistical to chop capability to make it simpler.
+A:	I am an amateur programmer but even I know "Simplicitas divinitatum est" or "Keep it simple stupid".
+	If it looks cobbled together or broken that's because it is and I am either too egotistical to chop capability to make it simpler or too lazy/busy elswhere to fix it.
