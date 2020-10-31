@@ -1,0 +1,19 @@
+%include	'../genreg.ah'
+%include	'../syscall.ah'
+%include	'../size.ah'
+%include	'../string.ah'
+section	.data
+	obj1:	dq	0x24ae7f34b8a0d3cc
+	obj2:	dq	0xabcdef0123456789
+	rtst:	dq	0;test result
+	rctrl:	dq	0;control result for compare with test result
+	
+section	.code
+%macro	testadd	2
+	dgr	1,	%1
+	dgr	2,	%2
+	mov	%1,	
+%endmacro
+
+
+
