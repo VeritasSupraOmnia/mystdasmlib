@@ -4,8 +4,8 @@
 %include	'../syscall.ah'
 global	main
 section .data
-	%define	tfm	'cstring.ah test failure!'
-	%define	tsm	'cstring.ah test success!'
+	%define	tfm	'cstring.ah:	Test failure!'
+	%define	tsm	'cstring.ah:	Test success!'
 	%strlen	trcl	tfm
 	tf:	db	tfm,0x0A
 	ts:	db	tsm,0x0A
