@@ -26,7 +26,8 @@
 	udgr	c
 %endmacro
 
-;TODO: Fix this shit
+;TODO: Fix this preproccessed out macro
+#if	0
 %macro	tohexbu	2	;to uppercase hex - byte. Fast and small but less modular version.
 	;output on ax
 	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
@@ -46,7 +47,7 @@
 	udgr	c
 	udgr	b
 %endmacro
-
+%endif
 ;note: alt versions that are slower. Made only for use in registers r8 to r15
 ;To HEX Uppercase Byte Alternative
 %macro	tohexbua	3	;to uppercase hex - byte. Slow and large but more modular alt version for r8 to 15.
