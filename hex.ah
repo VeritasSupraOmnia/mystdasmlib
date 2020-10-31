@@ -1,7 +1,7 @@
 ;needs genreg.ah
 
 ;To HEX Uppercase Byte
-%macro	thexub	3	;to uppercase hex - byte. Slow and large but more modular version.
+%macro	tohexbu	3	;to uppercase hex - byte. Slow and large but more modular version.
 	dgr	%1,	a	;output
 	dgr	%2,	b	;arithmatic value-holder
 	dgr	%3,	c	;input, must be al, bl, cl or dl for high byte
@@ -25,29 +25,31 @@
 	udgr	b
 	udgr	c
 %endmacro
-%macro	thexub	2	;to uppercase hex - byte. Fast and small but less modular version.
+
+;TODO: Fix this shit
+%macro	tohexbu	2	;to uppercase hex - byte. Fast and small but less modular version.
 	;output on ax
-	dgr	%1,	b	;arithmatic value-holder
 	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
+	dgr	%2,	b	;arithmetic register for multiply
 	;split	nibbles into two bytes in input
 	mov	gch,	gcb
 	shr	gcb,	4
 	and	gcw,	0x0f0f
-	mov	gbw,	gcw
-	sub	gbw,	0x0202
-	and	gbw,	gcw
-	and	gbw,	0x0808
-	mov	ax,	gbw
-	mul	7
-	add	gaw,	gcw
-	add	gaw,	0x3030
-	udgr	b
+	mov	ax,	gcw
+	mov	gb,	7
+	sub	ax,	0x0202
+	and	ax,	gcw
+	and	ax,	0x0808
+	mul	gb
+	add	ax,	gcw
+	add	ax,	0x3030
 	udgr	c
+	udgr	b
 %endmacro
 
 ;note: alt versions that are slower. Made only for use in registers r8 to r15
 ;To HEX Uppercase Byte Alternative
-%macro	thexuba	3	;to uppercase hex - byte. Slow and large but more modular alt version for r8 to 15.
+%macro	tohexbua	3	;to uppercase hex - byte. Slow and large but more modular alt version for r8 to 15.
 	dgr	%1,	a	;output
 	dgr	%2,	b	;arithmatic value-holder
 	dgr	%3,	c	;input, must be al, bl, cl or dl for high byte
@@ -73,11 +75,11 @@
 	udgr	b
 	udgr	c
 %endmacro
-
-%macro	thexuba	2	;to uppercase hex - byte. Fast and small but less modular alt version for r8-15.
+;
+%macro	tohexbua	2	;to uppercase hex - byte. Fast and small but less modular alt version for r8-15.
 	;output on ax
 	dgr	%1,	b	;arithmatic value-holder
-	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
+	dgr	%22,	c	;input, must be al, bl, cl or dl for high byte
 	;split	nibbles into two bytes in input
 	mov	gbb,	gcb
 	shr	gcb,	4
@@ -90,8 +92,8 @@
 	and	gbw,	0x0808
 	mov	ax,	gbw
 	mul	7
-	add	gaw,	gcw
-	add	gaw,	0x3030
+	add	ax,	gcw
+	add	ax,	0x3030
 	udgr	b
 	udgr	c
 %endmacro
