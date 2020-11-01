@@ -15,35 +15,45 @@ section .data
 	;note: result data is always 2x the size of test data
 
 	;test over one byte
-	btt:	db	0x9A
-	brtu:	dw	'9A'
-	brtl:	dw	'9a'
+	bytebin:	db	0x9A
+	bytehexu:	dw	'9A'
+	bytehexl:	dw	'9a'
+
+	qtt:	dq	0x0123456789ABCDEF
+	qtru:	dq	'01234567','89ABCDEF'
 section	.code
 main:
-	mov	dl,	[btt]
+	mov	dl,	[bytebin]
 	xor	rsi,	rsi
 	xor	rdi,	rdi
 	tohexbu	rdi,	rsi,	rdx
-	mov	ax,	[brtu]
+	mov	ax,	[bytehexu]
 	cmp	ax,	di
 	jne	failure
 
-	mov	dl,	[btt]
+	mov	dl,	[bytebin]
 	xor	rsi,	rsi
 	xor	rdi,	rdi
 	tohexbua	rdi,	rsi,	rdx
-	mov	ax,	[brtu]
+	mov	ax,	[bytehexu]
 	cmp	ax,	di
 	jne	failure
 %if	0
-	mov	dl,	[btt]
-	xor	rax,	rax
-	xor	rdi,	rdi
-	tohexbu	dl,	rdi
-	mov	dx,	[brtu]
+	mov	cl,	[bytebin]
+	xor	r8,	r8
+	tohexbu	cl,	r8
+	mov	dx,	[bytehexu]
 	cmp	ax,	dx
 	jne	failure
 %endif
+	
+	mov	r10,	[qtt]
+	tohexqu	xmm0,	xmm1,	xmm2,	r8,	r9,	r10
+	movdqu	xmm1,	[qtru]
+	pandn	xmm1,	xmm1
+	ptest	xmm0,	xmm1
+	jnz	failure
+
 	jmp	success
 failure:mov	rax,	sys_write
 	mov	rdi,	stdout

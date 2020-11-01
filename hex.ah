@@ -26,6 +26,49 @@
 	udgr	c
 %endmacro
 
+%macro	tohexqu	6
+	dgr	%1,	1;output	-	16 byte
+	dgr	%2,	2;bitmask	-	16 byte
+	dgr	%3,	3;arithmetic	-	16 byte
+	dgr	%4,	4;pdep output holder -	8 byte
+	dgr	%5,	5;pdep mask	-	8byte
+	dgr	%6,	6;input		-	8byte
+
+	mov	g5,	0x0f0f0f0f0f0f0f0f
+	pdep	g4,	g5,	g6;pdep first half of input to holder
+	movq	g1x,	g4
+	pslldq	g1x,	8
+	shr	g6,	32
+	pdep	g4,	g5,	g6
+	movq	g2x,	g4
+	pand	g1x,	g2x
+	mov	g4,	0x08
+	movq	g3x,	g4
+	mov	g6,	0x30
+	vpbroadcastb	g2x,	g3x
+	vpcmpgtb	g3x,	g1x,	g2x
+	vpcmpeqb	g2x,	g1x,	g2x
+	pand	g3x,	g2x
+	psllw	g3x,	1
+	movdqu	g2x,	g3x
+	psllw	g2x,	1
+	por	g3x,	g2x
+	psllw	g2x,	1
+	por	g3x,	g2x
+	psllw	g2x,	1
+	por	g3x,	g2x
+	paddb	g1x,	g3x
+	movq	g3x,	g6
+	vpbroadcastb	g2x,	g3x
+	paddb	g1x,	g2x
+
+	udgr	1
+	udgr	2
+	udgr	3
+	udgr	4
+	udgr	5
+	udgr	6
+%endmacro
 ;TODO: Fix this preproccessed out macro
 %if	0
 %macro	tohexbu	2	;to uppercase hex - byte. Fast and small but less modular version.
