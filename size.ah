@@ -1,8 +1,9 @@
 ;header for predefining sizes for increased legibility on size relevant incrementing addresses
-%define	bsize	1
-%define	wsize	2
-%define	dsize	4
-%define	qsize	8
-%define	xsize	16
-%define	ysize	32
-%define	zsize	64
+
+%define	bsize(count)	1*count
+%define wsize(count)	2*count
+%define dsize(count)	4*count
+%define qsize(count)	8*count
+%define xsize(count)	16*count
+%define ysize(count)	32*count
+%define zsize(count)	64*count
