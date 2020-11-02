@@ -19,8 +19,8 @@ section .data
 	bytehexu:	dw	'9A'
 	bytehexl:	dw	'9a'
 
-	qtt:	dq	0x0123456789ABCDEF
-	qtru:	dq	'01234567','89ABCDEF'
+	quadbin:	dq	0x0123456789ABCDEF
+	quadhexu:	dq	'01234567','89ABCDEF'
 section	.code
 main:
 	mov	dl,	[bytebin]
@@ -38,6 +38,13 @@ main:
 	mov	ax,	[bytehexu]
 	cmp	ax,	di
 	jne	failure
+	
+	mov	dx,	[bytehexu]
+	frhexbu	ax,	di, dx
+	mov	dl,	[bytebin]
+	cmp	al,	dl
+	jne	failure
+	
 %if	0
 	mov	cl,	[bytebin]
 	xor	r8,	r8
@@ -47,9 +54,9 @@ main:
 	jne	failure
 %endif
 	
-	mov	r10,	[qtt]
+	mov	r10,	[quadbin]
 	tohexqu	xmm0,	xmm1,	xmm2,	r8,	r9,	r10
-	movdqu	xmm1,	[qtru]
+	movdqu	xmm1,	[quadhexu]
 	pandn	xmm1,	xmm1
 	ptest	xmm0,	xmm1
 	jnz	failure

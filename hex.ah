@@ -26,6 +26,31 @@
 	udgr	c
 %endmacro
 
+;From DEX Uppercase Byte
+%macro	frhexbu	3
+	dgr	%1,	1;output
+	dgr	%2,	2;arithmetic reg
+	dgr	%3,	3;input - this is a word in size
+	
+	mov	g2w,	g3w
+	and	g2w,	0x4040
+	shr	g2w,	4
+	mov	g1w,	g2w
+	shr	g1w,	1
+	or	g2w,	g1w
+	shr	g1w,	1
+	or	g2w,	g1w
+	sub	g3w,	g2w
+	and	g3w,	0x0f0f
+	ror	g3w,	8
+	mov	g2w,	0x0f0f
+	pext	g1d,	g3d,	g2d
+	
+	udgr	1
+	udgr	2
+	udgr	3
+%endmacro
+
 %macro	tohexqu	6
 	dgr	%1,	1;output	-	16 byte
 	dgr	%2,	2;bitmask	-	16 byte
