@@ -94,8 +94,41 @@
 	udgr	5
 	udgr	6
 %endmacro
-;TODO: Fix this preproccessed out macro
-%if	0
+;TODO:	Fix this macro
+%macro	frhexqu	6
+	dgr	%1,	1;output reg-	8bytes
+	dgr	%2,	2;mask reg  -	8bytes
+	dgr	%3,	3;cross reg -	8bytes
+	dgr	%4,	4;arith	reg -	16bytes
+	dgr	%5,	5;arith reg -	16bytes
+	dgr	%6,	6;input reg -	16bytes
+	
+	mov	g2,	0x4040404040404040
+	movq	g5x,	g2
+	vpbroadcastq	g5x,	g5x
+	pand	g5x,	g6x
+	psrlw	g5x,	4
+	movdqu	g4x,	g5x
+	psrlw	g5x,	1
+	por	g4x,	g5x
+	psrlw	g5x,	1
+	por	g4x,	g5x
+	psubb	g6x,	g4x
+	mov	g2,	0x0f0f0f0f0f0f0f0f
+	movq	g3,	g6x	
+	pext	g1,	g3,	g2
+	pextrq	g3,	g6x,	1
+	pext	g3,	g3,	g2
+	shl	g3,	32
+	or	g1,	g3
+	udgr	1
+	udgr	2
+	udgr	3
+	udgr	4
+	udgr	5
+	udgr	6
+%endmacro
+;TODO: Fix this macro
 %macro	tohexbu	2	;to uppercase hex - byte. Fast and small but less modular version.
 	;output on ax
 	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
@@ -115,7 +148,6 @@
 	udgr	c
 	udgr	b
 %endmacro
-%endif
 ;note: alt versions that are slower. Made only for use in registers r8 to r15
 ;To HEX Uppercase Byte Alternative
 %macro	tohexbua	3	;to uppercase hex - byte. Slow and large but more modular alt version for r8 to 15.

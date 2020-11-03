@@ -2,6 +2,7 @@
 %include	'../hex.ah'
 %include	'../genreg.ah'
 %include	'../syscall.ah'
+%include	'../size.ah'
 global	main
 
 section .data
@@ -61,6 +62,21 @@ main:
 	ptest	xmm0,	xmm1
 	jnz	failure
 
+;under testing (frhexqu)
+%if	0	
+	movdqu	xmm0,	[quadhexu]
+	frhexqu	rax,	rdi,	rsi,	xmm2,	xmm1,	xmm0
+	tohexqu	xmm0,	xmm1,	xmm2,	rsi,	rdi,	rax
+	movdqu	[quadhexu],	xmm0
+	mov	rax,	sys_write
+	mov	rdi,	stdout
+	mov	rsi,	quadhexu
+	mov	rdx,	xsize(1)
+	syscall
+	;mov	rdi,	[quadbin]
+	;cmp	rax,	rdi
+	;jne	failure
+%endif
 	jmp	success
 failure:mov	rax,	sys_write
 	mov	rdi,	stdout
