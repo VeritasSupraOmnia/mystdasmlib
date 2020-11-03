@@ -7,6 +7,6 @@ This is my library of basic nasm assembly headers for defines, preproccessing ma
 	-	syscall.ah:
 			A header detailing some well used syscalls and options on linux. Makes true native system programming much easier.
 	-	size.ah:
-			A header containing the values of each register size for correct address incrementing purposes.
+			A header enabling marginal assembly-time programming of register size. Enables using one macro label for multiple register sizes.
 	-	cstring.ah:
 			A header for easy declaration of string constants.
