@@ -17,5 +17,8 @@
 %define	sys_write	1	;rdi:fd			rsi:char buffer address	rdx:byte count
 %define	sys_open	2	;rdi:filename address	rsi:flags
 %define	sys_close	3	;rdi:file descriptor
-%define	sys_brk		12
-%define	sys_ret		60
+%define	sys_mmap	9
+%define sys_mumap	11
+%define	sys_brk		12	;rdi:bytes to make brk
+%define sys_exec	59	;rdi:cmd char array pnt
+%define	sys_ret		60	;rdi:return value
