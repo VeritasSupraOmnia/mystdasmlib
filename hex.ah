@@ -41,7 +41,6 @@
 	shr	g1w,	1
 	or	g2w,	g1w
 	sub	g3w,	g2w
-	and	g3w,	0x0f0f
 	ror	g3w,	8
 	mov	g2w,	0x0f0f
 	pext	g1d,	g3d,	g2d
@@ -93,7 +92,6 @@
 	or	g2,	g1
 	sub	g3,	g2
 	mov	g2,	0x0f0f0f0f0f0f0f0f
-	and	g3,	g2
 	bswap	g3
 	pext	g1,	g3,	g2
 	
