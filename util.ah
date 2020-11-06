@@ -1,0 +1,29 @@
+;misculanious utilites for speeding up the coding of various common functions of basic programs
+%define	util	1
+
+;Needs genreg for macro malleability.
+%ifndef	genreg
+%include genreg
+%endif
+
+;zero terminates a string of bytes from an array and reads it into an r64 reg
+;currenly useful for short, but not byte-long, arguments passed on the command line
+%macro  rdztstr       4
+	dgr     %1,     1;zeroed output register
+	dgr     %2,     2;read-into register
+	dgr     %3,     3;zeroed test-against register
+	dgr     %4,     4;input address of first character
+%%arl   mov     g2b,    [g4]
+	cmp     g2b,    g3b
+	je      %%earg;end of arg if null char detected
+	shl     g1,     8
+	or      g1,     g2
+	inc     g4
+	jmp     %%arl;arg read loop
+%%earg: bswap   g1
+	udgr    1
+	udgr    2
+	udgr    3
+	udgr    4
+	udgr    5
+%endmacro
