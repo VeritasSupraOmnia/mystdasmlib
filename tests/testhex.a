@@ -64,6 +64,14 @@ main:
 	cmp	rax,	rdi
 	jne	failure
 
+	mov	rdx,	[dwordhexu]
+	xor	rsi,	rsi
+	xor	rdi,	rdi
+	frhexdu	rdi,	rsi,	rdx
+	mov	eax,	[dwordbin]
+	cmp	eax,	edi
+	jne	failure
+
 	mov	r10,	[quadbin]
 	tohexqu	xmm0,	xmm1,	xmm2,	r8,	r9,	r10
 	movdqu	xmm1,	[quadhexu]

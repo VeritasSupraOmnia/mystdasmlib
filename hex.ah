@@ -78,11 +78,24 @@
 	udgr	2
 	udgr	2
 %endmacro
-
-%macro	frhexdu 3
-	dgr	%1,	1
-	dgr	%2,	2
-	dgr	%3,	3
+%macro	frhexdu	3
+	dgr	%1,	1;output	-	4 bytes
+	dgr	%2,	2;arithmetic	-	8 bytes
+	dgr	%3,	3;input		-	8 bytes
+	
+	mov	g2,	0x4040404040404040
+	and	g2,	g3
+	shr	g2,	4
+	mov	g1,	g2
+	shr	g1,	1
+	or	g2,	g1
+	shr	g1,	1
+	or	g2,	g1
+	sub	g3,	g2
+	mov	g2,	0x0f0f0f0f0f0f0f0f
+	and	g3,	g2
+	bswap	g3
+	pext	g1,	g3,	g2
 	
 	udgr	1
 	udgr	2
