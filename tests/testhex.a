@@ -19,7 +19,8 @@ section .data
 	bytebin:	db	0x9A
 	bytehexu:	dw	'9A'
 	bytehexl:	dw	'9a'
-
+	dwordbin:	dd	0x02468ACE
+	dwordhexu:	dq	'02468ACE'
 	quadbin:	dq	0x0123456789ABCDEF
 	quadhexu:	dq	'01234567','89ABCDEF'
 section	.code
@@ -55,6 +56,14 @@ main:
 	jne	failure
 %endif
 	
+	mov	edx,	[dwordbin]
+	xor	rsi,	rsi
+	xor	rdi,	rdi
+	tohexdu	rdi,	rsi,	rdx
+	mov	rax,	[dwordhexu]
+	cmp	rax,	rdi
+	jne	failure
+
 	mov	r10,	[quadbin]
 	tohexqu	xmm0,	xmm1,	xmm2,	r8,	r9,	r10
 	movdqu	xmm1,	[quadhexu]

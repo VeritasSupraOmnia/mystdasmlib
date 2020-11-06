@@ -51,6 +51,44 @@
 	udgr	3
 %endmacro
 
+%macro	tohexdu 3
+	dgr	%1,	1;output	-	8 bytes
+	dgr	%2,	2;arithmetic	-	8 bytes
+	dgr	%3,	3;input		-	4 bytes
+	
+	mov	g2,	0x0f0f0f0f0f0f0f0f
+	pdep	g1,	g3,	g2
+	mov	g2,	g1
+	mov	g3,	0x0202020202020202
+	sub	g2,	g3
+	mov	g3,	0x0808080808080808
+	and	g2,	g3
+	and	g2,	g1
+	shr	g2,	1
+	mov	g3,	0x3030303030303030
+	or	g1,	g3
+	mov	g3,	g2
+	shr	g3,	1
+	or	g2,	g3
+	shr	g3,	1
+	or	g2,	g3
+	add	g1,	g2
+	bswap	g1
+	udgr	1
+	udgr	2
+	udgr	2
+%endmacro
+
+%macro	frhexdu 3
+	dgr	%1,	1
+	dgr	%2,	2
+	dgr	%3,	3
+	
+	udgr	1
+	udgr	2
+	udgr	3
+%endmacro
+
 %macro	tohexqu	6
 	dgr	%1,	1;output	-	16 byte
 	dgr	%2,	2;bitmask	-	16 byte
@@ -94,7 +132,8 @@
 	udgr	5
 	udgr	6
 %endmacro
-;TODO:	Fix this macro
+;NOTE:	MACRO DOES NOT YET WORK
+%if	0
 %macro	frhexqu	6
 	dgr	%1,	1;output reg-	8bytes
 	dgr	%2,	2;mask reg  -	8bytes
@@ -113,7 +152,7 @@
 	por	g4x,	g5x
 	psrlw	g5x,	1
 	por	g4x,	g5x
-	psubb	g6x,	g4x
+	g6x,	g4x
 	mov	g2,	0x0f0f0f0f0f0f0f0f
 	movq	g3,	g6x	
 	pext	g1,	g3,	g2
@@ -128,6 +167,7 @@
 	udgr	5
 	udgr	6
 %endmacro
+%endif
 ;TODO: Fix this macro
 %macro	tohexbu	2	;to uppercase hex - byte. Fast and small but less modular version.
 	;output on ax
