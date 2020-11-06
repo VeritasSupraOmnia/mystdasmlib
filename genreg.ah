@@ -252,132 +252,180 @@
 ;conditionally generalize extensions
 
 %macro	d_v0	1
-	%if	use128 = 1	%define	g%1x	xmm0
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm0	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm0
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm0
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm0	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm0
+	%endif
 %endmacro
 %macro	d_v1	1
-	%if	use128 = 1	%define	g%1x	xmm1
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm1	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm1
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm1
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm1	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm1
+	%endif
 %endmacro
 %macro	d_v2	1
-	%if	use128 = 1	%define	g%1x	xmm2
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm2	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm2
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm2
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm2	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm2
+	%endif
 %endmacro
 %macro	d_v3	1
-	%if	use128 = 1	%define	g%1x	xmm3
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm3	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm3
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm3
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm3	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm3
+	%endif
 %endmacro
 %macro	d_v4	1
-	%if	use128 = 1	%define	g%1x	xmm4
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm4	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm4
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm4
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm4	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm4
+	%endif
 %endmacro
 %macro	d_v5	1
-	%if	use128 = 1	%define	g%1x	xmm5
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm5	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm5
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm5
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm5	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm5
+	%endif
 %endmacro
 %macro	d_v6	1
-	%if	use128 = 1	%define	g%1x	xmm6
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm6	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm6
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm6
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm6	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm6
+	%endif
 %endmacro
 %macro	d_v7	1
-	%if	use128 = 1	%define	g%1x	xmm7
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm7	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm7
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm7
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm7	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm7
+	%endif
 %endmacro
 %macro	d_v8	1
-	%if	use128 = 1	%define	g%1x	xmm8
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm8	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm8
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm8
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm8	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm8
+	%endif
 %endmacro
 %macro	d_v9	1
-	%if	use128 = 1	%define	g%1x	xmm9
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm9	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm9
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm9
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm9	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm9
+	%endif
 %endmacro
 %macro	d_v10	1
-	%if	use128 = 1	%define	g%1x	xmm10
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm10	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm10
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm10
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm10	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm10
+	%endif
 %endmacro
 %macro	d_v11	1
-	%if	use128 = 1	%define	g%1x	xmm11
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm11	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm11
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm11
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm11	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm11
+	%endif
 %endmacro
 %macro	d_v12	1
-	%if	use128 = 1	%define	g%1x	xmm12
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm12	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm12
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm12
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm12	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm12
+	%endif
 %endmacro
 %macro	d_v13	1
-	%if	use128 = 1	%define	g%1x	xmm13
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm13	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm13
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm13
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm13	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm13
+	%endif
 %endmacro
 %macro	d_v14	1
-	%if	use128 = 1	%define	g%1x	xmm14
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm14	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm14
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm14
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm14	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm14
+	%endif
 %endmacro
 %macro	d_v15	1
-	%if	use128 = 1	%define	g%1x	xmm15
-		%endif
-	%if	use256 = 1	%define	g%1y	ymm15	
-		%endif
-	%if	use512 = 1	%define	g%1z	zmm15
-		%endif
+	%if	use128 = 1	
+		%define	g%1x	xmm15
+	%endif
+	%if	use256 = 1	
+		%define	g%1y	ymm15	
+	%endif
+	%if	use512 = 1	
+		%define	g%1z	zmm15
+	%endif
 %endmacro
 
 %macro	dgr 2
