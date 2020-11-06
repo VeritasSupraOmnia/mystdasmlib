@@ -1,4 +1,4 @@
-;misculanious utilites for speeding up the coding of various common functions of basic programs
+;miscellaneous utilites for speeding up the coding of various common functions of basic programs
 %define	util	1
 
 ;Needs genreg for macro malleability.
@@ -6,6 +6,7 @@
 %include genreg
 %endif
 
+;ReaD Zero Terminate STRing
 ;zero terminates a string of bytes from an array and reads it into an r64 reg
 ;currenly useful for short, but not byte-long, arguments passed on the command line
 %macro  rdztstr       4
