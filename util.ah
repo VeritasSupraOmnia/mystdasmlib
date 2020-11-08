@@ -23,5 +23,27 @@
 	udgr    2
 	udgr    3
 	udgr    4
+%endmacro
+
+;same as above but counts the size of the register in a specified register
+%macro  rdztstrc       4
+	dgr     %1,     1;zeroed output register
+	dgr     %2,     2;read-into register
+	dgr     %3,     3;zeroed test-against register
+	dgr     %4,     4;input address of first character
+	dgr	%5,	5;count of chars(gets incremented)
+%%arl   mov     g2b,    [g4]
+	cmp     g2b,    g3b
+	je      %%earg;end of arg if null char detected
+	shl     g1,     8
+	or      g1,     g2
+	inc     g4
+	inc	g5
+	jmp     %%arl;arg read loop
+%%earg: bswap   g1
+	udgr    1
+	udgr    2
+	udgr    3
+	udgr    4
 	udgr    5
 %endmacro

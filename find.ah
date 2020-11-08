@@ -1,0 +1,13 @@
+
+
+%macro fndrpq
+	;take quadword of sought chars, byte shifted completely to the left
+	;then copy the compare-to register to a temp reg
+	;then make an 0xff bitmask register of the comparator register's rightmost, zeroed bytes.
+	;AND the temp reg into the bitmask then xor the bitmask into the temp reg
+	;do a cmp on the sought chars and temp registers
+	;if equal, do make an 0xff of bitmask register of the sought chars left, non-zeroed bytes.
+	;also make another temp reg which is a NOT'd copy of the compare-to reg, then or it into the bitmask reg
+	;then AND the compare-to register into the bitmask followed by a XOR of the bitmask into the compare-to
+	;finally, or the replace register (in the same format as sought chars reg) into the 
+%endmacro
