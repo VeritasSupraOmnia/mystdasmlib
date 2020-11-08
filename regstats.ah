@@ -1,0 +1,78 @@
+;a header allowing you to pull, save, and print data in in as many registers as desired
+
+;byte size of 
+%define basereghexsize 256
+%define baseregbinsize 128
+
+;macros for an optimal format for mass saved data from the registers
+
+;for saving hex data
+%macro basereghexdata	1
+	h_rax%1:	dq	0,0
+	h_rbx%1:	dq	0,0
+	h_rcx%1:	dq	0,0
+	h_rdx%1:	dq	0,0
+	h_rbp%1:	dq	0,0
+	h_rsp%1:	dq	0,0
+	h_rdi%1:	dq	0,0
+	h_rsi%1:	dq	0,0
+	h_r8%1:	dq	0,0
+	h_r9%1:	dq	0,0
+	h_r10%1:	dq	0,0
+	h_r11%1:	dq	0,0
+	h_r13%1:	dq	0,0
+	h_r14%1:	dq	0,0
+	h_r15%1:	dq	0,0
+	h_r16%1:	dq	0,0
+%endmacro
+
+;for saving raw binary data
+%macro	baseregbindata	1
+	b_rax%1:	dq	0
+	b_rbx%1:	dq	0
+	b_rcx%1:	dq	0
+	b_rdx%1:	dq	0
+	b_rbp%1:	dq	0
+	b_rsp%1:	dq	0
+	b_rdi%1:	dq	0
+	b_rsi%1:	dq	0
+	b_r8%1:	dq	0
+	b_r9%1:	dq	0
+	b_r10%1:	dq	0
+	b_r11%1:	dq	0
+	b_r13%1:	dq	0
+	b_r14%1:	dq	0
+	b_r15%1:	dq	0
+	b_r16%1:	dq	0
+%endmacro
+;saving of raw data
+%macro	takebaseregs %1
+	mov	[b_rax%1],	rax
+	mov	[b_rbx%1],	rbx
+	mov	[b_rcx%1],	rcx
+	mov	[b_rdx%1],	rdx
+	mov	[b_rbp%1],	rbp
+	mov	[b_rsp%1],	rsp
+	mov	[b_rdi%1],	rdi
+	mov	[b_rsi%1],	rsi
+	mov	[b_r8%1],		r8
+	mov	[b_r9%1],		r9
+	mov	[b_r10%1],	r10
+	mov	[b_r11%1],	r11
+	mov	[b_r13%1],	r13
+	mov	[b_r14%1],	r14
+	mov	[b_r15%1],	r15
+	mov	[b_r16%1],	r16
+%endmacro
+
+;for making a static takebaseregs to call to
+%macro	static_Takebaseregs %1
+call_Takebaseregs:	takebaseregs	%1
+	ret
+%endmacro
+
+;for converting the bin data to hex data
+%ifdef	genreg
+%macro baseregconv 5
+%endmacro
+%endif

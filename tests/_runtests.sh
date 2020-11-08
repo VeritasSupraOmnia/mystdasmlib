@@ -17,3 +17,9 @@ nasm testhex.a -o testhex.o -felf64
 tcc testhex.o -o testhex
 ./testhex
 rm testhex testhex.o
+
+#test regstats.ah
+nasm testregstats.a -o testregstats.o -felf64
+tcc testregstats.o -o testregstats
+./testregstats
+rm testregstats testregstats.o
