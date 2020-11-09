@@ -6,8 +6,31 @@
 
 ;macros for an optimal format for mass saved data from the registers
 
+;for outputting readable register data to console (that's why there are newline chars
+%define	outdat_regoffset	4
+%define outdat_linesize	13
+%define	outdat_totalsize	226
+%macro	baseregoutdata	1
+	s_rax%1:	db	'rax:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_rbx%1:	db	'rbx:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_rcx%1:	db	'rcx:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_rdx%1:	db	'rdx:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_rbp%1:	db	'rbp:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_rsp%1:	db	'rsp:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_rdi%1:	db	'rdi:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_rsi%1:	db	'rsi:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r8%1:		db	'_r8:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r9%1:		db	'_r9:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r10%1:	db	'r10:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r11%1:	db	'r11:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r12%1:	db	'r12:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r13%1:	db	'r13:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r14%1:	db	'r14:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r15%1:	db	'r15:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+%endmacro
+
 ;for saving hex data
-%macro basereghexdata	1
+%macro	basereghexdata	1
 	h_rax%1:	dq	0,0
 	h_rbx%1:	dq	0,0
 	h_rcx%1:	dq	0,0
@@ -16,8 +39,8 @@
 	h_rsp%1:	dq	0,0
 	h_rdi%1:	dq	0,0
 	h_rsi%1:	dq	0,0
-	h_r8%1:	dq	0,0
-	h_r9%1:	dq	0,0
+	h_r8%1:		dq	0,0
+	h_r9%1:		dq	0,0
 	h_r10%1:	dq	0,0
 	h_r11%1:	dq	0,0
 	h_r13%1:	dq	0,0
@@ -36,8 +59,8 @@
 	b_rsp%1:	dq	0
 	b_rdi%1:	dq	0
 	b_rsi%1:	dq	0
-	b_r8%1:	dq	0
-	b_r9%1:	dq	0
+	b_r8%1:		dq	0
+	b_r9%1:		dq	0
 	b_r10%1:	dq	0
 	b_r11%1:	dq	0
 	b_r13%1:	dq	0
@@ -55,8 +78,8 @@
 	mov	[b_rsp%1],	rsp
 	mov	[b_rdi%1],	rdi
 	mov	[b_rsi%1],	rsi
-	mov	[b_r8%1],		r8
-	mov	[b_r9%1],		r9
+	mov	[b_r8%1],	r8
+	mov	[b_r9%1],	r9
 	mov	[b_r10%1],	r10
 	mov	[b_r11%1],	r11
 	mov	[b_r13%1],	r13
@@ -76,3 +99,5 @@ call_Takebaseregs:	takebaseregs	%1
 %macro baseregconv 5
 %endmacro
 %endif
+
+;for formatting hex data so it can be printed with names next to it
