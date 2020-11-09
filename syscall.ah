@@ -22,6 +22,7 @@
 %define	sys_mmap	9
 %define sys_mumap	11
 %define	sys_brk		12	;rdi:bytes to make brk
+%define sys_pipe	22	;rdi:pointer to double quadword for pipe read and write file descripter
 %define sys_exec	59	;rdi:cmd char array pnt
 %define	sys_ret		60	;rdi:return value
 
@@ -43,4 +44,9 @@ mov	rdi,	%1
 mov	rsi,	%2
 mov	rdx,	%3
 syscall
+%endmacro
+
+%macro	pipedat 0
+	pread:	dq	0
+	pwrite:	dq	0
 %endmacro
