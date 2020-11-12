@@ -1,5 +1,5 @@
 ;syscalls for linux
-
+%define	libsyscall	1
 
 ;-1 for return checking
 %define	err		0xffffffffffffffff
