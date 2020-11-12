@@ -1,7 +1,7 @@
 ;needs genreg.ah
 %define	hex	1
-%ifdef	genreg
 ;To HEX Uppercase Byte
+
 %macro	tohexbu	3	;to uppercase hex - byte. Slow and large but more modular version.
 	dgr	%1,	a	;output
 	dgr	%2,	b	;arithmatic value-holder
@@ -101,6 +101,7 @@
 	udgr	3
 %endmacro
 
+;DOESN'T FUCKING WORK - FML!!!
 %macro	tohexqu	6
 	dgr	%1,	1;output	-	16 byte
 	dgr	%2,	2;bitmask	-	16 byte
@@ -179,6 +180,7 @@
 	udgr	6
 %endmacro
 ;TODO: Fix this macro
+%if	0
 %macro	tohexbu	2	;to uppercase hex - byte. Fast and small but less modular version.
 	;output on ax
 	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
@@ -198,6 +200,7 @@
 	udgr	c
 	udgr	b
 %endmacro
+%endif
 ;note: alt versions that are slower. Made only for use in registers r8 to r15
 ;To HEX Uppercase Byte Alternative
 %macro	tohexbua	3	;to uppercase hex - byte. Slow and large but more modular alt version for r8 to 15.
@@ -297,4 +300,3 @@ F_THEXUBA_%1_%2_%3:
 	thexub %1, %2, %3
 	ret
 %endmacro
-%endif

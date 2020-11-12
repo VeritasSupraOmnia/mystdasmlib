@@ -1,1 +1,28 @@
-;nothing here, just putting this here so I don't forget it
+;test of regstats header file
+;takes regster data loaded with test data through binary saving to hex conversion to formatting to printing
+%include	'../genreg.ah'
+%include	'../syscall.ah'
+%include	'../hex.ah'
+%include	'../regstats.ah'
+global	main
+section .data
+	baseregoutdata	1
+	basereghexdata	1
+	baseregbindata	1
+section	.code
+main:
+	mov	rax,	6
+	mov	rdi,	8
+	mov	rsi,	0x450329AF
+	takebaseregs	1
+	baseregconvm	1,	1,	rdi,	rsi,	r8d
+	baseregformat	1,	1,	xmm0
+	mov	rax,	sys_write
+	mov	rdi,	stdout
+	mov	rsi,	s_rax1
+	mov	rdx,	odat_totalsize
+	syscall
+	
+	mov	rax,	sys_ret
+	mov	rdi,	0
+	syscall
