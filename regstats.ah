@@ -94,6 +94,9 @@
 call_Takebaseregs:	takebaseregs	%1
 	ret
 %endmacro
+
+;\/\/\/THIS IS UGLY\/\/\/
+
 ;for converting the bin data to hex data by reading from bin memory and outputting to hex memory
 %macro	baseregconvm	5;1:outputid|2:inputid|3:free 8 byte regs
 	mov	%5,	[b_rax%2]
@@ -234,3 +237,307 @@ call_Takebaseregs:	takebaseregs	%1
 	movdqu	%3,	[h_r15%2]
 	movdqu	[s_r15%1 + outdat_offset],	%3
 %endmacro
+
+%macro	sseregbindata	1
+	b_xmm0%1:	dq	0,0
+	b_xmm1%1:	dq	0,0
+	b_xmm2%1:	dq	0,0
+	b_xmm3%1:	dq	0,0
+	b_xmm4%1:	dq	0,0
+	b_xmm5%1:	dq	0,0
+	b_xmm6%1:	dq	0,0
+	b_xmm7%1:	dq	0,0
+	b_xmm8%1:	dq	0,0
+	b_xmm9%1:	dq	0,0
+	b_xmm10%1:	dq	0,0
+	b_xmm11%1:	dq	0,0
+	b_xmm12%1:	dq	0,0
+	b_xmm13%1:	dq	0,0
+	b_xmm14%1:	dq	0,0
+	b_xmm15%1:	dq	0,0
+%endmacro
+
+%macro	ssereghexdata	1
+	h_xmm0%1:	dq	0,0,0,0
+	h_xmm1%1:	dq	0,0,0,0
+	h_xmm2%1:	dq	0,0,0,0
+	h_xmm3%1:	dq	0,0,0,0
+	h_xmm4%1:	dq	0,0,0,0
+	h_xmm5%1:	dq	0,0,0,0
+	h_xmm6%1:	dq	0,0,0,0
+	h_xmm7%1:	dq	0,0,0,0
+	h_xmm8%1:	dq	0,0,0,0
+	h_xmm9%1:	dq	0,0,0,0
+	h_xmm10%1:	dq	0,0,0,0
+	h_xmm11%1:	dq	0,0,0,0
+	h_xmm12%1:	dq	0,0,0,0
+	h_xmm13%1:	dq	0,0,0,0
+	h_xmm14%1:	dq	0,0,0,0
+	h_xmm15%1:	dq	0,0,0,0
+%endmacro
+
+%macro	sseregoutdata	1
+	s_xmm0%1:	db	'xmm0'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm1%1:	db	'xmm1'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm2%1:	db	'xmm2'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm3%1:	db	'xmm3'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm4%1:	db	'xmm4'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm5%1:	db	'xmm5'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm6%1:	db	'xmm6'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm7%1:	db	'xmm7'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm8%1:	db	'xmm8'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm9%1:	db	'xmm9'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm10%1:	db	'xmm10'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm11%1:	db	'xmm11'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm12%1:	db	'xmm12'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm13%1:	db	'xmm13'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm14%1:	db	'xmm14'
+			dq	0,0,0,0
+			db	0x0A
+	s_xmm15%1:	db	'xmm15'
+			dq	0,0,0,0
+			db	0x0A
+%endmacroA
+
+%macro	takesseregs	1
+	movdqu	[b_xmm0%1],	xmm0
+	movdqu	[b_xmm1%1],	xmm1
+	movdqu	[b_xmm2%1],	xmm2
+	movdqu	[b_xmm3%1],	xmm3
+	movdqu	[b_xmm4%1],	xmm4
+	movdqu	[b_xmm5%1],	xmm5
+	movdqu	[b_xmm6%1],	xmm6
+	movdqu	[b_xmm7%1],	xmm7
+	movdqu	[b_xmm8%1],	xmm8
+	movdqu	[b_xmm9%1],	xmm9
+	movdqu	[b_xmm10%1],	xmm10
+	movdqu	[b_xmm11%1],	xmm11
+	movdqu	[b_xmm12%1],	xmm12
+	movdqu	[b_xmm13%1],	xmm13
+	movdqu	[b_xmm14%1],	xmm14
+	movdqu	[b_xmm15%1],	xmm15
+%endmacro
+
+%macro	sseregconvm	5
+	mov	%5,	[b_xmm0%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm0%1 + 24],	%3
+	mov	%5,	[b_xmm0%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm0%1 + 16],	%3
+	mov	%5,	[b_xmm0%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm0%1 + 8],	%3
+	mov	%5,	[b_xmm0%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm0%1],	%3
+	mov	%5,	[b_xmm1%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm1%1 + 24],	%3
+	mov	%5,	[b_xmm1%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm1%1 + 16],	%3
+	mov	%5,	[b_xmm1%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm1%1 + 8],	%3
+	mov	%5,	[b_xmm1%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm1%1],	%3
+	mov	%5,	[b_xmm2%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm2%1 + 24],	%3
+	mov	%5,	[b_xmm2%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm2%1 + 16],	%3
+	mov	%5,	[b_xmm2%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm2%1 + 8],	%3
+	mov	%5,	[b_xmm2%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm2%1],	%3
+	mov	%5,	[b_xmm3%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm3%1 + 24],	%3
+	mov	%5,	[b_xmm3%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm3%1 + 16],	%3
+	mov	%5,	[b_xmm3%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm3%1 + 8],	%3
+	mov	%5,	[b_xmm3%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm3%1],	%3
+	mov	%5,	[b_xmm4%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm4%1 + 24],	%3
+	mov	%5,	[b_xmm4%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm4%1 + 16],	%3
+	mov	%5,	[b_xmm4%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm4%1 + 8],	%3
+	mov	%5,	[b_xmm4%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm4%1],	%3
+	mov	%5,	[b_xmm5%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm5%1 + 24],	%3
+	mov	%5,	[b_xmm5%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm5%1 + 16],	%3
+	mov	%5,	[b_xmm5%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm5%1 + 8],	%3
+	mov	%5,	[b_xmm5%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm5%1],	%3
+	mov	%5,	[b_xmm6%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm6%1 + 24],	%3
+	mov	%5,	[b_xmm6%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm6%1 + 16],	%3
+	mov	%5,	[b_xmm6%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm6%1 + 8],	%3
+	mov	%5,	[b_xmm6%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm6%1],	%3
+	mov	%5,	[b_xmm7%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm7%1 + 24],	%3
+	mov	%5,	[b_xmm7%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm7%1 + 16],	%3
+	mov	%5,	[b_xmm7%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm7%1 + 8],	%3
+	mov	%5,	[b_xmm7%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm7%1],	%3
+	mov	%5,	[b_xmm8%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm8%1 + 24],	%3
+	mov	%5,	[b_xmm8%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm8%1 + 16],	%3
+	mov	%5,	[b_xmm8%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm8%1 + 8],	%3
+	mov	%5,	[b_xmm8%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm8%1],	%3
+	mov	%5,	[b_xmm9%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm9%1 + 24],	%3
+	mov	%5,	[b_xmm9%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm9%1 + 16],	%3
+	mov	%5,	[b_xmm9%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm9%1 + 8],	%3
+	mov	%5,	[b_xmm9%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm9%1],	%3
+	mov	%5,	[b_xmm10%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm10%1 + 24],	%3
+	mov	%5,	[b_xmm10%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm10%1 + 16],	%3
+	mov	%5,	[b_xmm10%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm10%1 + 8],	%3
+	mov	%5,	[b_xmm10%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm10%1],	%3
+	mov	%5,	[b_xmm11%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm11%1 + 24],	%3
+	mov	%5,	[b_xmm11%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm11%1 + 16],	%3
+	mov	%5,	[b_xmm11%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm11%1 + 8],	%3
+	mov	%5,	[b_xmm11%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm11%1],	%3
+	mov	%5,	[b_xmm12%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm12%1 + 24],	%3
+	mov	%5,	[b_xmm12%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm12%1 + 16],	%3
+	mov	%5,	[b_xmm12%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm12%1 + 8],	%3
+	mov	%5,	[b_xmm12%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm12%1],	%3
+	mov	%5,	[b_xmm13%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm13%1 + 24],	%3
+	mov	%5,	[b_xmm13%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm13%1 + 16],	%3
+	mov	%5,	[b_xmm13%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm13%1 + 8],	%3
+	mov	%5,	[b_xmm13%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm13%1],	%3
+	mov	%5,	[b_xmm14%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm14%1 + 24],	%3
+	mov	%5,	[b_xmm14%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm14%1 + 16],	%3
+	mov	%5,	[b_xmm14%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm14%1 + 8],	%3
+	mov	%5,	[b_xmm14%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm14%1],	%3
+	mov	%5,	[b_xmm15%2]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm15%1 + 24],	%3
+	mov	%5,	[b_xmm15%2 + 4]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm15%1 + 16],	%3
+	mov	%5,	[b_xmm15%2 + 8]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm15%1 + 8],	%3
+	mov	%5,	[b_xmm15%2 + 16]
+	tohexdu	%3,	%4,	%5
+	mov	[h_xmm15%1],	%3
+	
+%endmacro	
