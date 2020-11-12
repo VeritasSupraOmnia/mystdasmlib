@@ -10,6 +10,7 @@
 %define	outdat_offset	4
 %define odat_linesize	21
 %define	odat_totalsize	336
+%define	osse_totalsize	624
 %macro	baseregoutdata	1
 	s_rax%1:	db	'rax:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_rbx%1:	db	'rbx:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
@@ -277,55 +278,55 @@ call_Takebaseregs:	takebaseregs	%1
 %endmacro
 
 %macro	sseregoutdata	1
-	s_xmm0%1:	db	'xmm0'
+	s_xmm0%1:	db	' xmm0:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm1%1:	db	'xmm1'
+	s_xmm1%1:	db	' xmm1:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm2%1:	db	'xmm2'
+	s_xmm2%1:	db	' xmm2:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm3%1:	db	'xmm3'
+	s_xmm3%1:	db	' xmm3:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm4%1:	db	'xmm4'
+	s_xmm4%1:	db	' xmm4:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm5%1:	db	'xmm5'
+	s_xmm5%1:	db	' xmm5:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm6%1:	db	'xmm6'
+	s_xmm6%1:	db	' xmm6:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm7%1:	db	'xmm7'
+	s_xmm7%1:	db	' xmm7:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm8%1:	db	'xmm8'
+	s_xmm8%1:	db	' xmm8:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm9%1:	db	'xmm9'
+	s_xmm9%1:	db	' xmm9:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm10%1:	db	'xmm10'
+	s_xmm10%1:	db	'xmm10:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm11%1:	db	'xmm11'
+	s_xmm11%1:	db	'xmm11:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm12%1:	db	'xmm12'
+	s_xmm12%1:	db	'xmm12:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm13%1:	db	'xmm13'
+	s_xmm13%1:	db	'xmm13:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm14%1:	db	'xmm14'
+	s_xmm14%1:	db	'xmm14:'
 			dq	0,0,0,0
 			db	0x0A
-	s_xmm15%1:	db	'xmm15'
+	s_xmm15%1:	db	'xmm15:'
 			dq	0,0,0,0
 			db	0x0A
-%endmacroA
+%endmacro
 
 %macro	takesseregs	1
 	movdqu	[b_xmm0%1],	xmm0
@@ -346,6 +347,7 @@ call_Takebaseregs:	takebaseregs	%1
 	movdqu	[b_xmm15%1],	xmm15
 %endmacro
 
+;\/\/\/\/THIS IS EVEN WORSE\/\/\/\/
 %macro	sseregconvm	5
 	mov	%5,	[b_xmm0%2]
 	tohexdu	%3,	%4,	%5
@@ -356,7 +358,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm0%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm0%1 + 8],	%3
-	mov	%5,	[b_xmm0%2 + 16]
+	mov	%5,	[b_xmm0%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm0%1],	%3
 	mov	%5,	[b_xmm1%2]
@@ -368,7 +370,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm1%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm1%1 + 8],	%3
-	mov	%5,	[b_xmm1%2 + 16]
+	mov	%5,	[b_xmm1%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm1%1],	%3
 	mov	%5,	[b_xmm2%2]
@@ -380,7 +382,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm2%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm2%1 + 8],	%3
-	mov	%5,	[b_xmm2%2 + 16]
+	mov	%5,	[b_xmm2%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm2%1],	%3
 	mov	%5,	[b_xmm3%2]
@@ -392,7 +394,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm3%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm3%1 + 8],	%3
-	mov	%5,	[b_xmm3%2 + 16]
+	mov	%5,	[b_xmm3%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm3%1],	%3
 	mov	%5,	[b_xmm4%2]
@@ -404,7 +406,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm4%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm4%1 + 8],	%3
-	mov	%5,	[b_xmm4%2 + 16]
+	mov	%5,	[b_xmm4%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm4%1],	%3
 	mov	%5,	[b_xmm5%2]
@@ -416,7 +418,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm5%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm5%1 + 8],	%3
-	mov	%5,	[b_xmm5%2 + 16]
+	mov	%5,	[b_xmm5%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm5%1],	%3
 	mov	%5,	[b_xmm6%2]
@@ -428,7 +430,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm6%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm6%1 + 8],	%3
-	mov	%5,	[b_xmm6%2 + 16]
+	mov	%5,	[b_xmm6%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm6%1],	%3
 	mov	%5,	[b_xmm7%2]
@@ -440,7 +442,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm7%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm7%1 + 8],	%3
-	mov	%5,	[b_xmm7%2 + 16]
+	mov	%5,	[b_xmm7%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm7%1],	%3
 	mov	%5,	[b_xmm8%2]
@@ -452,7 +454,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm8%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm8%1 + 8],	%3
-	mov	%5,	[b_xmm8%2 + 16]
+	mov	%5,	[b_xmm8%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm8%1],	%3
 	mov	%5,	[b_xmm9%2]
@@ -464,7 +466,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm9%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm9%1 + 8],	%3
-	mov	%5,	[b_xmm9%2 + 16]
+	mov	%5,	[b_xmm9%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm9%1],	%3
 	mov	%5,	[b_xmm10%2]
@@ -476,7 +478,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm10%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm10%1 + 8],	%3
-	mov	%5,	[b_xmm10%2 + 16]
+	mov	%5,	[b_xmm10%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm10%1],	%3
 	mov	%5,	[b_xmm11%2]
@@ -488,7 +490,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm11%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm11%1 + 8],	%3
-	mov	%5,	[b_xmm11%2 + 16]
+	mov	%5,	[b_xmm11%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm11%1],	%3
 	mov	%5,	[b_xmm12%2]
@@ -500,7 +502,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm12%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm12%1 + 8],	%3
-	mov	%5,	[b_xmm12%2 + 16]
+	mov	%5,	[b_xmm12%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm12%1],	%3
 	mov	%5,	[b_xmm13%2]
@@ -512,7 +514,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm13%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm13%1 + 8],	%3
-	mov	%5,	[b_xmm13%2 + 16]
+	mov	%5,	[b_xmm13%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm13%1],	%3
 	mov	%5,	[b_xmm14%2]
@@ -524,7 +526,7 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm14%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm14%1 + 8],	%3
-	mov	%5,	[b_xmm14%2 + 16]
+	mov	%5,	[b_xmm14%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm14%1],	%3
 	mov	%5,	[b_xmm15%2]
@@ -536,8 +538,45 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	%5,	[b_xmm15%2 + 8]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm15%1 + 8],	%3
-	mov	%5,	[b_xmm15%2 + 16]
+	mov	%5,	[b_xmm15%2 + 12]
 	tohexdu	%3,	%4,	%5
 	mov	[h_xmm15%1],	%3
-	
-%endmacro	
+%endmacro
+;move ssereg hex data int formatted slot for clean printing
+;args - 1:outputdata 2:inputdata 3:avx reg
+%macro	sseregformat	3
+	dgr	%3,	1
+	vmovdqu	g1y,	[h_xmm0%2]
+	vmovdqu	[s_xmm0%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm1%2]
+	vmovdqu	[s_xmm1%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm2%2]
+	vmovdqu	[s_xmm2%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm3%2]
+	vmovdqu	[s_xmm3%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm4%2]
+	vmovdqu	[s_xmm4%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm5%2]
+	vmovdqu	[s_xmm5%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm6%2]
+	vmovdqu	[s_xmm6%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm7%2]
+	vmovdqu	[s_xmm7%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm8%2]
+	vmovdqu	[s_xmm8%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm9%2]
+	vmovdqu	[s_xmm9%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm10%2]
+	vmovdqu	[s_xmm10%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm11%2]
+	vmovdqu	[s_xmm11%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm12%2]
+	vmovdqu	[s_xmm12%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm13%2]
+	vmovdqu	[s_xmm13%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm14%2]
+	vmovdqu	[s_xmm14%1 + 6],	g1y
+	vmovdqu	g1y,	[h_xmm15%2]
+	vmovdqu	[s_xmm15%1 + 6],	g1y
+	udgr	1
+%endmacro
