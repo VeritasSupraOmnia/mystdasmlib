@@ -1,1 +1,2 @@
 1 macros for creating and inserting function calls to macro instances that also utilize genreg
+2 macros for keeping track of in use registers to aid in both smart writing and assembly-time debugging
