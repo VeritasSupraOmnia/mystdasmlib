@@ -9,12 +9,6 @@ global	main
 section .data
 	newstrla	failure,	"hex.ah		Test failure!"
 	newstrla	success,	"hex.ah		Test success!"
-	baseregbindata	1
-	basereghexdata	1
-	baseregoutdata	1
-	sseregbindata	1
-	ssereghexdata	1
-	sseregoutdata	1
 	;testing data is as follows: first char in label is size, second is whether it is converted to or from hexadecimal, third is whether it is the test or desired result, fourth is whether output is uppercase. 
 	;example1:	btt - byte to hexadecimal test 
 	;example2:	qfr - quadword from hexidecimal result 
@@ -81,24 +75,14 @@ main:
 	mov	r10,	[quadbin]
 	tohexqu	xmm0,	xmm1,	xmm2,	r10
 	movdqu	xmm1,	[quadhexu]
-	pandn	xmm1,	xmm1
 	ptest	xmm0,	xmm1
-	jnz	failure
-%if	0
-;under testing (frhexqu)
+	jz	failure
+	
 	movdqu	xmm0,	[quadhexu]
 	frhexqu	rax,	rdi,	rsi,	xmm2,	xmm1,	xmm0
-	tohexqu	xmm0,	xmm1,	xmm2,	rsi,	rdi,	rax
-	movdqu	[quadhexu],	xmm0
-	mov	rax,	sys_write
-	mov	rdi,	stdout
-	mov	rsi,	quadhexu
-	mov	rdx,	xsize(1)
-	syscall
-	;mov	rdi,	[quadbin]
-	;cmp	rax,	rdi
-	;jne	failure
-%endif
+	mov	rdi,	[quadbin]
+	cmp	rax,	rdi
+	jne	failure
 	jmp	success
 failure:mov	rax,	sys_write
 	mov	rdi,	stdout
