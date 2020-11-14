@@ -21,15 +21,15 @@ main:
 	movq	xmm1,	rsi
 	takebaseregs	1
 	takesseregs	1
-	baseregconvm	1,	1,	rdi,	rsi,	r8d
+	baseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
 	baseregformat	1,	1,	xmm0
 	mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	s_rax1
 	mov	rdx,	odat_totalsize
 	syscall
-	sseregconvm	1,	1,	rdi,	rsi,	r8d
-	sseregformat	1,	1,	ymm0
+	sseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
+	sseregformat	1,	1,	xmm0
 	mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	s_xmm01
