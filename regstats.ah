@@ -11,6 +11,7 @@
 %define odat_linesize	21
 %define	odat_totalsize	336
 %define	osse_totalsize	624
+%define	oavx2_totalsize	1136
 %macro	baseregoutdata	1
 	s_rax%1:	db	'rax:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_rbx%1:	db	'rbx:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
@@ -301,7 +302,7 @@ call_Takebaseregs:	takebaseregs	%1
 	movdqu	[b_xmm15%1],	xmm15
 %endmacro
 
-;\/\/\/\/THIS IS EVEN WORSE\/\/\/\/
+;\/\/\/THIS IS PRETTY UGLY\/\/\/
 %macro	sseregconvm	6
 	mov	%6,	[b_xmm0%2]
 	tohexqu	%3,	%4,	%5,	%6
@@ -437,4 +438,374 @@ call_Takebaseregs:	takebaseregs	%1
 	vmovdqu	g1y,	[h_xmm15%2]
 	vmovdqu	[s_xmm15%1 + 6],	g1y
 	udgr	1
+%endmacro
+%macro	avx2regbindata	1
+	b_ymm0%1:	dq	0,0,0,0
+	b_ymm1%1:	dq	0,0,0,0
+	b_ymm2%1:	dq	0,0,0,0
+	b_ymm3%1:	dq	0,0,0,0
+	b_ymm4%1:	dq	0,0,0,0
+	b_ymm5%1:	dq	0,0,0,0
+	b_ymm6%1:	dq	0,0,0,0
+	b_ymm7%1:	dq	0,0,0,0
+	b_ymm8%1:	dq	0,0,0,0
+	b_ymm9%1:	dq	0,0,0,0
+	b_ymm10%1:	dq	0,0,0,0
+	b_ymm11%1:	dq	0,0,0,0
+	b_ymm12%1:	dq	0,0,0,0
+	b_ymm13%1:	dq	0,0,0,0
+	b_ymm14%1:	dq	0,0,0,0
+	b_ymm15%1:	dq	0,0,0,0
+%endmacro
+%macro	avx2reghexdata	1
+	h_ymm0%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm1%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm2%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm3%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm4%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm5%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm6%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm7%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm8%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm9%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm10%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm11%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm12%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm13%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm14%1:	dq	0,0,0,0,0,0,0,0
+	h_ymm15%1:	dq	0,0,0,0,0,0,0,0
+%endmacro
+%macro	avx2regoutdata	1
+	s_ymm0%1:	db	' ymm0:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm1%1:	db	' ymm1:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm2%1:	db	' ymm2:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm3%1:	db	' ymm3:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm4%1:	db	' ymm4:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm5%1:	db	' ymm5:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm6%1:	db	' ymm6:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm7%1:	db	' ymm7:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm8%1:	db	' ymm8:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm9%1:	db	' ymm9:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm10%1:	db	'ymm10:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm11%1:	db	'ymm11:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm12%1:	db	'ymm12:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm13%1:	db	'ymm13:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm14%1:	db	'ymm14:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+	s_ymm15%1:	db	'ymm15:'
+			dq	0,0,0,0,0,0,0,0
+			db	0x0A
+%endmacro
+%macro	takeavx2regs	1
+	vmovdqu	[b_ymm0%1],	ymm0
+	vmovdqu	[b_ymm1%1],	ymm1
+	vmovdqu	[b_ymm2%1],	ymm2
+	vmovdqu	[b_ymm3%1],	ymm3
+	vmovdqu	[b_ymm4%1],	ymm4
+	vmovdqu	[b_ymm5%1],	ymm5
+	vmovdqu	[b_ymm6%1],	ymm6
+	vmovdqu	[b_ymm7%1],	ymm7
+	vmovdqu	[b_ymm8%1],	ymm8
+	vmovdqu	[b_ymm9%1],	ymm9
+	vmovdqu	[b_ymm10%1],	ymm10
+	vmovdqu	[b_ymm11%1],	ymm11
+	vmovdqu	[b_ymm12%1],	ymm12
+	vmovdqu	[b_ymm13%1],	ymm13
+	vmovdqu	[b_ymm14%1],	ymm14
+	vmovdqu	[b_ymm15%1],	ymm15
+%endmacro
+%macro	avx2regconvm	6
+	dgr	%6,	in
+	dgr	%3,	out
+	mov	gin,	[b_ymm0%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm0%1 + 48],	goutx 
+	mov	gin,	[b_ymm0%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm0%1 + 32],	goutx 
+	mov	gin,	[b_ymm0%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm0%1 + 16],	goutx 
+	mov	gin,	[b_ymm0%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm0%1],	goutx 
+	mov	gin,	[b_ymm1%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm1%1 + 48],	goutx 
+	mov	gin,	[b_ymm1%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm1%1 + 32],	goutx 
+	mov	gin,	[b_ymm1%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm1%1 + 16],	goutx 
+	mov	gin,	[b_ymm1%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm1%1],	goutx 
+	mov	gin,	[b_ymm2%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm2%1 + 48],	goutx 
+	mov	gin,	[b_ymm2%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm2%1 + 32],	goutx 
+	mov	gin,	[b_ymm2%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm2%1 + 16],	goutx 
+	mov	gin,	[b_ymm2%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm2%1],	goutx 
+	mov	gin,	[b_ymm3%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm3%1 + 48],	goutx 
+	mov	gin,	[b_ymm3%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm3%1 + 32],	goutx 
+	mov	gin,	[b_ymm3%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm3%1 + 16],	goutx 
+	mov	gin,	[b_ymm3%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm3%1],	goutx 
+	mov	gin,	[b_ymm4%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm4%1 + 48],	goutx 
+	mov	gin,	[b_ymm4%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm4%1 + 32],	goutx 
+	mov	gin,	[b_ymm4%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm4%1 + 16],	goutx 
+	mov	gin,	[b_ymm4%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm4%1],	goutx 
+	mov	gin,	[b_ymm5%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm5%1 + 48],	goutx 
+	mov	gin,	[b_ymm5%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm5%1 + 32],	goutx 
+	mov	gin,	[b_ymm5%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm5%1 + 16],	goutx 
+	mov	gin,	[b_ymm5%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm5%1],	goutx 
+	mov	gin,	[b_ymm6%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm6%1 + 48],	goutx 
+	mov	gin,	[b_ymm6%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm6%1 + 32],	goutx 
+	mov	gin,	[b_ymm6%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm6%1 + 16],	goutx 
+	mov	gin,	[b_ymm6%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm6%1],	goutx 
+	mov	gin,	[b_ymm7%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm7%1 + 48],	goutx 
+	mov	gin,	[b_ymm7%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm7%1 + 32],	goutx 
+	mov	gin,	[b_ymm7%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm7%1 + 16],	goutx 
+	mov	gin,	[b_ymm7%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm7%1],	goutx 
+	mov	gin,	[b_ymm8%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm8%1 + 48],	goutx 
+	mov	gin,	[b_ymm8%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm8%1 + 32],	goutx 
+	mov	gin,	[b_ymm8%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm8%1 + 16],	goutx 
+	mov	gin,	[b_ymm8%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm8%1],	goutx 
+	mov	gin,	[b_ymm9%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm9%1 + 48],	goutx 
+	mov	gin,	[b_ymm9%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm9%1 + 32],	goutx 
+	mov	gin,	[b_ymm9%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm9%1 + 16],	goutx 
+	mov	gin,	[b_ymm9%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm9%1],	goutx 
+	mov	gin,	[b_ymm10%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm10%1 + 48],	goutx 
+	mov	gin,	[b_ymm10%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm10%1 + 32],	goutx 
+	mov	gin,	[b_ymm10%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm10%1 + 16],	goutx 
+	mov	gin,	[b_ymm10%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm10%1],	goutx 
+	mov	gin,	[b_ymm11%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm11%1 + 48],	goutx 
+	mov	gin,	[b_ymm11%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm11%1 + 32],	goutx 
+	mov	gin,	[b_ymm11%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm11%1 + 16],	goutx 
+	mov	gin,	[b_ymm11%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm11%1],	goutx 
+	mov	gin,	[b_ymm12%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm12%1 + 48],	goutx 
+	mov	gin,	[b_ymm12%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm12%1 + 32],	goutx 
+	mov	gin,	[b_ymm12%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm12%1 + 16],	goutx 
+	mov	gin,	[b_ymm12%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm12%1],	goutx 
+	mov	gin,	[b_ymm13%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm13%1 + 48],	goutx 
+	mov	gin,	[b_ymm13%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm13%1 + 32],	goutx 
+	mov	gin,	[b_ymm13%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm13%1 + 16],	goutx 
+	mov	gin,	[b_ymm13%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm13%1],	goutx 
+	mov	gin,	[b_ymm14%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm14%1 + 48],	goutx 
+	mov	gin,	[b_ymm14%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm14%1 + 32],	goutx 
+	mov	gin,	[b_ymm14%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm14%1 + 16],	goutx 
+	mov	gin,	[b_ymm14%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm14%1],	goutx 
+	mov	gin,	[b_ymm15%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm15%1 + 48],	goutx 
+	mov	gin,	[b_ymm15%2 + 8]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm15%1 + 32],	goutx 
+	mov	gin,	[b_ymm15%2 + 16]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm15%1 + 16],	goutx 
+	mov	gin,	[b_ymm15%2 + 24]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_ymm15%1],	goutx 
+	udgr	in
+	udgr	out
+%endmacro
+%macro	avx2regformat	3
+	dgr	%3,	temp
+	vmovdqu	gtempy,	[h_ymm0%2]
+	vmovdqu	[s_ymm0%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm0%2 + 32]
+	vmovdqu	[s_ymm0%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm1%2]
+	vmovdqu	[s_ymm1%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm1%2 + 32]
+	vmovdqu	[s_ymm1%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm2%2]
+	vmovdqu	[s_ymm2%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm2%2 + 32]
+	vmovdqu	[s_ymm2%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm3%2]
+	vmovdqu	[s_ymm3%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm3%2 + 32]
+	vmovdqu	[s_ymm3%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm4%2]
+	vmovdqu	[s_ymm4%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm4%2 + 32]
+	vmovdqu	[s_ymm4%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm5%2]
+	vmovdqu	[s_ymm5%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm5%2 + 32]
+	vmovdqu	[s_ymm5%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm6%2]
+	vmovdqu	[s_ymm6%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm6%2 + 32]
+	vmovdqu	[s_ymm6%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm7%2]
+	vmovdqu	[s_ymm7%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm7%2 + 32]
+	vmovdqu	[s_ymm7%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm8%2]
+	vmovdqu	[s_ymm8%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm8%2 + 32]
+	vmovdqu	[s_ymm8%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm9%2]
+	vmovdqu	[s_ymm9%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm9%2 + 32]
+	vmovdqu	[s_ymm9%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm10%2]
+	vmovdqu	[s_ymm10%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm10%2 + 32]
+	vmovdqu	[s_ymm10%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm11%2]
+	vmovdqu	[s_ymm11%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm11%2 + 32]
+	vmovdqu	[s_ymm11%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm12%2]
+	vmovdqu	[s_ymm12%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm12%2 + 32]
+	vmovdqu	[s_ymm12%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm13%2]
+	vmovdqu	[s_ymm13%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm13%2 + 32]
+	vmovdqu	[s_ymm13%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm14%2]
+	vmovdqu	[s_ymm14%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm14%2 + 32]
+	vmovdqu	[s_ymm14%1 + 6 + 32],	gtempy
+	vmovdqu	gtempy,	[h_ymm15%2]
+	vmovdqu	[s_ymm15%1 + 6],	gtempy
+	vmovdqu	gtempy,	[h_ymm15%2 + 32]
+	vmovdqu	[s_ymm15%1 + 6 + 32],	gtempy
+	udgr	temp
 %endmacro

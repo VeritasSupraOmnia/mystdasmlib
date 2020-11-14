@@ -12,6 +12,9 @@ section .data
 	sseregoutdata	1
 	ssereghexdata	1
 	sseregbindata	1
+	avx2regbindata	1
+	avx2reghexdata	1
+	avx2regoutdata	1
 section	.code
 main:
 	mov	rax,	6
@@ -19,7 +22,12 @@ main:
 	mov	rsi,	0x450329AF
 	movq	xmm0,	rax
 	movq	xmm1,	rsi
+	vpbroadcastq	ymm5,	xmm1
+	vpbroadcastb	ymm6,	xmm0
+	vpor	ymm7,	ymm6,	ymm1
+	vpand	ymm7,	ymm7,	ymm5
 	takebaseregs	1
+	takeavx2regs	1
 	takesseregs	1
 	baseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
 	baseregformat	1,	1,	xmm0
@@ -34,6 +42,13 @@ main:
 	mov	rdi,	stdout
 	mov	rsi,	s_xmm01
 	mov	rdx,	osse_totalsize
+	syscall
+	avx2regconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
+	avx2regformat	1,	1,	xmm0
+	mov	rax,	sys_write
+	mov	rdi,	stdout
+	mov	rsi,	s_ymm01
+	mov	rdx,	oavx2_totalsize
 	syscall
 	mov	rax,	sys_ret
 	mov	rdi,	0
