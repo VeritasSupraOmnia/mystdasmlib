@@ -182,33 +182,33 @@
 %macro	tohexdqu	4
 	dgr     %1,     1;output	-	32 byte
 	dgr     %2,     2;bitmask	-	32 byte
-	dgr     %3,     3;arithmetic	-	32 byte
+	dgr     %3,     3;bitmask loader-	8 byte
 	dgr     %4,     4;input binary	-	16 byte
-	bswap   g4
-	movq    g3x,    g4
-	pxor    g2x,    g2x
-	vpunpcklbw      g3x,    g2x,    g3x
-	movdqu  g2x,    g3x
-	psrlw   g2x,    12
-	por     g3x,    g2x
-	mov     g4,     0x0f0f0f0f0f0f0f0f
-	movq    g2x,    g4
-	vpbroadcastb    g2x,    g2x
-	pand    g3x,    g2x
+	vpunpcklbw      g2y,    g3y,    g3y
+	vpunpckhbw      g3y,    g3y,    g3y
+	vperm2i128	g3y,	g2y,	g3y,	0x02
+	vmovdqu  g2y,    g3y
+	vpsrlw   g2y,    4
+	mov     g4,     0x0f000f000f000f00
+	movq    g1x,    g4
+	vpbroadcastq    g1y,    g1x
+	vpand   g2y,    g2y,	g1y
+	vpsrlw	g1y,	8
+	vpand   g3y,    g3y,	g1y
+	vpor     g3y,    g2y,	g3y
 	mov     g4,     0x0909090909090909
 	movq    g2x,    g4
-	vpbroadcastq    g2x,    g2x
-	vpcmpgtb        g1x,    g3x,    g2x
-	mov     g4b,    0xf8
+	vpbroadcastq    g2y,    g2x
+	vpcmpgtb        g1y,    g3y,    g2y
+	mov     g4b,    0x07
 	movq    g2x,    g4
-	vpbroadcastb    g2x,    g2x
-	pand    g2x,    g1x
-	psubb   g1x,    g2x
-	paddb   g1x,    g3x
+	vpbroadcastb    g2y,    g2x
+	vpand	g1y,    g1y,	g2y
+	vpaddb	g1y,	g1y,	g3y
 	mov     g4b,    0x30
 	movq    g2x,    g4
-	vpbroadcastb    g2x,    g2x
-	paddb   g1x,    g2x
+	vpbroadcastb    g2y,    g2x
+	vpaddb   g1y, 	g1y,	g2y
 	udgr    1
 	udgr    2
 	udgr    3
