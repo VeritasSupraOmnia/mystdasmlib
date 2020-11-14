@@ -175,7 +175,44 @@
 	udgr    3
 	udgr    4
 	udgr    5
-udgr    6
+	udgr    6
+%endmacro
+
+;TODO:	this was just copied from tohexqu. suppose to be 16 byte binary to 32 byte hex using ymm registers
+%macro	tohexdqu	4
+	dgr     %1,     1;output	-	32 byte
+	dgr     %2,     2;bitmask	-	32 byte
+	dgr     %3,     3;arithmetic	-	32 byte
+	dgr     %4,     4;input binary	-	16 byte
+	bswap   g4
+	movq    g3x,    g4
+	pxor    g2x,    g2x
+	vpunpcklbw      g3x,    g2x,    g3x
+	movdqu  g2x,    g3x
+	psrlw   g2x,    12
+	por     g3x,    g2x
+	mov     g4,     0x0f0f0f0f0f0f0f0f
+	movq    g2x,    g4
+	vpbroadcastb    g2x,    g2x
+	pand    g3x,    g2x
+	mov     g4,     0x0909090909090909
+	movq    g2x,    g4
+	vpbroadcastq    g2x,    g2x
+	vpcmpgtb        g1x,    g3x,    g2x
+	mov     g4b,    0xf8
+	movq    g2x,    g4
+	vpbroadcastb    g2x,    g2x
+	pand    g2x,    g1x
+	psubb   g1x,    g2x
+	paddb   g1x,    g3x
+	mov     g4b,    0x30
+	movq    g2x,    g4
+	vpbroadcastb    g2x,    g2x
+	paddb   g1x,    g2x
+	udgr    1
+	udgr    2
+	udgr    3
+	udgr    4
 %endmacro
 ;TODO: Fix this macro
 %if	0

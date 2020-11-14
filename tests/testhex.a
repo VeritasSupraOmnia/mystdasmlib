@@ -23,6 +23,8 @@ section .data
 	dwordhexu:	dq	'02468ACE'
 	quadbin:	dq	0x0123456789ABCDEF
 	quadhexu:	dq	'01234567','89ABCDEF'
+	dquadbin:	dq	0x0123456789ABCDEF,0xFEDCBA9876543210
+	dquadhexu:	dq	'01234567','89ABCDEF','FEDCBA98','76543210'
 section	.code
 main:
 	mov	dl,	[bytebin]
@@ -83,6 +85,14 @@ main:
 	mov	rdi,	[quadbin]
 	cmp	rax,	rdi
 	jne	failure
+
+	
+	movdqu	xmm3,	[dquadbin]
+	tohexdqu	ymm0,	ymm1,	ymm2,	xmm3
+	vmovdqu	ymm1,	[dquadhexu]
+	ptest	ymm0,	ymm1
+	jz	failure
+
 	jmp	success
 failure:mov	rax,	sys_write
 	mov	rdi,	stdout
