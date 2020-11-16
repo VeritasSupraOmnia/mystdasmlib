@@ -21,5 +21,11 @@ rm testhex testhex.o
 #test regstats.ah
 nasm testregstats.a -o testregstats.o -felf64
 tcc testregstats.o -o testregstats
-./testregstats
+./testregstats	saotne asone
 rm testregstats testregstats.o
+
+#test util.ah
+nasm testutil.a -o testutil.o -felf64
+tcc testutil.o -o testutil
+./testutil
+rm testutil testutil.o

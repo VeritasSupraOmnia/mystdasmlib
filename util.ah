@@ -47,3 +47,36 @@
 	udgr    4
 	udgr    5
 %endmacro
+
+;reverses the byte order of each x reg in a y reg
+%macro	bswapxregs	5
+	dgr	%1,	o
+	dgr	%2,	t1
+	dgr	%3,	t2
+	dgr	%4,	load
+	dgr	%5,	i
+	
+	mov	gload,	0x0123456789ABCDEF
+	movq	gt1x,	gload
+	pxor	gt2x,	gt2x
+	punpcklbw	gt2x,	gt1x
+	movdqu	gt1x,	gt2x
+	psrlw	gt1x,	8
+	psrlw	gt2x,	4
+
+	mov	gload,	0x0f000f000f000f00
+	movq	gox,	gload
+	vpbroadcastq	gox,	gox
+	pand	gt2x,	gox
+	psrlw	gox,	8
+	pand	gt1x,	gox
+	por	gt1x,	gt2x
+	vperm2i128	gt1y,	gt1y,	gt1y,	0x00
+	vpshufb	goy,	giy,	gt1y
+
+	udgr	o
+	udgr	t1
+	udgr	t2
+	udgr	load
+	udgr	i
+%endmacro

@@ -1,0 +1,25 @@
+%include '../syscall.ah'
+%include '../cstring.ah'
+%include '../genreg.ah'
+%include '../util.ah'
+
+global	main
+section	.data
+	testmedium:	dq	0x0123456789ABCDEF,0x0123456789ABCDEF,0x0123456789ABCDEF,0x0123456789ABCDEF
+	testresult:	dq	0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301
+	newstrla	successm,	"util.ah:	Test success!"
+	newstrla	failurem,	"util.ah:	Test failure!"
+section	.code
+main:	vmovdqu	ymm0,	[testmedium]
+	bswapxregs	ymm3,	ymm2,	ymm1,	r8,	xmm0
+	vmovdqu	ymm2,	[testresult]
+	vptest	ymm3,	ymm2
+	jnb	failure
+	write	stdout,	ssuccessm,	[lsuccessm]
+	jmp	end
+failure:write	stdout,	sfailurem,	[lfailurem]
+end:	mov	rax,	sys_ret
+	mov	rdi,	0
+	syscall
+
+	
