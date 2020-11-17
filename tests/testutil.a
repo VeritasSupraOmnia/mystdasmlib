@@ -1,24 +1,45 @@
 %include '../syscall.ah'
 %include '../cstring.ah'
 %include '../genreg.ah'
+%include '../hex.ah'
+%include '../regstats.ah'
 %include '../util.ah'
 
 global	main
 section	.data
-	testmedium:	dq	0x0123456789ABCDEF,0x0123456789ABCDEF,0x0123456789ABCDEF,0x0123456789ABCDEF
-	testresult:	dq	0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301
+	testmedium:	dq	0x0123456789ABCDEF,0x0123456789ABCDEF,0x0123456789ABCDEF,0x1123456789ABCDEF
+	testresult1:	dq	0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301
+	testresult2:	dq	0xFEDCBA9876543210,0xFEDCBA9876543210,0xFEDCBA9876543210,0xFEDCBA9876543210
 	newstrla	successm,	"util.ah:	Test success!"
 	newstrla	failurem,	"util.ah:	Test failure!"
+	avx2regbindata	1
+	avx2reghexdata	1
+	avx2regoutdata	1
 section	.code
-main:	vmovdqu	ymm0,	[testmedium]
-	bswapxregs	ymm3,	ymm2,	ymm1,	r8,	xmm0
-	vmovdqu	ymm2,	[testresult]
+main:	
+	vmovdqu	ymm0,	[testmedium]
+	byteswapdqreg	ymm3,	ymm2,	ymm1,	r8,	xmm0
+	;takeavx2regs	1
+	vmovdqu	ymm2,	[testresult1]
 	vptest	ymm3,	ymm2
 	jnb	failure
+
+	vmovdqu	ymm0,	[testmedium]
+	nibswapqreg	ymm3,	ymm2,	ymm1,	r8,	xmm0
+	;takeavx2regs	1
+	vmovdqu	ymm2,	[testresult2]
+	vptest	ymm3,	ymm2
+	jnb	failure
+
 	write	stdout,	ssuccessm,	[lsuccessm]
 	jmp	end
 failure:write	stdout,	sfailurem,	[lfailurem]
-end:	mov	rax,	sys_ret
+end:	
+	;avx2regconvm	1,	1,	ymm0,	ymm1,	ymm2,	r8
+	;avx2regformat	1,	1,	ymm0
+	;write	stdout,	s_ymm01,	oavx2_totalsize
+
+	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall
 

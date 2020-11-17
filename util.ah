@@ -48,8 +48,8 @@
 	udgr    5
 %endmacro
 
-;reverses the byte order of each x reg in a y reg
-%macro	bswapxregs	5
+;reverses the byte order of each double quadword reg in a y reg
+%macro	byteswapdqreg	5
 	dgr	%1,	o
 	dgr	%2,	t1
 	dgr	%3,	t2
@@ -73,6 +73,49 @@
 	por	gt1x,	gt2x
 	vperm2i128	gt1y,	gt1y,	gt1y,	0x00
 	vpshufb	goy,	giy,	gt1y
+
+	udgr	o
+	udgr	t1
+	udgr	t2
+	udgr	load
+	udgr	i
+%endmacro
+;reverse the order of each nibble (half byte) in each quadword in an avx2 register
+%macro	nibswapqreg	5
+	dgr	%1,	o
+	dgr	%2,	t1
+	dgr	%3,	t2
+	dgr	%4,	load
+	dgr	%5,	i
+
+	mov	gload,	0x89ABCDEF01234567
+	movq	gt1x,	gload
+	pxor	gt2x,	gt2x
+	punpcklbw	gt2x,	gt1x
+	movdqu	gt1x,	gt2x
+	psrlw	gt1x,	8
+	psrlw	gt2x,	4
+
+	mov	gload,	0x0f000f000f000f00
+	movq	gox,	gload
+	vpbroadcastq	gox,	gox
+	pand	gt2x,	gox
+	psrlw	gox,	8
+	pand	gt1x,	gox
+	por	gt1x,	gt2x
+	vperm2i128	gt1y,	gt1y,	gt1y,	0x00
+	vpshufb	gt1y,	giy,	gt1y
+
+	mov	gload,	0xf0f0f0f0f0f0f0f0
+	movq	gox,	gload
+	vpbroadcastq	goy,	gox
+	vmovdqu	gt2y,	gt1y
+	vpsllw	gt2y,	gt2y,	4
+	vpand	gt2y,	gt2y,	goy
+	vpsrlw	gt1y,	gt1y,	4
+	vpsrlw	goy,	goy,	4
+	vpand	gt1y,	gt1y,	goy
+	vpor	goy,	gt1y,	gt2y
 
 	udgr	o
 	udgr	t1
