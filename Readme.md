@@ -11,4 +11,6 @@ This is my library of basic nasm assembly headers for defines, preproccessing ma
 	-	cstring.ah:
 			A header for easy declaration of string constants.
 	-	regstat.ah:
-			A debugging header, it allows easy runtime saving, organization, formatting and printing of registers. Currently only deals with base x64 regs and xmm regs, and does so slowly.
+			A debugging header, it allows easy runtime saving, organization, formatting and printing of registers. Currently capable of x64, xmm, and ymm registers, and does so somewhat slowly.
+	-	util.ah:
+			A header filled with general use and miscellaneous macros like function declaring, reading and sizing zero terminated strings, reversing byte and nibble order, etc. Mostly I haven't found a good place for these yet and that's why they are here.
