@@ -123,3 +123,8 @@
 	udgr	load
 	udgr	i
 %endmacro
+;define function from macro so you can call it without 
+%macro	dfunc	3+;1 is the function id. 2+ is the macro call to implement
+f_%1:	%[%2	%3]
+	ret
+%endmacro

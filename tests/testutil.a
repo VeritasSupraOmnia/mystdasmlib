@@ -8,14 +8,18 @@
 global	main
 section	.data
 	testmedium:	dq	0x0123456789ABCDEF,0x0123456789ABCDEF,0x0123456789ABCDEF,0x1123456789ABCDEF
+	testconved:	db	"0123456789ABCDEF0123456789ABCDEF"
 	testresult1:	dq	0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301
 	testresult2:	dq	0xFEDCBA9876543210,0xFEDCBA9876543210,0xFEDCBA9876543210,0xFEDCBA9876543210
 	newstrla	successm,	"util.ah:	Test success!"
 	newstrla	failurem,	"util.ah:	Test failure!"
-	avx2regbindata	1
-	avx2reghexdata	1
-	avx2regoutdata	1
+;	avx2regbindata	1
+;	avx2reghexdata	1
+;	avx2regoutdata	1
 section	.code
+	
+dfunc	tohex1,	tohexdqu,	ymm0,	ymm1,	ymm2,	r8
+
 main:	
 	vmovdqu	ymm0,	[testmedium]
 	byteswapdqreg	ymm3,	ymm2,	ymm1,	r8,	xmm0
@@ -29,6 +33,15 @@ main:
 	;takeavx2regs	1
 	vmovdqu	ymm2,	[testresult2]
 	vptest	ymm3,	ymm2
+	jnb	failure
+
+	movdqu	xmm3,	[testmedium]
+	nibswapqreg	ymm2,	ymm0,	ymm1,	r8,	ymm3	
+	call	f_tohex1
+	;vmovdqu	[testconved],	ymm0
+	;write	stdout,	testconved,	32
+	vmovdqu	ymm1,	[testconved]
+	vptest	ymm0,	ymm1
 	jnb	failure
 
 	write	stdout,	ssuccessm,	[lsuccessm]
