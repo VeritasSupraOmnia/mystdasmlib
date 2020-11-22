@@ -1,2 +1,2 @@
-1 macros for keeping track of in use registers to aid in both smart writing and assembly-time debugging
+1 macros for declaring and keeping track of in use registers to aid in both smart writing and assembly-time debugging
 2 macro for easily creating and printing timestamps to stout or log files for automated debugging.
