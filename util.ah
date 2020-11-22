@@ -50,6 +50,9 @@
 
 ;reverses the byte order of each double quadword reg in a y reg
 %macro	byteswapdqreg	5
+	%ifndef	genreg
+		%error	"util.ah macro 'byteswapdqreg' needs genreg.ah declared above it"
+	%endif
 	dgr	%1,	o
 	dgr	%2,	t1
 	dgr	%3,	t2
@@ -82,6 +85,9 @@
 %endmacro
 ;reverse the order of each nibble (half byte) in each quadword in an avx2 register
 %macro	nibswapqreg	5
+	%ifndef	genreg
+		%error	"util.ah macro 'nibswapqreg' needs genreg.ah declared above it"
+	%endif
 	dgr	%1,	o
 	dgr	%2,	t1
 	dgr	%3,	t2
@@ -127,4 +133,16 @@
 %macro	dfunc	3+;1 is the function id. 2+ is the macro call to implement
 f_%1:	%[%2	%3]
 	ret
+%endmacro
+
+;macro for quicly declaring, storing and accessing broken down time data for a moment in time
+%macro	timedat	1
+	%1_misec:	db	0;milisecond
+	%1_mcsec:	db	0;microsecond
+	%1_sec:	db	0
+	%1_min:	db	0
+	%1_hour:	db	0
+	%1_day:	db	0
+	%1_month:	db	0
+	%1_year:	db	0
 %endmacro
