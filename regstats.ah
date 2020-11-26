@@ -361,21 +361,6 @@ call_Takebaseregs:	takebaseregs	%1
 	movdqu	%3,	[h_r31%2]
 	movdqu	[s_r31%1 + outdat_offset],	%3
 	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
-	%endif
 %endmacro
 
 %macro	sseregbindata	1
