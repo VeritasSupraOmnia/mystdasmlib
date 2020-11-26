@@ -1,23 +1,30 @@
 ;sets of macros able to convert binary to decimal and decimal to binary.
 ;needs genreg
-
-%macro	todecb	0
+;due to the nature of division, this cannot have a truely generic register selection
+%macro	todecb	2
+	%push	to_decimal_byte
+	dgr	%1,	1
+	dgr	%2,	2
 ;in on al
-;out on rsi
+;scratches rax and rdx in addition to general registers
+;out on g1d
+;g2 is an arith reg
 	xor	rdx,	rdx
-	xor	rsi,	rsi
-	mov	dil,	100
-	div	di
-	mov	sil,	al
+	xor	g1,	g1
+	mov	g2b,	100
+	div	g2d
+	mov	g1b,	al
 	mov	ax,	dx
 	xor	rdx,	rdx
-	shl	si,	8
-	mov	dil,	10
-	div	di
-	or	si,	ax
-	shl	esi,	8
-	or	esi,	edx
-	or	esi,	0x30303030
-	bswap	esi
+	shl	g1w,	8
+	mov	g2b,	10
+	div	g2d
+	or	g1d,	eax
+	shl	g1d,	8
+	or	g1d,	edx
+	or	g1d,	0x30303030
+	bswap	g1d
+	takebaseregs	1
+	%pop
 %endmacro
 

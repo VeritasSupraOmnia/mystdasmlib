@@ -1,25 +1,39 @@
 %include	"../genreg.ah"
+%include	"../hex.ah"
 %include	"../regstats.ah"
 %include	"../dec.ah"
-%include	"../hex.ah"
+%include	"../cstring.ah"
 %include	"../syscall.ah"
+
 global	main
 section	.data
 	
-	output:	dd	0
+	outdb:	dd	0
 		db	0x0A
-	test:	db	24
+	resdb:	db	'0255'
+	testdb:	db	0xff
+
 	baseregbindata	1
 	basereghexdata	1
 	baseregoutdata	1
+
+	newstrla	failure,	"dec.ah:		Test failure!"
+	newstrla	success,	"dec.ah:		Test success!"
 section	.code
 main:	xor	rax,	rax
-	mov	al,	[test]
-	todecb
-	mov	[output],	esi
-	write	stdout,	output,	5
+	mov	al,	[testdb]
+	todecb	r8,	rdi
+	mov	r9d,	[resdb]
+	cmp	r8d,	r9d
+	jne	fail
+	
+	write	stdout,	ssuccess,	[lsuccess]
+	jmp	end
+fail:	
+	write	stdout,	sfailure,	[lfailure]
+	jmp	end
 
-	;baseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
+end:	;baseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
 	;baseregformat	1,	1,	xmm0
 	;write	stdout,	s_rax1,	odat_totalsize
 	mov	rax,	sys_ret
