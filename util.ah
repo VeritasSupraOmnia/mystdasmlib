@@ -7,6 +7,7 @@
 ;zero terminates a string of bytes from an array and reads it into an r64 reg
 ;currenly useful for short, but not byte-long, arguments passed on the command line
 %macro  rdztstr       4
+	%push scope
 	dgr     %1,     1;zeroed output register
 	dgr     %2,     2;read-into register
 	dgr     %3,     3;zeroed test-against register
@@ -19,14 +20,12 @@
 	inc     g4
 	jmp     %%arl;arg read loop
 %%earg: bswap   g1
-	udgr    1
-	udgr    2
-	udgr    3
-	udgr    4
+	%pop
 %endmacro
 
 ;same as above but counts the size of the register in a specified register
 %macro  rdztstrc       5
+%push	scope
 	dgr     %1,     1;zeroed output register
 	dgr     %2,     2;read-into register
 	dgr     %3,     3;zeroed test-against register
@@ -41,18 +40,25 @@
 	inc	g5
 	jmp     %%arl;arg read loop
 %%earg: bswap   g1
-	udgr    1
-	udgr    2
-	udgr    3
-	udgr    4
-	udgr    5
+%pop
+%endmacro
+
+;Mask of Non-Leading Zeros - 8 byte
+;gets a generic number in %3 and outputs an ff mask in %1 of all the bytes with numbers in it
+;uses %2 as arithmetic reg
+%macro	mnlz8	3
+%push	scope
+	dgr	%1,	1
+	dgr	%2,	2
+	dgr	%3,	3
+	bsr	g2,	g3
+	blsmsk	g1,	g2
+%pop
 %endmacro
 
 ;reverses the byte order of each double quadword reg in a y reg
 %macro	byteswapdqreg	5
-	%ifndef	genreg
-		%error	"util.ah macro 'byteswapdqreg' needs genreg.ah declared above it"
-	%endif
+%push	scope
 	dgr	%1,	o
 	dgr	%2,	t1
 	dgr	%3,	t2
@@ -76,18 +82,11 @@
 	por	gt1x,	gt2x
 	vperm2i128	gt1y,	gt1y,	gt1y,	0x00
 	vpshufb	goy,	giy,	gt1y
-
-	udgr	o
-	udgr	t1
-	udgr	t2
-	udgr	load
-	udgr	i
+%pop
 %endmacro
 ;reverse the order of each nibble (half byte) in each quadword in an avx2 register
 %macro	nibswapqreg	5
-	%ifndef	genreg
-		%error	"util.ah macro 'nibswapqreg' needs genreg.ah declared above it"
-	%endif
+%push	scope
 	dgr	%1,	o
 	dgr	%2,	t1
 	dgr	%3,	t2
@@ -122,12 +121,7 @@
 	vpsrlw	goy,	goy,	4
 	vpand	gt1y,	gt1y,	goy
 	vpor	goy,	gt1y,	gt2y
-
-	udgr	o
-	udgr	t1
-	udgr	t2
-	udgr	load
-	udgr	i
+%pop
 %endmacro
 ;define function from macro so you can call it without 
 %macro	dfunc	3+;1 is the function id. 2+ is the macro call to implement

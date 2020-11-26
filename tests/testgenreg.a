@@ -14,13 +14,13 @@ newstrla	failure,	"genreg.ah:	Test failure!"
 section	.code
 
 %macro	testadd	2
+	%push	tadd
 	dgr	%1,	1
 	dgr	%2,	2
 	mov	g1,	[obj1]
 	mov	g2,	[obj2]
 	add	g1,	g2
-	udgr	1
-	udgr	2
+	%pop
 %endmacro
 
 main:	mov	rdi,	[obj1]

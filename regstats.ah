@@ -184,6 +184,7 @@ call_Takebaseregs:	takebaseregs	%1
 
 ;for converting the bin data to hex data by reading from bin memory and outputting to hex memory
 %macro	baseregconvm	6;1:outputid|2:inputid|3-5:free 16 byte regs|6:free 8byte reg
+%push	scope	
 	dgr	%6,	in
 	dgr	%3,	out
 	mov	gin,	[b_rax%2]
@@ -284,8 +285,7 @@ call_Takebaseregs:	takebaseregs	%1
 	tohexqu	%3,	%4,	%5,	%6
 	movdqu	[h_r31%1],	goutx
 	%endif
-	udgr	in
-	udgr	out
+	%pop
 %endmacro
 
 ;for taking and converting the current register data using a minimal amount of memory reads and writes
@@ -295,6 +295,7 @@ call_Takebaseregs:	takebaseregs	%1
 %endmacro
 ;format hex data into a console readable format
 %macro	baseregformat	3;1:output|2:input|3:free avx reg
+%push	scope	
 	movdqu	%3,	[h_rax%2]
 	movdqu	[s_rax%1 + outdat_offset],	%3
 	movdqu	%3,	[h_rbx%2]
@@ -573,6 +574,7 @@ call_Takebaseregs:	takebaseregs	%1
 ;move ssereg hex data int formatted slot for clean printing
 ;args - 1:outputdata 2:inputdata 3:avx reg
 %macro	sseregformat	3
+%push	scope	
 	dgr	%3,	1
 	vmovdqu	g1y,	[h_xmm0%2]
 	vmovdqu	[s_xmm0%1 + 6],	g1y
@@ -606,7 +608,7 @@ call_Takebaseregs:	takebaseregs	%1
 	vmovdqu	[s_xmm14%1 + 6],	g1y
 	vmovdqu	g1y,	[h_xmm15%2]
 	vmovdqu	[s_xmm15%1 + 6],	g1y
-	udgr	1
+%pop
 %endmacro
 %macro	avx2regbindata	1
 	b_ymm0%1:	dq	0,0,0,0
@@ -713,6 +715,7 @@ call_Takebaseregs:	takebaseregs	%1
 	vmovdqu	[b_ymm15%1],	ymm15
 %endmacro
 %macro	avx2regconvm	6
+%push	scope	
 	dgr	%6,	in
 	dgr	%3,	out
 	mov	gin,	[b_ymm0%2]
@@ -907,10 +910,10 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	gin,	[b_ymm15%2 + 24]
 	tohexqu	%3,	%4,	%5,	%6
 	movdqu	[h_ymm15%1],	goutx 
-	udgr	in
-	udgr	out
+	%pop
 %endmacro
 %macro	avx2regformat	3
+%push	scope	
 	dgr	%3,	temp
 	vmovdqu	gtempy,	[h_ymm0%2]
 	vmovdqu	[s_ymm0%1 + 6],	gtempy
@@ -976,5 +979,5 @@ call_Takebaseregs:	takebaseregs	%1
 	vmovdqu	[s_ymm15%1 + 6],	gtempy
 	vmovdqu	gtempy,	[h_ymm15%2 + 32]
 	vmovdqu	[s_ymm15%1 + 6 + 32],	gtempy
-	udgr	temp
+%pop
 %endmacro

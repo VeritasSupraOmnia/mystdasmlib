@@ -119,262 +119,263 @@
 	%error Register %1 is not supported by genreg buildflag cpu_arch.
 %endmacro
 
+
 ;Because stack and base pointers have distinct functions, I do not generalize them.
 %macro	d_rax	1
 	%if	use64b = 1
-	%define	g%1	rax
+	%define	%$g%1	rax
 	%endif
 	%if	use32b = 1
-	%define	g%1d	eax
+	%define	%$g%1d	eax
 	%endif
-	%define	g%1w	ax
-	%define	g%1b	al
-	%define	g%1h	ah
+	%define	%$g%1w	ax
+	%define	%$g%1b	al
+	%define	%$g%1h	ah
 %endmacro
 %macro	d_rbx	1
 	%if	use64b = 1
-	%define	g%1	rbx
+	%define	%$g%1	rbx
 	%endif
 	%if	use32b = 1	
-	%define	g%1d	ebx
+	%define	%$g%1d	ebx
 	%endif
-	%define	g%1w	bx
-	%define	g%1b	bl
-	%define	g%1h	bh
+	%define	%$g%1w	bx
+	%define	%$g%1b	bl
+	%define	%$g%1h	bh
 %endmacro
 %macro	d_rcx	1
 	%if	use64b = 1
-	%define	g%1	rcx
+	%define	%$g%1	rcx
 	%endif
-	%if use32b = 1
-	%define	g%1d	ecx
+	%if	use32b = 1
+	%define	%$g%1d	ecx
 	%endif
-	%define	g%1w	cx
-	%define	g%1b	cl
-	%define	g%1h	ch
+	%define	%$g%1w	cx
+	%define	%$g%1b	cl
+	%define	%$g%1h	ch
 %endmacro
 %macro	d_rdx	1
 	%if	use64b = 1
-	%define	g%1	rdx
+	%define	%$g%1	rdx
 	%endif
-	%if use32b = 1
-	%define	g%1d	edx
+	%if	use32b = 1
+	%define	%$g%1d	edx
 	%endif
-	%define	g%1w	dx
-	%define	g%1b	dl
-	%define	g%1h	dh
+	%define	%$g%1w	dx
+	%define	%$g%1b	dl
+	%define	%$g%1h	dh
 %endmacro
 %macro	d_rdi	1
 	%if	use64b = 1
-	%define	g%1	rdi
+	%define	%$g%1	rdi
 	%endif
-	%if use32b = 1
-	%define	g%1d	edi
+	%if	use32b = 1
+	%define	%$g%1d	edi
 	%endif
-	%define	g%1w	di
-	%define	g%1b	dil
+	%define	%$g%1w	di
+	%define	%$g%1b	dil
 %endmacro
 %macro	d_rsi	1
 	%if	use64b = 1
-	%define	g%1	rsi
+	%define	%$g%1	rsi
 	%endif
-	%if use32b = 1
-	%define	g%1d	esi
+	%if	use32b = 1
+	%define	%$g%1d	esi
 	%endif
-	%define	g%1w	si
-	%define	g%1b	sil
+	%define	%$g%1w	si
+	%define	%$g%1b	sil
 %endmacro
 %macro	d_r8	1
 	%if	use64b = 1	
-		%define	g%1	r8
-		%define	g%1d	r8d
-		%define	g%1w	r8w
-		%define	g%1b	r8b
+		%define	%$g%1	r8
+		%define	%$g%1d	r8d
+		%define	%$g%1w	r8w
+		%define	%$g%1b	r8b
 	%endif
 %endmacro
 %macro	d_r9	1
 	%if	use64b = 1
-		%define	g%1	r9
-		%define	g%1d	r9d
-		%define	g%1w	r9w
-		%define	g%1b	r9b
+		%define	%$g%1	r9
+		%define	%$g%1d	r9d
+		%define	%$g%1w	r9w
+		%define	%$g%1b	r9b
 	%endif
 %endmacro
 %macro	d_r10	1
 	%if	use64b = 1
-		%define	g%1	r10
-		%define	g%1d	r10d
-		%define	g%1w	r10w
-		%define	g%1b	r10b
+		%define	%$g%1	r10
+		%define	%$g%1d	r10d
+		%define	%$g%1w	r10w
+		%define	%$g%1b	r10b
 	%endif
 %endmacro
 %macro	d_r11	1
 	%if	use64b = 1
-		%define	g%1	r11
-		%define	g%1d	r11d
-		%define	g%1w	r11w
-		%define	g%1b	r11b
+		%define	%$g%1	r11
+		%define	%$g%1d	r11d
+		%define	%$g%1w	r11w
+		%define	%$g%1b	r11b
 	%endif
 %endmacro
 %macro	d_r12	1
 	%if	use64b = 1
-		%define	g%1	r12
-		%define	g%1d	r12d
-		%define	g%1w	r12w
-		%define	g%1b	r12b
+		%define	%$g%1	r12
+		%define	%$g%1d	r12d
+		%define	%$g%1w	r12w
+		%define	%$g%1b	r12b
 	%endif
 %endmacro
 %macro	d_r13	1
 	%if	use64b = 1
-		%define	g%1	r13
-		%define	g%1d	r13d
-		%define	g%1w	r13w
-		%define	g%1b	r13b
+		%define	%$g%1	r13
+		%define	%$g%1d	r13d
+		%define	%$g%1w	r13w
+		%define	%$g%1b	r13b
 	%endif
 %endmacro
 %macro	d_r14	1
 	%if	use64b = 1
-		%define	g%1	r14
-		%define	g%1d	r14d
-		%define	g%1w	r14w
-		%define	g%1b	r14b
+		%define	%$g%1	r14
+		%define	%$g%1d	r14d
+		%define	%$g%1w	r14w
+		%define	%$g%1b	r14b
 	%endif
 %endmacro
 %macro	d_r15	1
 	%if	use64b = 1
-		%define	g%1	r15
-		%define	g%1d	r15d
-		%define	g%1w	r15w
-		%define	g%1b	r15b
+		%define	%$g%1	r15
+		%define	%$g%1d	r15d
+		%define	%$g%1w	r15w
+		%define	%$g%1b	r15b
 	%endif
 %endmacro
 ;avx512 extends general register count to 32
 %macro	d_r16	1
 	%if	use512 = 1
-		%define	g%1	r16
-		%define	g%1d	r16d
-		%define	g%1w	r16w
-		%define	g%1b	r16b
+		%define	%$g%1	r16
+		%define	%$g%1d	r16d
+		%define	%$g%1w	r16w
+		%define	%$g%1b	r16b
 	%endif
 %endmacro
 %macro	d_r17	1
 	%if	use512 = 1
-		%define	g%1	r17
-		%define	g%1d	r17d
-		%define	g%1w	r17w
-		%define	g%1b	r17b
+		%define	%$g%1	r17
+		%define	%$g%1d	r17d
+		%define	%$g%1w	r17w
+		%define	%$g%1b	r17b
 	%endif
 %endmacro
 %macro	d_r18	1
 	%if	use512 = 1
-		%define	g%1	r18
-		%define	g%1d	r18d
-		%define	g%1w	r18w
-		%define	g%1b	r18b
+		%define	%$g%1	r18
+		%define	%$g%1d	r18d
+		%define	%$g%1w	r18w
+		%define	%$g%1b	r18b
 	%endif
 %endmacro
 %macro	d_r19	1
 	%if	use512 = 1
-		%define	g%1	r19
-		%define	g%1d	r19d
-		%define	g%1w	r19w
-		%define	g%1b	r19b
+		%define	%$g%1	r19
+		%define	%$g%1d	r19d
+		%define	%$g%1w	r19w
+		%define	%$g%1b	r19b
 	%endif
 %endmacro
 %macro	d_r20	1
 	%if	use512 = 1
-		%define	g%1	r20
-		%define	g%1d	r20d
-		%define	g%1w	r20w
-		%define	g%1b	r20b
+		%define	%$g%1	r20
+		%define	%$g%1d	r20d
+		%define	%$g%1w	r20w
+		%define	%$g%1b	r20b
 	%endif
 %endmacro
 %macro	d_r21	1
 	%if	use512 = 1
-		%define	g%1	r21
-		%define	g%1d	r21d
-		%define	g%1w	r21w
-		%define	g%1b	r21b
+		%define	%$g%1	r21
+		%define	%$g%1d	r21d
+		%define	%$g%1w	r21w
+		%define	%$g%1b	r21b
 	%endif
 %endmacro
 %macro	d_r22	1
 	%if	use512 = 1
-		%define	g%1	r22
-		%define	g%1d	r22d
-		%define	g%1w	r22w
-		%define	g%1b	r22b
+		%define	%$g%1	r22
+		%define	%$g%1d	r22d
+		%define	%$g%1w	r22w
+		%define	%$g%1b	r22b
 	%endif
 %endmacro
 %macro	d_r23	1
 	%if	use512 = 1
-		%define	g%1	r23
-		%define	g%1d	r23d
-		%define	g%1w	r23w
-		%define	g%1b	r23b
+		%define	%$g%1	r23
+		%define	%$g%1d	r23d
+		%define	%$g%1w	r23w
+		%define	%$g%1b	r23b
 	%endif
 %endmacro
 %macro	d_r24	1
 	%if	use512 = 1
-		%define	g%1	r24
-		%define	g%1d	r24d
-		%define	g%1w	r24w
-		%define	g%1b	r24b
+		%define	%$g%1	r24
+		%define	%$g%1d	r24d
+		%define	%$g%1w	r24w
+		%define	%$g%1b	r24b
 	%endif
 %endmacro
 %macro	d_r25	1
 	%if	use512 = 1
-		%define	g%1	r25
-		%define	g%1d	r25d
-		%define	g%1w	r25w
-		%define	g%1b	r25b
+		%define	%$g%1	r25
+		%define	%$g%1d	r25d
+		%define	%$g%1w	r25w
+		%define	%$g%1b	r25b
 	%endif
 %endmacro
 %macro	d_r26	1
 	%if	use512 = 1
-		%define	g%1	r26
-		%define	g%1d	r26d
-		%define	g%1w	r26w
-		%define	g%1b	r26b
+		%define	%$g%1	r26
+		%define	%$g%1d	r26d
+		%define	%$g%1w	r26w
+		%define	%$g%1b	r26b
 	%endif
 %endmacro
 %macro	d_r27	1
 	%if	use512 = 1
-		%define	g%1	r27
-		%define	g%1d	r27d
-		%define	g%1w	r27w
-		%define	g%1b	r27b
+		%define	%$g%1	r27
+		%define	%$g%1d	r27d
+		%define	%$g%1w	r27w
+		%define	%$g%1b	r27b
 	%endif
 %endmacro
 %macro	d_r28	1
 	%if	use512 = 1
-		%define	g%1	r28
-		%define	g%1d	r28d
-		%define	g%1w	r28w
-		%define	g%1b	r28b
+		%define	%$g%1	r28
+		%define	%$g%1d	r28d
+		%define	%$g%1w	r28w
+		%define	%$g%1b	r28b
 	%endif
 %endmacro
 %macro	d_r29	1
 	%if	use512 = 1
-		%define	g%1	r29
-		%define	g%1d	r29d
-		%define	g%1w	r29w
-		%define	g%1b	r29b
+		%define	%$g%1	r29
+		%define	%$g%1d	r29d
+		%define	%$g%1w	r29w
+		%define	%$g%1b	r29b
 	%endif
 %endmacro
 %macro	d_r30	1
 	%if	use512 = 1
-		%define	g%1	r30
-		%define	g%1d	r30d
-		%define	g%1w	r30w
-		%define	g%1b	r30b
+		%define	%$g%1	r30
+		%define	%$g%1d	r30d
+		%define	%$g%1w	r30w
+		%define	%$g%1b	r30b
 	%endif
 %endmacro
 %macro	d_r31	1
 	%if	use512 = 1
-		%define	g%1	r31
-		%define	g%1d	r31d
-		%define	g%1w	r31w
-		%define	g%1b	r31b
+		%define	%$g%1	r31
+		%define	%$g%1d	r31d
+		%define	%$g%1w	r31w
+		%define	%$g%1b	r31b
 	%endif
 %endmacro
 
@@ -382,294 +383,309 @@
 
 %macro	d_v0	1
 	%if	use128 = 1	
-		%define	g%1x	xmm0
+		%define	%$g%1x	xmm0
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm0	
+		%define	%$g%1y	ymm0	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm0
+		%define	%$g%1z	zmm0
 	%endif
 %endmacro
 %macro	d_v1	1
 	%if	use128 = 1	
-		%define	g%1x	xmm1
+		%define	%$g%1x	xmm1
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm1	
+		%define	%$g%1y	ymm1	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm1
+		%define	%$g%1z	zmm1
 	%endif
 %endmacro
 %macro	d_v2	1
 	%if	use128 = 1	
-		%define	g%1x	xmm2
+		%define	%$g%1x	xmm2
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm2	
+		%define	%$g%1y	ymm2	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm2
+		%define	%$g%1z	zmm2
 	%endif
 %endmacro
 %macro	d_v3	1
 	%if	use128 = 1	
-		%define	g%1x	xmm3
+		%define	%$g%1x	xmm3
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm3	
+		%define	%$g%1y	ymm3	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm3
+		%define	%$g%1z	zmm3
 	%endif
 %endmacro
 %macro	d_v4	1
 	%if	use128 = 1	
-		%define	g%1x	xmm4
+		%define	%$g%1x	xmm4
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm4	
+		%define	%$g%1y	ymm4	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm4
+		%define	%$g%1z	zmm4
 	%endif
 %endmacro
 %macro	d_v5	1
 	%if	use128 = 1	
-		%define	g%1x	xmm5
+		%define	%$g%1x	xmm5
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm5	
+		%define	%$g%1y	ymm5	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm5
+		%define	%$g%1z	zmm5
 	%endif
 %endmacro
 %macro	d_v6	1
 	%if	use128 = 1	
-		%define	g%1x	xmm6
+		%define	%$g%1x	xmm6
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm6	
+		%define	%$g%1y	ymm6	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm6
+		%define	%$g%1z	zmm6
 	%endif
 %endmacro
 %macro	d_v7	1
 	%if	use128 = 1	
-		%define	g%1x	xmm7
+		%define	%$g%1x	xmm7
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm7	
+		%define	%$g%1y	ymm7	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm7
+		%define	%$g%1z	zmm7
 	%endif
 %endmacro
 %macro	d_v8	1
 	%if	use128 = 1	
-		%define	g%1x	xmm8
+		%define	%$g%1x	xmm8
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm8	
+		%define	%$g%1y	ymm8	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm8
+		%define	%$g%1z	zmm8
 	%endif
 %endmacro
 %macro	d_v9	1
 	%if	use128 = 1	
-		%define	g%1x	xmm9
+		%define	%$g%1x	xmm9
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm9	
+		%define	%$g%1y	ymm9	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm9
+		%define	%$g%1z	zmm9
 	%endif
 %endmacro
 %macro	d_v10	1
 	%if	use128 = 1	
-		%define	g%1x	xmm10
+		%define	%$g%1x	xmm10
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm10	
+		%define	%$g%1y	ymm10	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm10
+		%define	%$g%1z	zmm10
 	%endif
 %endmacro
 %macro	d_v11	1
 	%if	use128 = 1	
-		%define	g%1x	xmm11
+		%define	%$g%1x	xmm11
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm11	
+		%define	%$g%1y	ymm11	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm11
+		%define	%$g%1z	zmm11
 	%endif
 %endmacro
 %macro	d_v12	1
 	%if	use128 = 1	
-		%define	g%1x	xmm12
+		%define	%$g%1x	xmm12
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm12	
+		%define	%$g%1y	ymm12	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm12
+		%define	%$g%1z	zmm12
 	%endif
 %endmacro
 %macro	d_v13	1
 	%if	use128 = 1	
-		%define	g%1x	xmm13
+		%define	%$g%1x	xmm13
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm13	
+		%define	%$g%1y	ymm13	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm13
+		%define	%$g%1z	zmm13
 	%endif
 %endmacro
 %macro	d_v14	1
 	%if	use128 = 1	
-		%define	g%1x	xmm14
+		%define	%$g%1x	xmm14
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm14	
+		%define	%$g%1y	ymm14	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm14
+		%define	%$g%1z	zmm14
 	%endif
 %endmacro
 %macro	d_v15	1
 	%if	use128 = 1	
-		%define	g%1x	xmm15
+		%define	%$g%1x	xmm15
 	%endif
 	%if	use256 = 1	
-		%define	g%1y	ymm15	
+		%define	%$g%1y	ymm15	
 	%endif
 	%if	use512 = 1	
-		%define	g%1z	zmm15
+		%define	%$g%1z	zmm15
 	%endif
 %endmacro
 %macro	d_v16	1
 	%if	use512 = 1
-		%define	g%1x	xmm16
-		%define	g%1y	ymm16	
-		%define	g%1z	zmm16
+		%define	%$g%1x	xmm16
+		%define	%$g%1y	ymm16	
+		%define	%$g%1z	zmm16
 	%endif
 %endmacro
 %macro	d_v17	1
 	%if	use512 = 1
-		%define	g%1x	xmm17
-		%define	g%1y	ymm17	
-		%define	g%1z	zmm17
+		%define	%$g%1x	xmm17
+		%define	%$g%1y	ymm17	
+		%define	%$g%1z	zmm17
 	%endif
 %endmacro
 %macro	d_v18	1
 	%if	use512 = 1
-		%define	g%1x	xmm18
-		%define	g%1y	ymm18	
-		%define	g%1z	zmm18
+		%define	%$g%1x	xmm18
+		%define	%$g%1y	ymm18	
+		%define	%$g%1z	zmm18
 	%endif
 %endmacro
 %macro	d_v19	1
 	%if	use512 = 1
-		%define	g%1x	xmm19
-		%define	g%1y	ymm19	
-		%define	g%1z	zmm19
+		%define	%$g%1x	xmm19
+		%define	%$g%1y	ymm19	
+		%define	%$g%1z	zmm19
 	%endif
 %endmacro
 %macro	d_v20	1
 	%if	use512 = 1
-		%define	g%1x	xmm20
-		%define	g%1y	ymm20	
-		%define	g%1z	zmm20
+		%define	%$g%1x	xmm20
+		%define	%$g%1y	ymm20	
+		%define	%$g%1z	zmm20
 	%endif
 %endmacro
 %macro	d_v21	1
 	%if	use512 = 1
-		%define	g%1x	xmm21
-		%define	g%1y	ymm21	
-		%define	g%1z	zmm21
+		%define	%$g%1x	xmm21
+		%define	%$g%1y	ymm21	
+		%define	%$g%1z	zmm21
 	%endif
 %endmacro
 %macro	d_v22	1
 	%if	use512 = 1
-		%define	g%1x	xmm22
-		%define	g%1y	ymm22	
-		%define	g%1z	zmm22
+		%define	%$g%1x	xmm22
+		%define	%$g%1y	ymm22	
+		%define	%$g%1z	zmm22
 	%endif
 %endmacro
 %macro	d_v23	1
 	%if	use512 = 1
-		%define	g%1x	xmm23
-		%define	g%1y	ymm23	
-		%define	g%1z	zmm23
+		%define	%$g%1x	xmm23
+		%define	%$g%1y	ymm23	
+		%define	%$g%1z	zmm23
 	%endif
 %endmacro
 %macro	d_v24	1
 	%if	use512 = 1
-		%define	g%1x	xmm24
-		%define	g%1y	ymm24	
-		%define	g%1z	zmm24
+		%define	%$g%1x	xmm24
+		%define	%$g%1y	ymm24	
+		%define	%$g%1z	zmm24
 	%endif
 %endmacro
 %macro	d_v25	1
 	%if	use512 = 1
-		%define	g%1x	xmm25
-		%define	g%1y	ymm25	
-		%define	g%1z	zmm25
+		%define	%$g%1x	xmm25
+		%define	%$g%1y	ymm25	
+		%define	%$g%1z	zmm25
 	%endif
 %endmacro
 %macro	d_v26	1
 	%if	use512 = 1
-		%define	g%1x	xmm26
-		%define	g%1y	ymm26	
-		%define	g%1z	zmm26
+		%define	%$g%1x	xmm26
+		%define	%$g%1y	ymm26	
+		%define	%$g%1z	zmm26
 	%endif
 %endmacro
 %macro	d_v27	1
 	%if	use512 = 1
-		%define	g%1x	xmm27
-		%define	g%1y	ymm27	
-		%define	g%1z	zmm27
+		%define	%$g%1x	xmm27
+		%define	%$g%1y	ymm27	
+		%define	%$g%1z	zmm27
 	%endif
 %endmacro
 %macro	d_v28	1
 	%if	use512 = 1
-		%define	g%1x	xmm28
-		%define	g%1y	ymm28	
-		%define	g%1z	zmm28
+		%define	%$g%1x	xmm28
+		%define	%$g%1y	ymm28	
+		%define	%$g%1z	zmm28
 	%endif
 %endmacro
 %macro	d_v29	1
 	%if	use512 = 1
-		%define	g%1x	xmm29
-		%define	g%1y	ymm29	
-		%define	g%1z	zmm29
+		%define	%$g%1x	xmm29
+		%define	%$g%1y	ymm29	
+		%define	%$g%1z	zmm29
 	%endif
 %endmacro
 %macro	d_v30	1
 	%if	use512 = 1
-		%define	g%1x	xmm30
-		%define	g%1y	ymm30	
-		%define	g%1z	zmm30
+		%define	%$g%1x	xmm30
+		%define	%$g%1y	ymm30	
+		%define	%$g%1z	zmm30
 	%endif
 %endmacro
 %macro	d_v31	1
 	%if	use512 = 1
-		%define	g%1x	xmm31
-		%define	g%1y	ymm31	
-		%define	g%1z	zmm31
+		%define	%$g%1x	xmm31
+		%define	%$g%1y	ymm31	
+		%define	%$g%1z	zmm31
 	%endif
 %endmacro
 
+;redefines nonlocal macro to context local macro for easy typing
+;this is actually kind of genious. Only redefines labels smaller that are to be defined anyway.
+%macro	redef	1
+	%define	g%1	%$g%1
+	%define	g%1d	%$g%1d
+	%define	g%1w	%$g%1w
+	%define	g%1b	%$g%1b
+	%define	g%1h	%$g%1h
+	%define	g%1x	%$g%1x
+	%define	g%1y	%$g%1y
+	%define	g%1z	%$g%1z
+%endmacro
+
+;redefines general register identifier as register slot by identifying all general register slot variants as all valid static register slot variatst
 %macro	dgr 2
+	redef	%2
 	%ifidni		%1,	rax
 		d_rax	%2
 	%elifidni	%1,	rbx
@@ -1113,63 +1129,5 @@
 	%endif
 %endmacro
 
-%macro	udgr	1
-	%ifdef	g%1
-		%undef g%1
-		%undef g%1d
-		%undef g%1w
-		%undef g%1b
-		%ifdef	g%1h
-			%undef g%1h
-		%endif
-	%elifdef	g%1d
-		%if use64b = 1
-			%undef g%1
-		%endif
-		%undef	g%1d
-		%undef	g%1w
-		%undef	g%1b
-		%ifdef	g%1h
-			%undef	g%1h
-		%endif
-	%elifdef	g%1w
-		%if use64b = 1
-			%undef	g%1
-		%endif
-		%if use32b = 1
-			%undef	g%1d
-		%endif
-		%undef	g%1w
-		%undef	g%1b
-		%ifdef	g%1h
-			%undef	g%1h
-		%endif
-	%elifdef	g%1x
-		%undef	g%1x
-		%if use256 = 1
-			%undef	g%1y
-		%endif
-		%if use512 = 1
-			%undef g%1z
-		%endif
-	%elifdef	g%1y
-		%undef	g%1x
-		%undef	g%1y
-		%if use512 = 1
-			%undef g%1z
-		%endif
-	%elifdef g%1z
-		%undef	g%1x
-		%undef	g%1y
-		%undef	g%1z
-	%endif
-%endmacro
-%if	0
-;macro for defining a called implementation of another macro
-%macro	calledm	1+
-c%1:	%1	
-ret
-%endmacro
-%endif
 ;Possible feature: register-in-use table 
 ;Using a quadword sized number define (with each bit representing a register slot) check-reg-open/check-reg-closed macros, one can keep track of which register is in use and output register use flow as well as enabling the detection of register conflicts.

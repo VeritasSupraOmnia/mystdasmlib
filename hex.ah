@@ -3,6 +3,7 @@
 ;To HEX Uppercase Byte
 
 %macro	tohexbu	3	;to uppercase hex - byte. Slow and large but more modular version.
+	%push	scope
 	dgr	%1,	a	;output
 	dgr	%2,	b	;arithmatic value-holder
 	dgr	%3,	c	;input, must be al, bl, cl or dl for high byte
@@ -22,13 +23,12 @@
 	or	gaw,	gbw
 	add	gaw,	gcw
 	add	gaw,	0x3030
-	udgr	a
-	udgr	b
-	udgr	c
+	%pop
 %endmacro
 
 ;From DEX Uppercase Byte
 %macro	frhexbu	3
+	%push	scope
 	dgr	%1,	1;output
 	dgr	%2,	2;arithmetic reg
 	dgr	%3,	3;input - this is a word in size
@@ -45,13 +45,11 @@
 	ror	g3w,	8
 	mov	g2w,	0x0f0f
 	pext	g1d,	g3d,	g2d
-	
-	udgr	1
-	udgr	2
-	udgr	3
+	%pop
 %endmacro
 
 %macro	tohexdu 3
+	%push	scope
 	dgr	%1,	1;output	-	8 bytes
 	dgr	%2,	2;arithmetic	-	8 bytes
 	dgr	%3,	3;input		-	4 bytes
@@ -74,11 +72,10 @@
 	or	g2,	g3
 	add	g1,	g2
 	bswap	g1
-	udgr	1
-	udgr	2
-	udgr	2
+	%pop
 %endmacro
 %macro	frhexdu	3
+	%push	scope
 	dgr	%1,	1;output	-	4 bytes
 	dgr	%2,	2;arithmetic	-	8 bytes
 	dgr	%3,	3;input		-	8 bytes
@@ -96,12 +93,11 @@
 	bswap	g3
 	pext	g1,	g3,	g2
 	
-	udgr	1
-	udgr	2
-	udgr	3
+	%pop
 %endmacro
 
 %macro	tohexqu	4
+	%push	scope
 	dgr     %1,     1;output        -       16 byte
 	dgr     %2,     2;bitmask       -       16 byte
 	dgr     %3,     3;arithmetic    -       16 byte
@@ -131,12 +127,10 @@
 	movq    g2x,    g4
 	vpbroadcastb    g2x,    g2x
 	paddb   g1x,    g2x
-	udgr    1
-	udgr    2
-	udgr    3
-	udgr    4
+	%pop
 %endmacro
 %macro	frhexqu	6
+	%push	scope
 	dgr     rax,     1;output reg-   8bytes
 	dgr     rdi,     2;mask reg  -   8bytes
 	dgr     rsi,     3;cross reg -   8bytes
@@ -170,31 +164,27 @@
 	and     g2,     g3
 	or      g1,     g2
 	bswap   g1
-	udgr    1
-	udgr    2
-	udgr    3
-	udgr    4
-	udgr    5
-	udgr    6
+	%pop
 %endmacro
 
 ;TODO:	this was just copied from tohexqu. suppose to be 16 byte binary to 32 byte hex using ymm registers
 %macro	tohexdqu	4
+	%push	scope
 	dgr     %1,     1;output	-	32 byte
 	dgr     %2,     2;bitmask	-	32 byte
-	dgr     %3,     3;bitmask loader-	8 byte
-	dgr     %4,     4;input binary	-	16 byte
+	dgr     %3,     3;input binary	-	16 byte
+	dgr     %4,     4;bitmask loader-	8 byte
 	vpunpcklbw      g2y,    g3y,    g3y
 	vpunpckhbw      g3y,    g3y,    g3y
 	vperm2i128	g3y,	g2y,	g3y,	0x02
 	vmovdqu  g2y,    g3y
-	vpsrlw   g2y,    4
+	vpsrlw   g3y,    4
 	mov     g4,     0x0f000f000f000f00
 	movq    g1x,    g4
 	vpbroadcastq    g1y,    g1x
-	vpand   g2y,    g2y,	g1y
-	vpsrlw	g1y,	8
 	vpand   g3y,    g3y,	g1y
+	vpsrlw	g1y,	8
+	vpand   g2y,    g2y,	g1y
 	vpor     g3y,    g2y,	g3y
 	mov     g4,     0x0909090909090909
 	movq    g2x,    g4
@@ -209,14 +199,12 @@
 	movq    g2x,    g4
 	vpbroadcastb    g2y,    g2x
 	vpaddb   g1y, 	g1y,	g2y
-	udgr    1
-	udgr    2
-	udgr    3
-	udgr    4
+	%pop
 %endmacro
 ;TODO: Fix this macro
 %if	0
 %macro	tohexbu	2	;to uppercase hex - byte. Fast and small but less modular version.
+	%push	scope
 	;output on ax
 	dgr	%1,	c	;input, must be al, bl, cl or dl for high byte
 	dgr	%2,	b	;arithmetic register for multiply
@@ -232,13 +220,13 @@
 	mul	gb
 	add	ax,	gcw
 	add	ax,	0x3030
-	udgr	c
-	udgr	b
+	%pop
 %endmacro
 %endif
 ;note: alt versions that are slower. Made only for use in registers r8 to r15
 ;To HEX Uppercase Byte Alternative
 %macro	tohexbua	3	;to uppercase hex - byte. Slow and large but more modular alt version for r8 to 15.
+	%push	scope
 	dgr	%1,	a	;output
 	dgr	%2,	b	;arithmatic value-holder
 	dgr	%3,	c	;input, must be al, bl, cl or dl for high byte
@@ -260,12 +248,11 @@
 	or	gaw,	gbw
 	add	gaw,	gcw
 	add	gaw,	0x3030
-	udgr	a
-	udgr	b
-	udgr	c
+	%pop
 %endmacro
 ;
 %macro	tohexbua	2	;to uppercase hex - byte. Fast and small but less modular alt version for r8-15.
+	%push	scope
 	;output on ax
 	dgr	%1,	b	;arithmatic value-holder
 	dgr	%22,	c	;input, must be al, bl, cl or dl for high byte
@@ -283,12 +270,12 @@
 	mul	7
 	add	ax,	gcw
 	add	ax,	0x3030
-	udgr	b
-	udgr	c
+	%pop
 %endmacro
 
 ;To HEX Lowercase Byte
 %macro thexlb	3
+	%push	scope
 	dgr	a,	%1	;out on gab
 	dgr	b,	%2
 	dgr	c,	%3	;in on gcw
@@ -309,29 +296,5 @@
 	or	gaw,	gbw
 	add	gaw,	gcw
 	add	gaw,	0x30
-	udgr	a
-	udgr	b
-	udgr	c
-%endmacro
-
-;callable variants
-%macro f_t_hex_u_b 2
-F_THEXUB_%1_%2:
-	thexub %1, %2
-	ret
-%endmacro
-;%macro f_t_hex_u_b 3
-;F_THEXUBA_%1_%2_%3:
-;	thexub %1 %2 %3
-;	ret
-;%endmacro
-%macro f_t_hex_u_b_a 2
-F_THEXUBA_%1_%2:
-	thexub %1, %2
-	ret
-%endmacro
-%macro f_t_hex_u_b_a 3
-F_THEXUBA_%1_%2_%3:
-	thexub %1, %2, %3
-	ret
+	%pop
 %endmacro
