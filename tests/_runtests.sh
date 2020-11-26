@@ -18,10 +18,16 @@ tcc testhex.o -o testhex
 ./testhex
 rm testhex testhex.o
 
+#test dec.ah
+nasm testdec.a -o testdec.o -felf64
+tcc testdec.o -o testdec
+./testdec
+rm testdec testdec.o
+
 #test regstats.ah
 nasm testregstats.a -o testregstats.o -felf64
 tcc testregstats.o -o testregstats
-./testregstats	saotne asone
+#./testregstats	saotne asone
 rm testregstats testregstats.o
 
 #test util.ah

@@ -1,0 +1,23 @@
+;sets of macros able to convert binary to decimal and decimal to binary.
+;needs genreg
+
+%macro	todecb	0
+;in on al
+;out on rsi
+	xor	rdx,	rdx
+	xor	rsi,	rsi
+	mov	dil,	100
+	div	di
+	mov	sil,	al
+	mov	ax,	dx
+	xor	rdx,	rdx
+	shl	si,	8
+	mov	dil,	10
+	div	di
+	or	si,	ax
+	shl	esi,	8
+	or	esi,	edx
+	or	esi,	0x30303030
+	bswap	esi
+%endmacro
+

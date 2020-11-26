@@ -1,0 +1,27 @@
+%include	"../genreg.ah"
+%include	"../regstats.ah"
+%include	"../dec.ah"
+%include	"../hex.ah"
+%include	"../syscall.ah"
+global	main
+section	.data
+	
+	output:	dd	0
+		db	0x0A
+	test:	db	24
+	baseregbindata	1
+	basereghexdata	1
+	baseregoutdata	1
+section	.code
+main:	xor	rax,	rax
+	mov	al,	[test]
+	todecb
+	mov	[output],	esi
+	write	stdout,	output,	5
+
+	;baseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
+	;baseregformat	1,	1,	xmm0
+	;write	stdout,	s_rax1,	odat_totalsize
+	mov	rax,	sys_ret
+	mov	rdi,	0
+	syscall
