@@ -248,6 +248,135 @@
 		%define	g%1b	r15b
 	%endif
 %endmacro
+;avx512 extends general register count to 32
+%macro	d_r16	1
+	%if	use512 = 1
+		%define	g%1	r16
+		%define	g%1d	r16d
+		%define	g%1w	r16w
+		%define	g%1b	r16b
+	%endif
+%endmacro
+%macro	d_r17	1
+	%if	use512 = 1
+		%define	g%1	r17
+		%define	g%1d	r17d
+		%define	g%1w	r17w
+		%define	g%1b	r17b
+	%endif
+%endmacro
+%macro	d_r18	1
+	%if	use512 = 1
+		%define	g%1	r18
+		%define	g%1d	r18d
+		%define	g%1w	r18w
+		%define	g%1b	r18b
+	%endif
+%endmacro
+%macro	d_r19	1
+	%if	use512 = 1
+		%define	g%1	r19
+		%define	g%1d	r19d
+		%define	g%1w	r19w
+		%define	g%1b	r19b
+	%endif
+%endmacro
+%macro	d_r20	1
+	%if	use512 = 1
+		%define	g%1	r20
+		%define	g%1d	r20d
+		%define	g%1w	r20w
+		%define	g%1b	r20b
+	%endif
+%endmacro
+%macro	d_r21	1
+	%if	use512 = 1
+		%define	g%1	r21
+		%define	g%1d	r21d
+		%define	g%1w	r21w
+		%define	g%1b	r21b
+	%endif
+%endmacro
+%macro	d_r22	1
+	%if	use512 = 1
+		%define	g%1	r22
+		%define	g%1d	r22d
+		%define	g%1w	r22w
+		%define	g%1b	r22b
+	%endif
+%endmacro
+%macro	d_r23	1
+	%if	use512 = 1
+		%define	g%1	r23
+		%define	g%1d	r23d
+		%define	g%1w	r23w
+		%define	g%1b	r23b
+	%endif
+%endmacro
+%macro	d_r24	1
+	%if	use512 = 1
+		%define	g%1	r24
+		%define	g%1d	r24d
+		%define	g%1w	r24w
+		%define	g%1b	r24b
+	%endif
+%endmacro
+%macro	d_r25	1
+	%if	use512 = 1
+		%define	g%1	r25
+		%define	g%1d	r25d
+		%define	g%1w	r25w
+		%define	g%1b	r25b
+	%endif
+%endmacro
+%macro	d_r26	1
+	%if	use512 = 1
+		%define	g%1	r26
+		%define	g%1d	r26d
+		%define	g%1w	r26w
+		%define	g%1b	r26b
+	%endif
+%endmacro
+%macro	d_r27	1
+	%if	use512 = 1
+		%define	g%1	r27
+		%define	g%1d	r27d
+		%define	g%1w	r27w
+		%define	g%1b	r27b
+	%endif
+%endmacro
+%macro	d_r28	1
+	%if	use512 = 1
+		%define	g%1	r28
+		%define	g%1d	r28d
+		%define	g%1w	r28w
+		%define	g%1b	r28b
+	%endif
+%endmacro
+%macro	d_r29	1
+	%if	use512 = 1
+		%define	g%1	r29
+		%define	g%1d	r29d
+		%define	g%1w	r29w
+		%define	g%1b	r29b
+	%endif
+%endmacro
+%macro	d_r30	1
+	%if	use512 = 1
+		%define	g%1	r30
+		%define	g%1d	r30d
+		%define	g%1w	r30w
+		%define	g%1b	r30b
+	%endif
+%endmacro
+%macro	d_r31	1
+	%if	use512 = 1
+		%define	g%1	r31
+		%define	g%1d	r31d
+		%define	g%1w	r31w
+		%define	g%1b	r31b
+	%endif
+%endmacro
 
 ;conditionally generalize extensions
 
@@ -427,6 +556,118 @@
 		%define	g%1z	zmm15
 	%endif
 %endmacro
+%macro	d_v16	1
+	%if	use512 = 1
+		%define	g%1x	xmm16
+		%define	g%1y	ymm16	
+		%define	g%1z	zmm16
+	%endif
+%endmacro
+%macro	d_v17	1
+	%if	use512 = 1
+		%define	g%1x	xmm17
+		%define	g%1y	ymm17	
+		%define	g%1z	zmm17
+	%endif
+%endmacro
+%macro	d_v18	1
+	%if	use512 = 1
+		%define	g%1x	xmm18
+		%define	g%1y	ymm18	
+		%define	g%1z	zmm18
+	%endif
+%endmacro
+%macro	d_v19	1
+	%if	use512 = 1
+		%define	g%1x	xmm19
+		%define	g%1y	ymm19	
+		%define	g%1z	zmm19
+	%endif
+%endmacro
+%macro	d_v20	1
+	%if	use512 = 1
+		%define	g%1x	xmm20
+		%define	g%1y	ymm20	
+		%define	g%1z	zmm20
+	%endif
+%endmacro
+%macro	d_v21	1
+	%if	use512 = 1
+		%define	g%1x	xmm21
+		%define	g%1y	ymm21	
+		%define	g%1z	zmm21
+	%endif
+%endmacro
+%macro	d_v22	1
+	%if	use512 = 1
+		%define	g%1x	xmm22
+		%define	g%1y	ymm22	
+		%define	g%1z	zmm22
+	%endif
+%endmacro
+%macro	d_v23	1
+	%if	use512 = 1
+		%define	g%1x	xmm23
+		%define	g%1y	ymm23	
+		%define	g%1z	zmm23
+	%endif
+%endmacro
+%macro	d_v24	1
+	%if	use512 = 1
+		%define	g%1x	xmm24
+		%define	g%1y	ymm24	
+		%define	g%1z	zmm24
+	%endif
+%endmacro
+%macro	d_v25	1
+	%if	use512 = 1
+		%define	g%1x	xmm25
+		%define	g%1y	ymm25	
+		%define	g%1z	zmm25
+	%endif
+%endmacro
+%macro	d_v26	1
+	%if	use512 = 1
+		%define	g%1x	xmm26
+		%define	g%1y	ymm26	
+		%define	g%1z	zmm26
+	%endif
+%endmacro
+%macro	d_v27	1
+	%if	use512 = 1
+		%define	g%1x	xmm27
+		%define	g%1y	ymm27	
+		%define	g%1z	zmm27
+	%endif
+%endmacro
+%macro	d_v28	1
+	%if	use512 = 1
+		%define	g%1x	xmm28
+		%define	g%1y	ymm28	
+		%define	g%1z	zmm28
+	%endif
+%endmacro
+%macro	d_v29	1
+	%if	use512 = 1
+		%define	g%1x	xmm29
+		%define	g%1y	ymm29	
+		%define	g%1z	zmm29
+	%endif
+%endmacro
+%macro	d_v30	1
+	%if	use512 = 1
+		%define	g%1x	xmm30
+		%define	g%1y	ymm30	
+		%define	g%1z	zmm30
+	%endif
+%endmacro
+%macro	d_v31	1
+	%if	use512 = 1
+		%define	g%1x	xmm31
+		%define	g%1y	ymm31	
+		%define	g%1z	zmm31
+	%endif
+%endmacro
 
 %macro	dgr 2
 	%ifidni		%1,	rax
@@ -457,6 +698,38 @@
 		d_r14	%2
 	%elifidni	%1,	r15
 		d_r15	%2
+	%elifidni	%1,	r16
+		d_r16	%2
+	%elifidni	%1,	r17
+		d_r17	%2
+	%elifidni	%1,	r18
+		d_r18	%2
+	%elifidni	%1,	r19
+		d_r19	%2
+	%elifidni	%1,	r20
+		d_r20	%2
+	%elifidni	%1,	r21
+		d_r21	%2
+	%elifidni	%1,	r22
+		d_r22	%2
+	%elifidni	%1,	r23
+		d_r23	%2
+	%elifidni	%1,	r24
+		d_r24	%2
+	%elifidni	%1,	r25
+		d_r25	%2
+	%elifidni	%1,	r26
+		d_r26	%2
+	%elifidni	%1,	r27
+		d_r27	%2
+	%elifidni	%1,	r28
+		d_r28	%2
+	%elifidni	%1,	r29
+		d_r29	%2
+	%elifidni	%1,	r30
+		d_r30	%2
+	%elifidni	%1,	r31
+		d_r31	%2
 	%elifidni	%1,	eax
 		d_rax	%2
 	%elifidni	%1,	ebx
@@ -485,6 +758,38 @@
 		d_r14	%2
 	%elifidni	%1,	r15d
 		d_r15	%2
+	%elifidni	%1,	r16d
+		d_r16	%2
+	%elifidni	%1,	r17d
+		d_r17	%2
+	%elifidni	%1,	r18d
+		d_r18	%2
+	%elifidni	%1,	r19d
+		d_r19	%2
+	%elifidni	%1,	r20d
+		d_r20	%2
+	%elifidni	%1,	r21d
+		d_r21	%2
+	%elifidni	%1,	r22d
+		d_r22	%2
+	%elifidni	%1,	r23d
+		d_r23	%2
+	%elifidni	%1,	r24d
+		d_r24	%2
+	%elifidni	%1,	r25d
+		d_r25	%2
+	%elifidni	%1,	r26d
+		d_r26	%2
+	%elifidni	%1,	r27d
+		d_r27	%2
+	%elifidni	%1,	r28d
+		d_r28	%2
+	%elifidni	%1,	r29d
+		d_r29	%2
+	%elifidni	%1,	r30d
+		d_r30	%2
+	%elifidni	%1,	r31d
+		d_r31	%2
 	%elifidni	%1,	ax
 		d_rax	%2
 	%elifidni	%1,	bx
@@ -513,6 +818,38 @@
 		d_r14	%2
 	%elifidni	%1,	r15w
 		d_r15	%2
+	%elifidni	%1,	r16w
+		d_r16	%2
+	%elifidni	%1,	r17w
+		d_r17	%2
+	%elifidni	%1,	r18w
+		d_r18	%2
+	%elifidni	%1,	r19w
+		d_r19	%2
+	%elifidni	%1,	r20w
+		d_r20	%2
+	%elifidni	%1,	r21w
+		d_r21	%2
+	%elifidni	%1,	r22w
+		d_r22	%2
+	%elifidni	%1,	r23w
+		d_r23	%2
+	%elifidni	%1,	r24w
+		d_r24	%2
+	%elifidni	%1,	r25w
+		d_r25	%2
+	%elifidni	%1,	r26w
+		d_r26	%2
+	%elifidni	%1,	r27w
+		d_r27	%2
+	%elifidni	%1,	r28w
+		d_r28	%2
+	%elifidni	%1,	r29w
+		d_r29	%2
+	%elifidni	%1,	r30w
+		d_r30	%2
+	%elifidni	%1,	r31w
+		d_r31	%2
 	%elifidni	%1,	al
 		d_rax	%2
 	%elifidni	%1,	bl
@@ -549,6 +886,38 @@
 		d_r14	%2
 	%elifidni	%1,	r15b
 		d_r15	%2
+	%elifidni	%1,	r16b
+		d_r16	%2
+	%elifidni	%1,	r17b
+		d_r17	%2
+	%elifidni	%1,	r18b
+		d_r18	%2
+	%elifidni	%1,	r19b
+		d_r19	%2
+	%elifidni	%1,	r20b
+		d_r20	%2
+	%elifidni	%1,	r21b
+		d_r21	%2
+	%elifidni	%1,	r22b
+		d_r22	%2
+	%elifidni	%1,	r23b
+		d_r23	%2
+	%elifidni	%1,	r24b
+		d_r24	%2
+	%elifidni	%1,	r25b
+		d_r25	%2
+	%elifidni	%1,	r26b
+		d_r26	%2
+	%elifidni	%1,	r27b
+		d_r27	%2
+	%elifidni	%1,	r28b
+		d_r28	%2
+	%elifidni	%1,	r29b
+		d_r29	%2
+	%elifidni	%1,	r30b
+		d_r30	%2
+	%elifidni	%1,	r31b
+		d_r31	%2
 	%elifidni	%1,	xmm0
 		d_v0	%2
 	%elifidni	%1,	xmm1
@@ -581,6 +950,38 @@
 		d_v14	%2
 	%elifidni	%1,	xmm15
 		d_v15	%2
+	%elifidni	%1,	xmm16
+		d_v16	%2
+	%elifidni	%1,	xmm17
+		d_v17	%2
+	%elifidni	%1,	xmm18
+		d_v18	%2
+	%elifidni	%1,	xmm19
+		d_v19	%2
+	%elifidni	%1,	xmm20
+		d_v20	%2
+	%elifidni	%1,	xmm21
+		d_v21	%2
+	%elifidni	%1,	xmm22
+		d_v22	%2
+	%elifidni	%1,	xmm23
+		d_v23	%2
+	%elifidni	%1,	xmm24
+		d_v24	%2
+	%elifidni	%1,	xmm25
+		d_v25	%2
+	%elifidni	%1,	xmm26
+		d_v26	%2
+	%elifidni	%1,	xmm27
+		d_v27	%2
+	%elifidni	%1,	xmm28
+		d_v28	%2
+	%elifidni	%1,	xmm29
+		d_v29	%2
+	%elifidni	%1,	xmm30
+		d_v30	%2
+	%elifidni	%1,	xmm31
+		d_v31	%2
 	%elifidni	%1,	ymm0
 		d_v0	%2
 	%elifidni	%1,	ymm1
@@ -613,6 +1014,38 @@
 		d_v14	%2
 	%elifidni	%1,	ymm15
 		d_v15	%2
+	%elifidni	%1,	ymm16
+		d_v16	%2
+	%elifidni	%1,	ymm17
+		d_v17	%2
+	%elifidni	%1,	ymm18
+		d_v18	%2
+	%elifidni	%1,	ymm19
+		d_v19	%2
+	%elifidni	%1,	ymm20
+		d_v20	%2
+	%elifidni	%1,	ymm21
+		d_v21	%2
+	%elifidni	%1,	ymm22
+		d_v22	%2
+	%elifidni	%1,	ymm23
+		d_v23	%2
+	%elifidni	%1,	ymm24
+		d_v24	%2
+	%elifidni	%1,	ymm25
+		d_v25	%2
+	%elifidni	%1,	ymm26
+		d_v26	%2
+	%elifidni	%1,	ymm27
+		d_v27	%2
+	%elifidni	%1,	ymm28
+		d_v28	%2
+	%elifidni	%1,	ymm29
+		d_v29	%2
+	%elifidni	%1,	ymm30
+		d_v30	%2
+	%elifidni	%1,	ymm31
+		d_v31	%2
 	%elifidni	%1,	zmm0
 		d_v0	%2
 	%elifidni	%1,	zmm1
@@ -645,6 +1078,38 @@
 		d_v14	%2
 	%elifidni	%1,	zmm15
 		d_v15	%2
+	%elifidni	%1,	zmm16
+		d_v16	%2
+	%elifidni	%1,	zmm17
+		d_v17	%2
+	%elifidni	%1,	zmm18
+		d_v18	%2
+	%elifidni	%1,	zmm19
+		d_v19	%2
+	%elifidni	%1,	zmm20
+		d_v20	%2
+	%elifidni	%1,	zmm21
+		d_v21	%2
+	%elifidni	%1,	zmm22
+		d_v22	%2
+	%elifidni	%1,	zmm23
+		d_v23	%2
+	%elifidni	%1,	zmm24
+		d_v24	%2
+	%elifidni	%1,	zmm25
+		d_v25	%2
+	%elifidni	%1,	zmm26
+		d_v26	%2
+	%elifidni	%1,	zmm27
+		d_v27	%2
+	%elifidni	%1,	zmm28
+		d_v28	%2
+	%elifidni	%1,	zmm29
+		d_v29	%2
+	%elifidni	%1,	zmm30
+		d_v30	%2
+	%elifidni	%1,	zmm31
+		d_v31	%2
 	%endif
 %endmacro
 
@@ -699,7 +1164,12 @@
 		%undef	g%1z
 	%endif
 %endmacro
-
-;runtime register selection
-;Using a word-sized register-busy switch and special generalized macros, one can keep track of which register is in use.
-;Therefor, one can programmatically select which registers to use during runtime, so as to not need to worry as much about specific registers all the time, but how many registers of each type one has available.
+%if	0
+;macro for defining a called implementation of another macro
+%macro	calledm	1+
+c%1:	%1	
+ret
+%endmacro
+%endif
+;Possible feature: register-in-use table 
+;Using a quadword sized number define (with each bit representing a register slot) check-reg-open/check-reg-closed macros, one can keep track of which register is in use and output register use flow as well as enabling the detection of register conflicts.
