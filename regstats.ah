@@ -8,10 +8,23 @@
 
 ;for outputting readable register data to console (that's why there are newline chars
 %define	outdat_offset	4
+
 %define odat_linesize	21
-%define	odat_totalsize	336
-%define	osse_totalsize	624
-%define	oavx2_totalsize	1136
+%if	use512 = 0
+	%define	odat_totalsize	336
+%else
+	%define	odat_totalsize	672
+%endif
+%if	use512 = 0
+	%define	osse_totalsize	624
+%else
+	%define	osse_totalsize	1248
+%endif
+%if	use512 = 0
+	%define	oavx2_totalsize	1136
+%else
+	%define	oavx2_totalsize	2272
+%endif
 %macro	baseregoutdata	1
 	s_rax%1:	db	'rax:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_rbx%1:	db	'rbx:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
@@ -21,14 +34,32 @@
 	s_rsp%1:	db	'rsp:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_rdi%1:	db	'rdi:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_rsi%1:	db	'rsi:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
-	s_r8%1:		db	' r8:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
-	s_r9%1:		db	' r9:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r8%1:	db	' r8:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r9%1:	db	' r9:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_r10%1:	db	'r10:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_r11%1:	db	'r11:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_r12%1:	db	'r12:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_r13%1:	db	'r13:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_r14%1:	db	'r14:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_r15%1:	db	'r15:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	%if	use512 = 1
+	s_r16%1:	db	'r16:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r17%1:	db	'r17:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r18%1:	db	'r18:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r19%1:	db	'r19:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r20%1:	db	'r20:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r21%1:	db	'r21:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r22%1:	db	'r22:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r23%1:	db	'r23:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r24%1:	db	'r24:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r25%1:	db	'r25:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r26%1:	db	'r26:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r27%1:	db	'r27:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r28%1:	db	'r28:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r29%1:	db	'r29:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r30%1:	db	'r30:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	s_r31%1:	db	'r31:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	%endif
 %endmacro
 
 ;for saving hex data
@@ -49,6 +80,24 @@
 	h_r13%1:	dq	0,0
 	h_r14%1:	dq	0,0
 	h_r15%1:	dq	0,0
+	%if	use512 = 1
+	h_r16%1:	dq	0,0
+	h_r17%1:	dq	0,0
+	h_r18%1:	dq	0,0
+	h_r19%1:	dq	0,0
+	h_r20%1:	dq	0,0
+	h_r21%1:	dq	0,0
+	h_r22%1:	dq	0,0
+	h_r23%1:	dq	0,0
+	h_r24%1:	dq	0,0
+	h_r25%1:	dq	0,0
+	h_r26%1:	dq	0,0
+	h_r27%1:	dq	0,0
+	h_r28%1:	dq	0,0
+	h_r29%1:	dq	0,0
+	h_r30%1:	dq	0,0
+	h_r31%1:	dq	0,0
+	%endif
 %endmacro
 
 ;for saving raw binary data
@@ -69,6 +118,24 @@
 	b_r13%1:	dq	0
 	b_r14%1:	dq	0
 	b_r15%1:	dq	0
+	%if	use512	=	1
+	b_r16%1:	dq	0
+	b_r17%1:	dq	0
+	b_r18%1:	dq	0
+	b_r19%1:	dq	0
+	b_r20%1:	dq	0
+	b_r21%1:	dq	0
+	b_r22%1:	dq	0
+	b_r23%1:	dq	0
+	b_r24%1:	dq	0
+	b_r25%1:	dq	0
+	b_r26%1:	dq	0
+	b_r27%1:	dq	0
+	b_r28%1:	dq	0
+	b_r29%1:	dq	0
+	b_r30%1:	dq	0
+	b_r31%1:	dq	0
+	%endif
 %endmacro
 ;saving of raw data
 %macro	takebaseregs 1
@@ -88,6 +155,24 @@
 	mov	[b_r13%1],	r13
 	mov	[b_r14%1],	r14
 	mov	[b_r15%1],	r15
+	%if	use512	=	1
+	mov	[b_r16%1],	r16
+	mov	[b_r17%1],	r17
+	mov	[b_r18%1],	r18
+	mov	[b_r19%1],	r19
+	mov	[b_r20%1],	r20
+	mov	[b_r21%1],	r21
+	mov	[b_r22%1],	r22
+	mov	[b_r23%1],	r23
+	mov	[b_r24%1],	r24
+	mov	[b_r25%1],	r25
+	mov	[b_r26%1],	r26
+	mov	[b_r27%1],	r27
+	mov	[b_r28%1],	r28
+	mov	[b_r29%1],	r29
+	mov	[b_r30%1],	r30
+	mov	[b_r31%1],	r31
+	%endif
 %endmacro
 
 
@@ -149,12 +234,62 @@ call_Takebaseregs:	takebaseregs	%1
 	mov	gin,	[b_r15%2]
 	tohexqu	%3,	%4,	%5,	%6
 	movdqu	[h_r15%1],	goutx
+	%if	use512	=	1
+	mov	gin,	[b_r16%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r16%1],	goutx
+	mov	gin,	[b_r17%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r17%1],	goutx
+	mov	gin,	[b_r18%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r18%1],	goutx
+	mov	gin,	[b_r19%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r19%1],	goutx
+	mov	gin,	[b_r20%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r20%1],	goutx
+	mov	gin,	[b_r21%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r21%1],	goutx
+	mov	gin,	[b_r22%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r22%1],	goutx
+	mov	gin,	[b_r23%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r23%1],	goutx
+	mov	gin,	[b_r24%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r24%1],	goutx
+	mov	gin,	[b_r25%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r25%1],	goutx
+	mov	gin,	[b_r26%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r26%1],	goutx
+	mov	gin,	[b_r27%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r27%1],	goutx
+	mov	gin,	[b_r28%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r28%1],	goutx
+	mov	gin,	[b_r29%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r29%1],	goutx
+	mov	gin,	[b_r30%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r30%1],	goutx
+	mov	gin,	[b_r31%2]
+	tohexqu	%3,	%4,	%5,	%6
+	movdqu	[h_r31%1],	goutx
+	%endif
 	udgr	in
 	udgr	out
 %endmacro
 
-;for taking and converting the c%rrent register data using a minimal amount of memory reads and writes
-;more co%plex but should be faster
+;for taking and converting the current register data using a minimal amount of memory reads and writes
+;more complex but should be faster
 %macro	takebaseregconv	1
 	
 %endmacro
@@ -192,6 +327,55 @@ call_Takebaseregs:	takebaseregs	%1
 	movdqu	[s_r14%1 + outdat_offset],	%3
 	movdqu	%3,	[h_r15%2]
 	movdqu	[s_r15%1 + outdat_offset],	%3
+	%if	use512	=	1
+	movdqu	%3,	[h_r16%2]
+	movdqu	[s_r16%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r17%2]
+	movdqu	[s_r17%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r18%2]
+	movdqu	[s_r18%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r19%2]
+	movdqu	[s_r19%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r20%2]
+	movdqu	[s_r20%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r21%2]
+	movdqu	[s_r21%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r22%2]
+	movdqu	[s_r22%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r23%2]
+	movdqu	[s_r23%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r24%2]
+	movdqu	[s_r24%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r25%2]
+	movdqu	[s_r25%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r26%2]
+	movdqu	[s_r26%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r27%2]
+	movdqu	[s_r27%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r28%2]
+	movdqu	[s_r28%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r29%2]
+	movdqu	[s_r29%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r30%2]
+	movdqu	[s_r30%1 + outdat_offset],	%3
+	movdqu	%3,	[h_r31%2]
+	movdqu	[s_r31%1 + outdat_offset],	%3
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
+	%endif
 %endmacro
 
 %macro	sseregbindata	1
