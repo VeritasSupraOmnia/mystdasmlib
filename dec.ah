@@ -2,7 +2,7 @@
 ;needs genreg
 ;due to the nature of division, this cannot have a truely generic register selection
 %macro	todecb	2
-	%push	to_decimal_byte
+	%push	scope
 	dgr	%1,	1
 	dgr	%2,	2
 ;in on al
@@ -24,7 +24,40 @@
 	or	g1d,	edx
 	or	g1d,	0x30303030
 	bswap	g1d
-	takebaseregs	1
 	%pop
 %endmacro
-
+%macro	todecw	2
+	%push	scope
+	dgr	%1,	1
+	dgr	%2,	2
+	xor	rdx,	rdx
+	xor	g1,	g1
+	mov	g2,	10000
+	div	g2
+	mov	g1,	rax
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	shl	g1,	8
+	mov	g2,	1000
+	div	g2
+	or	g1,	rax
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g2,	100
+	shl	g1,	8
+	div	g2
+	or	g1,	rax
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	shl	g1,	8
+	mov	g2,	10
+	div	g2
+	or	g1,	rax
+	shl	g1,	8
+	or	g1,	rdx
+	mov	g2,	0x3030303030303030
+	or	g1,	g2
+	bswap	g1
+	;takebaseregs	1
+	%pop
+%endmacro

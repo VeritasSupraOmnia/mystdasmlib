@@ -8,25 +8,33 @@
 global	main
 section	.data
 	
-	outdb:	dd	0
-		db	0x0A
-	resdb:	db	'0255'
-	testdb:	db	0xff
+	resb:	db	'0255'
+	testb:	db	0xff
+	resw:	db	'00065535'
+	testw:	dw	0xffff
 
-	baseregbindata	1
-	basereghexdata	1
-	baseregoutdata	1
+
+	;baseregbindata	1
+	;basereghexdata	1
+	;baseregoutdata	1
 
 	newstrla	failure,	"dec.ah:		Test failure!"
 	newstrla	success,	"dec.ah:		Test success!"
 section	.code
 main:	xor	rax,	rax
-	mov	al,	[testdb]
+	mov	al,	[testb]
 	todecb	r8,	rdi
-	mov	r9d,	[resdb]
+	mov	r9d,	[resb]
 	cmp	r8d,	r9d
 	jne	fail
 	
+	xor	rax,	rax
+	mov	ax,	[testw]
+	todecw	r8,	rdi
+	mov	r9,	[resw]
+	cmp	r8,	r9
+	jne	fail
+
 	write	stdout,	ssuccess,	[lsuccess]
 	jmp	end
 fail:	
