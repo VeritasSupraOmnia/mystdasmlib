@@ -75,55 +75,17 @@
 	pslldq	g1x,	1
 	mov	rax,	rdx
 	xor	rdx,	rdx
-	mov	g3,	100000000
+	%assign	it	100000000
+	%rep	7
+	mov	g3,	it
 	div	g3
 	movd	g2x,	eax
 	por	g1x,	g2x
 	pslldq	g1x,	1
 	mov	rax,	rdx
 	xor	rdx,	rdx
-	mov	g3,	10000000
-	div	g3
-	movd	g2x,	eax
-	por	g1x,	g2x
-	pslldq	g1x,	1
-	mov	rax,	rdx
-	xor	rdx,	rdx
-	mov	g3,	1000000
-	div	g3
-	movd	g2x,	eax
-	por	g1x,	g2x
-	pslldq	g1x,	1
-	mov	rax,	rdx
-	xor	rdx,	rdx
-	mov	g3,	100000
-	div	g3
-	movd	g2x,	eax
-	por	g1x,	g2x
-	pslldq	g1x,	1
-	mov	rax,	rdx
-	xor	rdx,	rdx
-	mov	g3,	10000
-	div	g3
-	movd	g2x,	eax
-	por	g1x,	g2x
-	pslldq	g1x,	1
-	mov	rax,	rdx
-	xor	rdx,	rdx
-	mov	g3,	1000
-	div	g3
-	movd	g2x,	eax
-	por	g1x,	g2x
-	pslldq	g1x,	1
-	mov	rax,	rdx
-	xor	rdx,	rdx
-	mov	g3,	100
-	div	g3
-	movd	g2x,	eax
-	por	g1x,	g2x
-	pslldq	g1x,	1
-	mov	rax,	rdx
-	xor	rdx,	rdx
+	%assign	it	it / 10
+	%endrep
 	mov	g3,	10
 	div	g3
 	movd	g2x,	eax
