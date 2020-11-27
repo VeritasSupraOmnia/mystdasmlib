@@ -12,11 +12,16 @@ section	.data
 	testb:	db	0xff
 	resw:	db	'00065535'
 	testw:	dw	0xffff
+	resd:	db	'0000004294967295',0x0A
+	testd:	dd	0xffffffff
 
 
-	;baseregbindata	1
-	;basereghexdata	1
-	;baseregoutdata	1
+	baseregbindata	1
+	basereghexdata	1
+	baseregoutdata	1
+	sseregbindata	1
+	ssereghexdata	1
+	sseregoutdata	1
 
 	newstrla	failure,	"dec.ah:		Test failure!"
 	newstrla	success,	"dec.ah:		Test success!"
@@ -34,6 +39,15 @@ main:	xor	rax,	rax
 	mov	r9,	[resw]
 	cmp	r8,	r9
 	jne	fail
+	
+	xor	rax,	rax
+	mov	eax,	[testd]
+	todecd	xmm0,	xmm1,	r8,	xmm2
+	movdqu	xmm1,	[resd]
+	ptest	xmm0,	xmm1
+	jz	fail
+	movdqu	[resd],	xmm0
+	write	stdout,	resd,	17
 
 	write	stdout,	ssuccess,	[lsuccess]
 	jmp	end
@@ -41,9 +55,13 @@ fail:
 	write	stdout,	sfailure,	[lfailure]
 	jmp	end
 
-end:	;baseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
-	;baseregformat	1,	1,	xmm0
-	;write	stdout,	s_rax1,	odat_totalsize
+end:	
+	baseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
+	baseregformat	1,	1,	xmm0
+	write	stdout,	s_rax1,	odat_totalsize
+	sseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
+	sseregformat	1,	1,	xmm0
+	write	stdout,	s_xmm01,	osse_totalsize
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall

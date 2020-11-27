@@ -2,13 +2,13 @@
 ;needs genreg
 ;due to the nature of division, this cannot have a truely generic register selection
 %macro	todecb	2
-	%push	scope
+	;in on al
+	;scratches rax and rdx in addition to general registers
+	;out on g1d
+	;g2 is an arith reg
+%push	scope
 	dgr	%1,	1
 	dgr	%2,	2
-;in on al
-;scratches rax and rdx in addition to general registers
-;out on g1d
-;g2 is an arith reg
 	xor	rdx,	rdx
 	xor	g1,	g1
 	mov	g2b,	100
@@ -24,10 +24,10 @@
 	or	g1d,	edx
 	or	g1d,	0x30303030
 	bswap	g1d
-	%pop
+%pop
 %endmacro
 %macro	todecw	2
-	%push	scope
+%push	scope
 	dgr	%1,	1
 	dgr	%2,	2
 	xor	rdx,	rdx
@@ -58,6 +58,89 @@
 	mov	g2,	0x3030303030303030
 	or	g1,	g2
 	bswap	g1
-	;takebaseregs	1
-	%pop
+%pop
+%endmacro
+
+;in on eax,	scratches that and edx
+%macro	todecd	4
+%push	scope
+	dgr	%1,	1;xmm output 
+	dgr	%2,	2;xmm loader
+	dgr	%3,	3;8byte digit of 10 checker
+	dgr	%4,	4;xmm mask
+	xor	rdx,	rdx
+	mov	g3,	1000000000
+	div	g3
+	movd	g1x,	eax
+	pslldq	g1x,	1
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g3,	100000000
+	div	g3
+	movd	g2x,	eax
+	por	g1x,	g2x
+	pslldq	g1x,	1
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g3,	10000000
+	div	g3
+	movd	g2x,	eax
+	por	g1x,	g2x
+	pslldq	g1x,	1
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g3,	1000000
+	div	g3
+	movd	g2x,	eax
+	por	g1x,	g2x
+	pslldq	g1x,	1
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g3,	100000
+	div	g3
+	movd	g2x,	eax
+	por	g1x,	g2x
+	pslldq	g1x,	1
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g3,	10000
+	div	g3
+	movd	g2x,	eax
+	por	g1x,	g2x
+	pslldq	g1x,	1
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g3,	1000
+	div	g3
+	movd	g2x,	eax
+	por	g1x,	g2x
+	pslldq	g1x,	1
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g3,	100
+	div	g3
+	movd	g2x,	eax
+	por	g1x,	g2x
+	pslldq	g1x,	1
+	mov	rax,	rdx
+	xor	rdx,	rdx
+	mov	g3,	10
+	div	g3
+	movd	g2x,	eax
+	por	g1x,	g2x
+	pslldq	g1x,	1
+	movd	g2x,	edx
+	por	g1x,	g2x
+	mov	g3,	0x3030303030303030
+	movq	g2x,	g3
+	vpbroadcastq	g2x,	g2x
+	por	g1x,	g2x
+	mov	g3,	0x0001020304050607
+	movq	g2x,	g3
+	pslldq	g2x,	8
+	mov	g3,	0x08090A0B0C0D0E0F
+	movq	g4x,	g3
+	por	g2x,	g4x
+	pshufb	g1x,	g2x
+%pop
 %endmacro
