@@ -4,6 +4,8 @@ This is my library of basic nasm assembly headers for defines, preproccessing ma
 			A header for defining and undefining register names at assembly-time for more independent functions and macros.
 	-	hex.ah:
 			A header filled with hex to binary and binary to hex conversion functions using the genreg system for modularity.
+	-	dec.ah:
+			A header filled with decimal to binary and binary to decimal conversions using my generalized register system for increased modularity.
 	-	syscall.ah:
 			A header detailing some well used syscalls and options on linux. Makes true native system programming much easier.
 	-	size.ah:
