@@ -9,6 +9,9 @@ global	main
 section .data
 	newstrla	failure,	"hex.ah		Test failure!"
 	newstrla	success,	"hex.ah		Test success!"
+	baseregbindata	1
+	basereghexdata	1
+	baseregoutdata	1
 	avx2regbindata	1
 	avx2reghexdata	1
 	avx2regoutdata	1
@@ -81,7 +84,7 @@ main:
 	tohexqu	xmm0,	xmm1,	xmm2,	r10
 	movdqu	xmm1,	[quadhexu]
 	ptest	xmm0,	xmm1
-	jz	failure
+	jnc	failure
 	
 	movdqu	xmm0,	[quadhexu]
 	frhexqu	rax,	rdi,	rsi,	xmm2,	xmm1,	xmm0
@@ -92,10 +95,10 @@ main:
 	
 	movdqu	xmm2,	[dquadbin]
 	tohexdqu	ymm0,	ymm1,	ymm2,	rax
-	vmovdqu	[dquadhexu],	ymm0
 	vmovdqu	ymm1,	[dquadhexu]
-	vptest	ymm0,	ymm1
-	jz	failure
+	vptest	ymm1,	ymm0
+	jnc	failure
+
 
 	jmp	success
 failure:mov	rax,	sys_write
