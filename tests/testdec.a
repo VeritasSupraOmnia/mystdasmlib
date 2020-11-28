@@ -33,11 +33,23 @@ main:	xor	rax,	rax
 	cmp	r8d,	r9d
 	jne	fail
 	
+	mov	edi,	[resb]
+	frdecb	r8,	rdi
+	mov	r9b,	[testb]
+	cmp	r8b,	r9b
+	jne	fail
+
 	xor	rax,	rax
 	mov	ax,	[testw]
 	todecw	r8,	rdi
 	mov	r9,	[resw]
 	cmp	r8,	r9
+	jne	fail
+	
+	mov	rdi,	[resw]
+	frdecw	r8,	rdi
+	mov	r9w,	[testw]
+	cmp	r8w,	r9w
 	jne	fail
 	
 	xor	rax,	rax
@@ -49,9 +61,6 @@ main:	xor	rax,	rax
 	vptest	xmm0,	xmm1
 	jnc	fail
 	
-	movdqu	[resd],	xmm0
-	write	stdout,	resd,	17
-
 	write	stdout,	ssuccess,	[lsuccess]
 	jmp	end
 fail:	
@@ -59,9 +68,9 @@ fail:
 	jmp	end
 
 end:	
-	;baseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
-	;baseregformat	1,	1,	xmm0
-	;write	stdout,	s_rax1,	odat_totalsize
+;	baseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
+;	baseregformat	1,	1,	xmm0
+;	write	stdout,	s_rax1,	odat_totalsize
 	;sseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
 	;sseregformat	1,	1,	xmm0
 	;write	stdout,	s_xmm01,	osse_totalsize

@@ -106,3 +106,63 @@
 	pshufb	g1x,	g2x
 %pop
 %endmacro
+
+%macro	frdecb	2
+%push	scope
+	dgr	%1,	1;output
+	dgr	%2,	2;input
+	;scratches rax and rdx
+	bswap	g2d;register binary is little endian but decimal chars are stored big endian
+	and	g2d,	0x0f0f0f0f
+	xor	g1,	g1
+	mov	g1b,	g2b
+	shr	g2,	8
+	mov	rdx,	10
+	xor	rax,	rax
+	mov	al,	g2b
+	mul	rdx
+	add	g1,	rax
+	shr	g2,	8
+	xor	rax,	rax
+	mov	rdx,	100
+	mov	al,	g2b
+	mul	rdx
+	add	g1,	rax
+%pop
+%endmacro
+%macro	frdecw	2
+%push	scope
+	dgr	%1,	1;output
+	dgr	%2,	2;input
+	;scratches rax and rdx
+	bswap	g2;register binary is little endian but decimal chars are stored big endian
+	mov	g1,	0x0f0f0f0f0f0f0f0f
+	and	g2,	g1
+	xor	g1,	g1
+	mov	g1b,	g2b
+	shr	g2,	8
+	mov	rdx,	10
+	xor	rax,	rax
+	mov	al,	g2b
+	mul	rdx
+	add	g1,	rax
+	shr	g2,	8
+	xor	rax,	rax
+	mov	rdx,	100
+	mov	al,	g2b
+	mul	rdx
+	add	g1,	rax
+	shr	g2,	8
+	xor	rax,	rax
+	mov	rdx,	1000
+	mov	al,	g2b
+	mul	rdx
+	add	g1,	rax
+	shr	g2,	8
+	xor	rax,	rax
+	mov	rdx,	10000
+	mov	al,	g2b
+	mul	rdx
+	add	g1,	rax
+%pop
+%endmacro
