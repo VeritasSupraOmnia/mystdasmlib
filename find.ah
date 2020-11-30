@@ -1,7 +1,8 @@
+;checks for a string in a 
+%macro	fndq	6
+	;scratches rcx
 
-
-%macro fndrpq
-	;take quadword of sought chars, byte shifted completely to the left
+	;take quadword of sought chars and count of sought chars
 	;then copy the compare-to register to a temp reg
 	;then make an 0xff bitmask register of the comparator register's rightmost, zeroed bytes.
 	;AND the temp reg into the bitmask then xor the bitmask into the temp reg
@@ -9,5 +10,31 @@
 	;if equal, do make an 0xff of bitmask register of the sought chars left, non-zeroed bytes.
 	;also make another temp reg which is a NOT'd copy of the compare-to reg, then or it into the bitmask reg
 	;then AND the compare-to register into the bitmask followed by a XOR of the bitmask into the compare-to
-	;finally, or the replace register (in the same format as sought chars reg) into the 
+%push	scope
+	dgr	%1,	1;output of found index or -1 for not found
+	dgr	%2,	2;input	of 8 byte reg containing string to search in
+	dgr	%3,	3;input of register containing string to search for
+	dgr	%4,	4;size of string to search for in bytes
+	dgr	%5,	5;holder of leading zero bytemask (one side of leading zero byte is 0xff the other is 0x00)
+	dgr	%6,	6;holder of compare to copy
+	
+	xor	g1,	g1
+	mov	rcx,	g4
+	shl	rcx,	3
+	dec	rcx
+	mov	g5,	1
+	shl	g5,	cl
+	mov	rcx,	8
+	blsmsk	g5,	g5
+%%lp:	mov	g6,	g2
+	and	g6,	g5
+	cmp	g6,	g3
+	je	%%exit
+	inc	g1
+	shr	g2,	8
+	loop	%%lp
+	mov	g1,	-1
+%%exit:	
+	takebaseregs	1
+%pop
 %endmacro

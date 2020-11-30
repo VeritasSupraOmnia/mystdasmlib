@@ -25,13 +25,19 @@ tcc testdec.o -o testdec
 rm testdec testdec.o
 
 #test regstats.ah
-nasm testregstats.a -o testregstats.o -felf64
-tcc testregstats.o -o testregstats
+#nasm testregstats.a -o testregstats.o -felf64
+#tcc testregstats.o -o testregstats
 #./testregstats	saotne asone
-rm testregstats testregstats.o
+#rm testregstats testregstats.o
 
 #test util.ah
 nasm testutil.a -o testutil.o -felf64
 tcc testutil.o -o testutil
 ./testutil
 rm testutil testutil.o
+
+#test find.ah
+nasm testfind.a -o testfind.o -felf64
+tcc testfind.o -o testfind
+./testfind
+rm testfind testfind.o
