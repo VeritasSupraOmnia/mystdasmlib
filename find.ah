@@ -1,4 +1,7 @@
-;checks for a string in a 
+;macros related to comparing and finding bytes with finesse.
+;NOTE: don't do a pre-macro byteswap on the inputs, just feed it in.
+
+;checks for a string in a qword and outputs either -1 or the found location
 %macro	fndq	6
 	;scratches rcx
 
@@ -26,6 +29,7 @@
 	shl	g5,	cl
 	mov	rcx,	8
 	blsmsk	g5,	g5
+	
 %%lp:	mov	g6,	g2
 	and	g6,	g5
 	cmp	g6,	g3
@@ -35,6 +39,49 @@
 	loop	%%lp
 	mov	g1,	-1
 %%exit:	
+%pop
+%endmacro
+
+;checks for a string being contained within a yword and outputs either -1 or the location.
+%macro	fndy	8
+%push	scope
+	dgr	%1,	1;output of found index or -1 for not found
+	dgr	%2,	2;input	of 32 byte reg containing string to search in
+	dgr	%3,	3;input of register containing string to search for
+	dgr	%4,	4;size of string to search for in bytes
+	dgr	%5,	5;holder of leading zero bytemask (one side of leading zero byte is 0xff the other is 0x00)
+	dgr	%6,	6;holder of current qword index of the 32 byte reg
+	dgr	%7,	7;holder of temp feed
+	dgr	%8,	8;holder of vpshrvq index data for shifting in new data to the next quadword in g2y, avx2 reg
+	
+	;setup andmask and shiftmask
+	xor	g1,	g1
+	mov	rcx,	g4
+	shl	rcx,	3
+	dec	rcx
+	mov	g5,	1
+	shl	g5,	cl
+	mov	rcx,	32
+	blsmsk	g5,	g5
+	mov	g6,	1
+	movq	g8x,	g6
+
+	;first qword
+	movq	g6,	g2x
+	vpermq	g2y,	g2y,	0b00111001
+	and	g6,	g5
+	cmp	g6,	g3
+	je	end
+	inc	g1
+	movq	g7,	g2x
+	mov	g7b,	g7b
+	bswap	g7
+	or	g6,	g7
+	
+	
+
+%%end:	
+	takeavx2regs	1
 	takebaseregs	1
 %pop
 %endmacro

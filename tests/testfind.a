@@ -10,22 +10,30 @@ section	.data
 	baseregbindata	1
 	basereghexdata	1
 	baseregoutdata	1
+	avx2regbindata	1
+	avx2reghexdata	1
+	avx2regoutdata	1
 
 	newstrla	success,	"find.ah	Test success!"
 	newstrla	failure,	"find.ah	Test failure!"
-	newstr		stof,		"34"
+	newstr		stof,		"fff1"
 	newstr		stosw,		"fff1234f";should return found
 	newstr		stosf,		"ff12ffea";should return not found
+	newstr		stos32,		"ffaaccllbb2233442288990011fff1gf"
 section	.code
 main:	
 	xor	r8,	r8
-	mov	r9,	sstof
 	xor	rdx,	rdx
-	mov	rcx,	2
-	mov	r8w,	[sstof]
+	mov	r10,	4
+	mov	r8d,	[sstof]
 	mov	rdx,	[sstosw]
 
-	fndq	rax,	rdx,	r8,	rcx,	r9,	r10
+	fndq	rax,	rdx,	r8,	r10,	r9,	rdi
+	xor	r8,	r8
+	xor	rdx,	rdx,
+	vmovdqu	ymm0,	[sstos32]
+	mov	r8d,	[sstof]
+	fndy	rax,	ymm0,	r8,	r10,	r9,	rdi,	rdx,	ymm1
 	write	stdout,	ssuccess,	[lsuccess]
 	jmp	end
 fail:	
@@ -33,7 +41,10 @@ fail:
 end:	
 	baseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
 	baseregformat	1,	1,	xmm0
+	avx2regconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
+	avx2regformat	1,	1,	xmm0
 	write	stdout,	s_rax1,	odat_totalsize
+	write	stdout,	s_ymm01,	oavx2_totalsize
 	mov	rax,	sys_ret
 	mov	rdx,	0
 	syscall
