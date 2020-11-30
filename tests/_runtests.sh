@@ -1,5 +1,5 @@
 #make and run tests for my standard asm library
-
+clear
 #test string.ah
 nasm teststring.a -o teststring.o -felf64
 tcc teststring.o -o teststring
