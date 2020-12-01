@@ -61,6 +61,10 @@
 %pop
 %endmacro
 
+;TODO:	RE-WRITE THIS TRASH
+;todo:	instead of movdqu-ing every byte found, build the string into an 8 byte register, load it into the xmm loader, permq the data in output
+;	register left and out of the way if needed, then or the loader reg into the output reg.
+;	If it's the first qword calculated (first 6 bytes zeroed), only movd into the output.
 ;in on eax,	scratches that and edx
 %macro	todecd	4
 %push	scope
@@ -104,6 +108,74 @@
 	movq	g4x,	g3
 	por	g2x,	g4x
 	pshufb	g1x,	g2x
+%pop
+%endmacro
+
+;in on rax,	scratches both rax and rdx
+%macro	todecq	4
+%push	scope
+	dgr	%1,	1;ymm output
+	dgr	%2,	2;8 byte builder reg
+	dgr	%3,	3;8 byte dividend reg
+	dgr	%4,	4;ymm loader
+
+	xor	g2,	g2
+
+	%assign	i	10000000000000000000
+	%rep	4
+	xor	rdx,	rdx
+	mov	g3,	i
+	div	g3
+	shl	g2,	8
+	or	g2,	rax
+	mov	rax,	rdx
+	%assign	i	i / 10
+	%endrep
+	
+	vpxor	g1y,	g1y,	g1y
+	bswap	g2
+	movq	g1x,	g2
+	vpermq	g1y,	g1y,	0b11110011
+	xor	g2,	g2
+
+	%assign	i	1000000000000000
+	%rep	8
+	xor	rdx,	rdx
+	mov	g3,	i
+	div	g3
+	shl	g2,	8
+	or	g2,	rax
+	mov	rax,	rdx
+	%assign	i	i / 10
+	%endrep
+	
+	vpxor	g4y,	g4y,	g4y
+	bswap	g2
+	movq	g4x,	g2
+	vpor	g1y,	g1y,	g4y
+	vpermq	g1y,	g1y,	0b11010011
+	xor	g2,	g2
+
+	%assign	i	10000000
+	%rep	8
+	xor	rdx,	rdx
+	mov	g3,	i
+	div	g3
+	shl	g2,	8
+	or	g2,	rax
+	mov	rax,	rdx
+	%assign	i	i / 10
+	%endrep
+
+	vpxor	g4y,	g4y,	g4y
+	bswap	g2
+	movq	g4x,	g2
+	vpor	g1y,	g1y,	g4y
+	vpermq	g1y,	g1y,	0b00011011
+	mov	g2,	0x3030303030303030
+	movq	g4x,	g2
+	vpbroadcastq	g4y,	g4x
+	vpor	g1y,	g1y,	g4y
 %pop
 %endmacro
 
@@ -166,3 +238,5 @@
 	add	g1,	rax
 %pop
 %endmacro
+
+;NOTE:	There has got to be a way to do simd decimal conversions...
