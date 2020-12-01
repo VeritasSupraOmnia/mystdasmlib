@@ -66,13 +66,13 @@
 	mov	g6,	8
 	movq	g8x,	g6
 
-	;beginning first index check
+	;beginning index check
 	movq	g7,	g2x
 	vpermq	g2y,	g2y,	0b00111001
 	mov	g6,	g7
 	and	g6,	g5
 	cmp	g6,	g3
-	je	end
+	je	%%end
 
 	;beginning index no match handle
 	inc	g1
@@ -85,13 +85,34 @@
 	vpsrlvq	g2y,	g8y
 	
 	%rep	7
-	;middle first indexes check
+	;end first qword indexes checks
 	mov	g7,	g6
 	and	g6,	g5
 	cmp	g6,	g3
-	je	end
+	je	%%end
 
-	;middle first indexes no match handle
+	;end first qword indexes no match handles
+	inc	g1
+	mov	g6,	g7
+	shr	g6,	8
+	movq	g7,	g2x
+	and	g7d,	0x000000ff
+	bswap	g7
+	or	g6,	g7
+	vpsrlvq	g2y,	g8y
+	%endrep
+	
+	;move the yreg right 1 qword
+	vpermq	g2y,	g2y,	0b00111001
+
+	;second qword indexes checks
+	%rep	8
+	mov	g7,	g6
+	and 	g6,	g5
+	cmp	g6,	g3
+	je	%%end
+
+	;second qword no match handles
 	inc	g1
 	mov	g6,	g7
 	shr	g6,	8
@@ -103,16 +124,44 @@
 	%endrep
 
 	vpermq	g2y,	g2y,	0b00111001
-	
-	takeavx2regs	1
-	takebaseregs	1
-	
-	;second byte to ---
 
+	;third qword indexes checks
+	%rep	8
+	mov	g7,	g6
+	and 	g6,	g5
+	cmp	g6,	g3
+	je	%%end
 
+	;third qword no match handles
+	inc	g1
+	mov	g6,	g7
+	shr	g6,	8
+	movq	g7,	g2x
+	and	g7d,	0x000000ff
+	bswap	g7
+	or	g6,	g7
+	vpsrlvq	g2y,	g8y
+	%endrep
 	
-	
+	;setup fat processing loop
+	mov	rcx,	8
+	sub	rcx,	g4
+	mov	g7,	g6
 
+	;fat proccessing
+
+%%lp:	and	g6,	g5
+	cmp	g6,	g3
+	je	%%end
+	shr	g7,	8
+	mov	g6,	g7
+	inc	g1
+	loop	%%lp
+	jmp	%%fail
+
+%%fail:	mov	g1,	-1
 %%end:	
+	takebaseregs	1
+	takeavx2regs	1
 %pop
 %endmacro
