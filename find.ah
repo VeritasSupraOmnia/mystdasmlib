@@ -63,25 +63,56 @@
 	shl	g5,	cl
 	mov	rcx,	32
 	blsmsk	g5,	g5
-	mov	g6,	1
+	mov	g6,	8
 	movq	g8x,	g6
 
-	;first qword
-	movq	g6,	g2x
+	;beginning first index check
+	movq	g7,	g2x
 	vpermq	g2y,	g2y,	0b00111001
+	mov	g6,	g7
 	and	g6,	g5
 	cmp	g6,	g3
 	je	end
+
+	;beginning index no match handle
 	inc	g1
+	mov	g6,	g7
+	shr	g6,	8
 	movq	g7,	g2x
-	mov	g7b,	g7b
+	and	g7d,	0x000000ff
 	bswap	g7
 	or	g6,	g7
+	vpsrlvq	g2y,	g8y
+	
+	%rep	7
+	;middle first indexes check
+	mov	g7,	g6
+	and	g6,	g5
+	cmp	g6,	g3
+	je	end
+
+	;middle first indexes no match handle
+	inc	g1
+	mov	g6,	g7
+	shr	g6,	8
+	movq	g7,	g2x
+	and	g7d,	0x000000ff
+	bswap	g7
+	or	g6,	g7
+	vpsrlvq	g2y,	g8y
+	%endrep
+
+	vpermq	g2y,	g2y,	0b00111001
+	
+	takeavx2regs	1
+	takebaseregs	1
+	
+	;second byte to ---
+
+
 	
 	
 
 %%end:	
-	takeavx2regs	1
-	takebaseregs	1
 %pop
 %endmacro
