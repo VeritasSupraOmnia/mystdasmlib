@@ -15,12 +15,13 @@ section	.data
 	resd:	db	'0000004294967295',0x0A
 	testd:	dd	0xffffffff
 	resq:	db	'00000000000018446744073709551615',0x0A
+	resqa:	db	'18446744073709551615000000000000',0x0A
 	testq:	dq	0xffffffffffffffff
 
 
 ;	baseregbindata	1
 ;	basereghexdata	1
-;	baseregoutdata	1
+;	basereghoutdata	1
 ;	avx2regbindata	1
 ;	avx2reghexdata	1
 ;	avx2regoutdata	1
@@ -69,7 +70,17 @@ main:	xor	rax,	rax
 	vmovdqu	ymm1,	[resq]
 	vptest	ymm0,	ymm1
 	jnc	fail
-	
+
+;	Example of todecqa used and the exactly 20 byte(shh!) memory write detailed in the comments above it in dec.ah
+;	xor	rax,	rax
+;	mov	rax,	[testq]
+;	todecqa	ymm0,	r8,	r9,	ymm1
+;	vpandn	ymm1,	ymm1,	ymm1
+;	vpand	ymm1,	ymm1,	[resq]
+;	vpor	ymm0,	ymm0,	ymm1
+;	vmovdqu	[resq],	ymm0
+;	write	stdout,	resq,	20	
+
 	write	stdout,	ssuccess,	[lsuccess]
 	jmp	end
 fail:	
@@ -77,9 +88,9 @@ fail:
 	jmp	end
 
 end:	
-;	baseregconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
-;	baseregformat	1,	1,	xmm0
-;	write	stdout,	s_rax1,	odat_totalsize
+;	basereghconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
+;	basereghformat	1,	1,	xmm0
+;	write	stdout,	s_rax1,	ohdat_totalsize
 ;	avx2regconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
 ;	avx2regformat	1,	1,	xmm0
 ;	write	stdout,	s_ymm01,	oavx2_totalsize
