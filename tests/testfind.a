@@ -9,7 +9,7 @@ global	main
 section	.data
 	baseregbindata	1
 	basereghexdata	1
-	baseregoutdata	1
+	basereghoutdata	1
 	avx2regbindata	1
 	avx2reghexdata	1
 	avx2regoutdata	1
