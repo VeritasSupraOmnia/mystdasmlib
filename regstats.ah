@@ -9,11 +9,13 @@
 ;for outputting readable register data to console (that's why there are newline chars
 %define	outdat_offset	4
 
-%define odat_linesize	21
+%define ohdat_linesize	21
 %if	use512 = 0
-	%define	odat_totalsize	336
+	%define	ohdat_totalsize	336
+	%define	oddat_totalsize 592
 %else
-	%define	odat_totalsize	672
+	%define	ohdat_totalsize	672
+	%define	oddat_totalsize 1184
 %endif
 %if	use512 = 0
 	%define	osse_totalsize	624
@@ -25,7 +27,9 @@
 %else
 	%define	oavx2_totalsize	2272
 %endif
-%macro	baseregoutdata	1
+
+;base register hexadecimal out data
+%macro	basereghoutdata	1
 	s_rax%1:	db	'rax:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_rbx%1:	db	'rbx:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_rcx%1:	db	'rcx:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
@@ -59,6 +63,108 @@
 	s_r29%1:	db	'r29:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_r30%1:	db	'r30:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
 	s_r31%1:	db	'r31:',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x0A
+	%endif
+%endmacro
+
+;base register decimal out data
+%macro	baseregdoutdata	1
+	sd_rax%1:	db	'rax:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_rbx%1:	db	'rbx:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_rcx%1:	db	'rcx:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_rdx%1:	db	'rdx:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_rbp%1:	db	'rbp:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_rsp%1:	db	'rsp:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_rdi%1:	db	'rdi:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_rsi%1:	db	'rsi:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r8%1:	db	' r8:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r9%1:	db	' r9:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r10%1:	db	'r10:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r11%1:	db	'r11:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r12%1:	db	'r12:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r13%1:	db	'r13:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r14%1:	db	'r14:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r15%1:	db	'r15:'
+			dq	0,0,0,0
+			db	0x0A
+	%if	use512 = 1
+	sd_r16%1:	db	'r16:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r17%1:	db	'r17:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r18%1:	db	'r18:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r19%1:	db	'r19:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r20%1:	db	'r20:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r21%1:	db	'r21:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r22%1:	db	'r22:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r23%1:	db	'r23:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r24%1:	db	'r24:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r25%1:	db	'r25:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r26%1:	db	'r26:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r27%1:	db	'r27:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r28%1:	db	'r28:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r29%1:	db	'r29:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r30%1:	db	'r30:'
+			dq	0,0,0,0
+			db	0x0A
+	sd_r31%1:	db	'r31:'
+			dq	0,0,0,0
+			db	0x0A
 	%endif
 %endmacro
 
@@ -97,6 +203,43 @@
 	h_r29%1:	dq	0,0
 	h_r30%1:	dq	0,0
 	h_r31%1:	dq	0,0
+	%endif
+%endmacro
+;for saving decimal data
+%macro	baseregdecdata	1
+	d_rax%1:	dq	0,0,0,0
+	d_rbx%1:	dq	0,0,0,0
+	d_rcx%1:	dq	0,0,0,0
+	d_rdx%1:	dq	0,0,0,0
+	d_rbp%1:	dq	0,0,0,0
+	d_rsp%1:	dq	0,0,0,0
+	d_rdi%1:	dq	0,0,0,0
+	d_rsi%1:	dq	0,0,0,0
+	d_r8%1:		dq	0,0,0,0
+	d_r9%1:		dq	0,0,0,0
+	d_r10%1:	dq	0,0,0,0
+	d_r11%1:	dq	0,0,0,0
+	d_r12%1:	dq	0,0,0,0
+	d_r13%1:	dq	0,0,0,0
+	d_r14%1:	dq	0,0,0,0
+	d_r15%1:	dq	0,0,0,0
+	%if	use512 = 1
+	d_r16%1:	dq	0,0,0,0
+	d_r17%1:	dq	0,0,0,0
+	d_r18%1:	dq	0,0,0,0
+	d_r19%1:	dq	0,0,0,0
+	d_r20%1:	dq	0,0,0,0
+	d_r21%1:	dq	0,0,0,0
+	d_r22%1:	dq	0,0,0,0
+	d_r23%1:	dq	0,0,0,0
+	d_r24%1:	dq	0,0,0,0
+	d_r25%1:	dq	0,0,0,0
+	d_r26%1:	dq	0,0,0,0
+	d_r27%1:	dq	0,0,0,0
+	d_r28%1:	dq	0,0,0,0
+	d_r29%1:	dq	0,0,0,0
+	d_r30%1:	dq	0,0,0,0
+	d_r31%1:	dq	0,0,0,0
 	%endif
 %endmacro
 
@@ -183,7 +326,7 @@ call_Takebaseregs:	takebaseregs	%1
 %endmacro
 
 ;for converting the bin data to hex data by reading from bin memory and outputting to hex memory
-%macro	baseregconvm	6;1:outputid|2:inputid|3-5:free 16 byte regs|6:free 8byte reg
+%macro	basereghconvm	6;1:outputid|2:inputid|3-5:free 16 byte regs|6:free 8byte reg
 %push	scope	
 	dgr	%6,	in
 	dgr	%3,	out
@@ -287,6 +430,109 @@ call_Takebaseregs:	takebaseregs	%1
 	%endif
 	%pop
 %endmacro
+%macro	baseregdconvm	6;1:outputid|2:inputid|3-5:free 16 byte regs|6:free 8byte reg
+%push	scope	
+	dgr	%3,	out
+	mov	rax,	[b_rax%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_rax%1],	gouty
+	mov	rax,	[b_rbx%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_rbx%1],	gouty
+	mov	rax,	[b_rcx%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_rcx%1],	gouty
+	mov	rax,	[b_rdx%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_rdx%1],	gouty
+	mov	rax,	[b_rbp%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_rbp%1],	gouty
+	mov	rax,	[b_rsp%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_rsp%1],	gouty
+	mov	rax,	[b_rdi%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_rdi%1],	gouty
+	mov	rax,	[b_rsi%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_rsi%1],	gouty
+	mov	rax,	[b_r8%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r8%1],	gouty
+	mov	rax,	[b_r9%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r9%1],	gouty
+	mov	rax,	[b_r10%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r10%1],	gouty
+	mov	rax,	[b_r11%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r11%1],	gouty
+	mov	rax,	[b_r12%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r12%1],	gouty
+	mov	rax,	[b_r13%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r13%1],	gouty
+	mov	rax,	[b_r14%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r14%1],	gouty
+	mov	rax,	[b_r15%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r15%1],	gouty
+	%if	use512	=	1
+	mov	rax,	[b_r16%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r16%1],	gouty
+	mov	rax,	[b_r17%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r17%1],	gouty
+	mov	rax,	[b_r18%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r18%1],	gouty
+	mov	rax,	[b_r19%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r19%1],	gouty
+	mov	rax,	[b_r20%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r20%1],	gouty
+	mov	rax,	[b_r21%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r21%1],	gouty
+	mov	rax,	[b_r22%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r22%1],	gouty
+	mov	rax,	[b_r23%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r23%1],	gouty
+	mov	rax,	[b_r24%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r24%1],	gouty
+	mov	rax,	[b_r25%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r25%1],	gouty
+	mov	rax,	[b_r26%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r26%1],	gouty
+	mov	rax,	[b_r27%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r27%1],	gouty
+	mov	rax,	[b_r28%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r28%1],	gouty
+	mov	rax,	[b_r29%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r29%1],	gouty
+	mov	rax,	[b_r30%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r30%1],	gouty
+	mov	rax,	[b_r31%2]
+	todecq	%3,	%4,	%5,	%6
+	vmovdqu	[d_r31%1],	gouty
+	%endif
+	%pop
+%endmacro
 
 ;for taking and converting the current register data using a minimal amount of memory reads and writes
 ;more complex but should be faster
@@ -294,74 +540,148 @@ call_Takebaseregs:	takebaseregs	%1
 	
 %endmacro
 ;format hex data into a console readable format
-%macro	baseregformat	3;1:output|2:input|3:free avx reg
+%macro	basereghformat	3;1:output|2:input|3:free avx reg
 %push	scope	
-	movdqu	%3,	[h_rax%2]
-	movdqu	[s_rax%1 + outdat_offset],	%3
-	movdqu	%3,	[h_rbx%2]
-	movdqu	[s_rbx%1 + outdat_offset],	%3
-	movdqu	%3,	[h_rcx%2]
-	movdqu	[s_rcx%1 + outdat_offset],	%3
-	movdqu	%3,	[h_rdx%2]
-	movdqu	[s_rdx%1 + outdat_offset],	%3
-	movdqu	%3,	[h_rbp%2]
-	movdqu	[s_rbp%1 + outdat_offset],	%3
-	movdqu	%3,	[h_rsp%2]
-	movdqu	[s_rsp%1 + outdat_offset],	%3
-	movdqu	%3,	[h_rdi%2]
-	movdqu	[s_rdi%1 + outdat_offset],	%3
-	movdqu	%3,	[h_rsi%2]
-	movdqu	[s_rsi%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r8%2]
-	movdqu	[s_r8%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r9%2]
-	movdqu	[s_r9%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r10%2]
-	movdqu	[s_r10%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r11%2]
-	movdqu	[s_r11%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r12%2]
-	movdqu	[s_r12%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r13%2]
-	movdqu	[s_r13%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r14%2]
-	movdqu	[s_r14%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r15%2]
-	movdqu	[s_r15%1 + outdat_offset],	%3
+	dgr	%3,	t
+	movdqu	gtx,	[h_rax%2]
+	movdqu	[s_rax%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_rbx%2]
+	movdqu	[s_rbx%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_rcx%2]
+	movdqu	[s_rcx%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_rdx%2]
+	movdqu	[s_rdx%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_rbp%2]
+	movdqu	[s_rbp%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_rsp%2]
+	movdqu	[s_rsp%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_rdi%2]
+	movdqu	[s_rdi%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_rsi%2]
+	movdqu	[s_rsi%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r8%2]
+	movdqu	[s_r8%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r9%2]
+	movdqu	[s_r9%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r10%2]
+	movdqu	[s_r10%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r11%2]
+	movdqu	[s_r11%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r12%2]
+	movdqu	[s_r12%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r13%2]
+	movdqu	[s_r13%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r14%2]
+	movdqu	[s_r14%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r15%2]
+	movdqu	[s_r15%1 + outdat_offset],	gtx
 	%if	use512	=	1
-	movdqu	%3,	[h_r16%2]
-	movdqu	[s_r16%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r17%2]
-	movdqu	[s_r17%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r18%2]
-	movdqu	[s_r18%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r19%2]
-	movdqu	[s_r19%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r20%2]
-	movdqu	[s_r20%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r21%2]
-	movdqu	[s_r21%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r22%2]
-	movdqu	[s_r22%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r23%2]
-	movdqu	[s_r23%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r24%2]
-	movdqu	[s_r24%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r25%2]
-	movdqu	[s_r25%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r26%2]
-	movdqu	[s_r26%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r27%2]
-	movdqu	[s_r27%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r28%2]
-	movdqu	[s_r28%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r29%2]
-	movdqu	[s_r29%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r30%2]
-	movdqu	[s_r30%1 + outdat_offset],	%3
-	movdqu	%3,	[h_r31%2]
-	movdqu	[s_r31%1 + outdat_offset],	%3
+	movdqu	gtx,	[h_r16%2]
+	movdqu	[s_r16%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r17%2]
+	movdqu	[s_r17%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r18%2]
+	movdqu	[s_r18%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r19%2]
+	movdqu	[s_r19%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r20%2]
+	movdqu	[s_r20%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r21%2]
+	movdqu	[s_r21%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r22%2]
+	movdqu	[s_r22%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r23%2]
+	movdqu	[s_r23%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r24%2]
+	movdqu	[s_r24%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r25%2]
+	movdqu	[s_r25%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r26%2]
+	movdqu	[s_r26%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r27%2]
+	movdqu	[s_r27%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r28%2]
+	movdqu	[s_r28%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r29%2]
+	movdqu	[s_r29%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r30%2]
+	movdqu	[s_r30%1 + outdat_offset],	gtx
+	movdqu	gtx,	[h_r31%2]
+	movdqu	[s_r31%1 + outdat_offset],	gtx
 	%endif
+%pop
+%endmacro
+;format dec data into a console readable format
+%macro	baseregdformat	3;1:output|2:input|3:free avx reg
+%push	scope	
+	dgr	%3,	t
+	vmovdqu	gty,	[d_rax%2]
+	vmovdqu	[sd_rax%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_rbx%2]
+	vmovdqu	[sd_rbx%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_rcx%2]
+	vmovdqu	[sd_rcx%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_rdx%2]
+	vmovdqu	[sd_rdx%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_rbp%2]
+	vmovdqu	[sd_rbp%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_rsp%2]
+	vmovdqu	[sd_rsp%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_rdi%2]
+	vmovdqu	[sd_rdi%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_rsi%2]
+	vmovdqu	[sd_rsi%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r8%2]
+	vmovdqu	[sd_r8%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r9%2]
+	vmovdqu	[sd_r9%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r10%2]
+	vmovdqu	[sd_r10%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r11%2]
+	vmovdqu	[sd_r11%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r12%2]
+	vmovdqu	[sd_r12%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r13%2]
+	vmovdqu	[sd_r13%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r14%2]
+	vmovdqu	[sd_r14%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r15%2]
+	vmovdqu	[sd_r15%1 + outdat_offset],	gty
+	%if	use512	=	1
+	vmovdqu	gty,	[d_r16%2]
+	vmovdqu	[sd_r16%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r17%2]
+	vmovdqu	[sd_r17%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r18%2]
+	vmovdqu	[sd_r18%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r19%2]
+	vmovdqu	[sd_r19%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r20%2]
+	vmovdqu	[sd_r20%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r21%2]
+	vmovdqu	[sd_r21%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r22%2]
+	vmovdqu	[sd_r22%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r23%2]
+	vmovdqu	[sd_r23%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r24%2]
+	vmovdqu	[sd_r24%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r25%2]
+	vmovdqu	[sd_r25%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r26%2]
+	vmovdqu	[sd_r26%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r27%2]
+	vmovdqu	[sd_r27%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r28%2]
+	vmovdqu	[sd_r28%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r29%2]
+	vmovdqu	[sd_r29%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r30%2]
+	vmovdqu	[sd_r30%1 + outdat_offset],	gty
+	vmovdqu	gty,	[d_r31%2]
+	vmovdqu	[sd_r31%1 + outdat_offset],	gty
+	%endif
+%pop
 %endmacro
 
 %macro	sseregbindata	1

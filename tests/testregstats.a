@@ -3,11 +3,14 @@
 %include	'../genreg.ah'
 %include	'../syscall.ah'
 %include	'../hex.ah'
+%include	'../dec.ah'
 %include	'../regstats.ah'
 global	main
 section .data
-	baseregoutdata	1
+	basereghoutdata	1
+	baseregdoutdata	1
 	basereghexdata	1
+	baseregdecdata	1
 	baseregbindata	1
 	sseregoutdata	1
 	ssereghexdata	1
@@ -29,12 +32,19 @@ main:
 	takebaseregs	1
 	takeavx2regs	1
 	takesseregs	1
-	baseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
-	baseregformat	1,	1,	xmm0
+	basereghconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
+	basereghformat	1,	1,	xmm0
 	mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	s_rax1
-	mov	rdx,	odat_totalsize
+	mov	rdx,	ohdat_totalsize
+	syscall
+	baseregdconvm	1,	1,	ymm0,	r8,	r9,	ymm1
+	baseregdformat	1,	1,	ymm0
+	mov	rax,	sys_write
+	mov	rdi,	stdout
+	mov	rsi,	sd_rax1
+	mov	rdx,	oddat_totalsize
 	syscall
 	sseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
 	sseregformat	1,	1,	xmm0
