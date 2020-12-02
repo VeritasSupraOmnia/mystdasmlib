@@ -1,0 +1,59 @@
+;asm header for easy writing of exception throws
+;needs genreg, cstring and syscall above it
+
+;needs the ability to approximate try and catch 
+;needs the ability to completely remove said exceptions given a non-debug build
+;clearly needs the ability to detect debug build status 
+;can set it itself with %define debug 1
+%define	debug	0
+
+;I'm of the opinion that exception handling should be
+
+;macro for defining a basic, standard exception in the .data section
+%macro	ex 3
+	ex%1_status:	db	0;whether there is an exception or not. 1 or more if there is
+	ex%1_ret:	db	2;whether or not to sys_return after printing message. 0xff for no print or return
+	newstrla	ex%1_msg,	%3
+%endmacro
+
+;immediately prints if two base registers are equal (really bad for mid algorithm work but good enough for general exception checking between main loop iterations 
+%macro	printeq	3;1 is exception id
+%push	scope
+	dgr	%2,	1
+	dgr	%3,	2
+	cmp	g1,	g2
+	jne	%%skp
+	write	stdout,	sex%1_msg,	[lex%1_msg]
+%%skp:
+%pop
+%endmacro
+;same as above but does ret check
+%macro	printeq	4;1 is exception id;2-3 are comparators;4 is 
+%push	scope
+	dgr	%2,	1
+	dgr	%3,	2
+	cmp	g1,	g2
+	jne	%%skp
+	write	stdout,	sex%1_msg,	[lex%1_msg]
+%%skp:
+%pop
+%endmacro
+
+;saves state for later detection
+%macro	delayeq 3
+%push	scope
+%pop
+%endmacro
+
+;checks state and prints if true without return check
+%macro	chkex	1
+	write	stdout,	sex%1_msg,	[lex%1_msg]
+%endmacro
+
+;checks state and prints if true, then return if needed.
+%macro	chkexr	3
+%push	scope
+	dgr	%2,	1
+	dgr	%3,	2
+%pop
+%endmacro

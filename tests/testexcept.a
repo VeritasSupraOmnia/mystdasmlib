@@ -1,0 +1,9 @@
+;test of ../except.ah
+%include	"../genreg.ah"
+%include	"../syscall.ah"
+%include	"../cstring.ah"
+%include	"../except.ah"
+global	main
+section	.data
+section	.code
+main:
