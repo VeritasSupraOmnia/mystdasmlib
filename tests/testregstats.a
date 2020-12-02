@@ -23,6 +23,7 @@ main:
 	mov	rax,	6
 	mov	rdi,	8
 	mov	rsi,	0x450329AF
+	mov	r8,	0xffffffffffffffff
 	movq	xmm0,	rax
 	movq	xmm1,	rsi
 	vpbroadcastq	ymm5,	xmm1
@@ -40,7 +41,7 @@ main:
 	mov	rdx,	ohdat_totalsize
 	syscall
 	baseregdconvm	1,	1,	ymm0,	r8,	r9,	ymm1
-	baseregdformat	1,	1,	ymm0
+	baseregdformat	1,	1,	ymm0,	ymm1,	r9
 	mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	sd_rax1

@@ -434,101 +434,101 @@ call_Takebaseregs:	takebaseregs	%1
 %push	scope	
 	dgr	%3,	out
 	mov	rax,	[b_rax%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_rax%1],	gouty
 	mov	rax,	[b_rbx%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_rbx%1],	gouty
 	mov	rax,	[b_rcx%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_rcx%1],	gouty
 	mov	rax,	[b_rdx%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_rdx%1],	gouty
 	mov	rax,	[b_rbp%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_rbp%1],	gouty
 	mov	rax,	[b_rsp%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_rsp%1],	gouty
 	mov	rax,	[b_rdi%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_rdi%1],	gouty
 	mov	rax,	[b_rsi%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_rsi%1],	gouty
 	mov	rax,	[b_r8%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r8%1],	gouty
 	mov	rax,	[b_r9%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r9%1],	gouty
 	mov	rax,	[b_r10%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r10%1],	gouty
 	mov	rax,	[b_r11%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r11%1],	gouty
 	mov	rax,	[b_r12%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r12%1],	gouty
 	mov	rax,	[b_r13%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r13%1],	gouty
 	mov	rax,	[b_r14%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r14%1],	gouty
 	mov	rax,	[b_r15%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r15%1],	gouty
 	%if	use512	=	1
 	mov	rax,	[b_r16%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r16%1],	gouty
 	mov	rax,	[b_r17%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r17%1],	gouty
 	mov	rax,	[b_r18%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r18%1],	gouty
 	mov	rax,	[b_r19%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r19%1],	gouty
 	mov	rax,	[b_r20%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r20%1],	gouty
 	mov	rax,	[b_r21%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r21%1],	gouty
 	mov	rax,	[b_r22%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r22%1],	gouty
 	mov	rax,	[b_r23%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r23%1],	gouty
 	mov	rax,	[b_r24%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r24%1],	gouty
 	mov	rax,	[b_r25%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r25%1],	gouty
 	mov	rax,	[b_r26%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r26%1],	gouty
 	mov	rax,	[b_r27%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r27%1],	gouty
 	mov	rax,	[b_r28%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r28%1],	gouty
 	mov	rax,	[b_r29%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r29%1],	gouty
 	mov	rax,	[b_r30%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r30%1],	gouty
 	mov	rax,	[b_r31%2]
-	todecq	%3,	%4,	%5,	%6
+	todecqa	%3,	%4,	%5,	%6
 	vmovdqu	[d_r31%1],	gouty
 	%endif
 	%pop
@@ -612,73 +612,145 @@ call_Takebaseregs:	takebaseregs	%1
 %pop
 %endmacro
 ;format dec data into a console readable format
-%macro	baseregdformat	3;1:output|2:input|3:free avx reg
+%macro	baseregdformat	5;1:output|2:input|3-4:free avx reg|5:free base reg
 %push	scope	
-	dgr	%3,	t
+	dgr	%3,	t;temp
+	dgr	%4,	m;mask
+	dgr	%5,	f;feed
+	mov	gf,	0xffffffffffffffff
+	movq	gmx,	gf
+	vpbroadcastq	gmy,	gmx
+	mov	gf,	0x00000000ffffffff
+	movq	gmx,	gf
+	vpermq	gmy,	gmy,	0b01001111
 	vmovdqu	gty,	[d_rax%2]
+	vpand	gmy,	gmy,	[sd_rax%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_rax%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_rbx%2]
+	vpand	gmy,	gmy,	[sd_rbx%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_rbx%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_rcx%2]
+	vpand	gmy,	gmy,	[sd_rcx%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_rcx%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_rdx%2]
+	vpand	gmy,	gmy,	[sd_rdx%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_rdx%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_rbp%2]
+	vpand	gmy,	gmy,	[sd_rbp%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_rbp%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_rsp%2]
+	vpand	gmy,	gmy,	[sd_rsp%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_rsp%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_rdi%2]
+	vpand	gmy,	gmy,	[sd_rdi%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_rdi%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_rsi%2]
+	vpand	gmy,	gmy,	[sd_rsi%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_rsi%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r8%2]
+	vpand	gmy,	gmy,	[sd_r8%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r8%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r9%2]
+	vpand	gmy,	gmy,	[sd_r9%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r9%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r10%2]
+	vpand	gmy,	gmy,	[sd_r10%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r10%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r11%2]
+	vpand	gmy,	gmy,	[sd_r11%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r11%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r12%2]
+	vpand	gmy,	gmy,	[sd_r12%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r12%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r13%2]
+	vpand	gmy,	gmy,	[sd_r13%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r13%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r14%2]
+	vpand	gmy,	gmy,	[sd_r14%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r14%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r15%2]
+	vpand	gmy,	gmy,	[sd_r15%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r15%1 + outdat_offset],	gty
 	%if	use512	=	1
 	vmovdqu	gty,	[d_r16%2]
+	vpand	gmy,	gmy,	[sd_r16%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r16%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r17%2]
+	vpand	gmy,	gmy,	[sd_r17%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r17%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r18%2]
+	vpand	gmy,	gmy,	[sd_r18%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r18%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r19%2]
+	vpand	gmy,	gmy,	[sd_r19%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r19%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r20%2]
+	vpand	gmy,	gmy,	[sd_r20%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r20%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r21%2]
+	vpand	gmy,	gmy,	[sd_r21%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r21%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r22%2]
+	vpand	gmy,	gmy,	[sd_r22%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r22%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r23%2]
+	vpand	gmy,	gmy,	[sd_r23%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r23%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r24%2]
+	vpand	gmy,	gmy,	[sd_r24%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r24%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r25%2]
+	vpand	gmy,	gmy,	[sd_r25%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r25%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r26%2]
+	vpand	gmy,	gmy,	[sd_r26%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r26%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r27%2]
+	vpand	gmy,	gmy,	[sd_r27%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r27%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r28%2]
+	vpand	gmy,	gmy,	[sd_r28%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r28%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r29%2]
+	vpand	gmy,	gmy,	[sd_r29%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r29%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r30%2]
+	vpand	gmy,	gmy,	[sd_r30%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r30%1 + outdat_offset],	gty
 	vmovdqu	gty,	[d_r31%2]
+	vpand	gmy,	gmy,	[sd_r31%1 + outdat_offset]
+	vpor	gty,	gty,	gmy
 	vmovdqu	[sd_r31%1 + outdat_offset],	gty
 	%endif
 %pop
