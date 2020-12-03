@@ -1,5 +1,5 @@
 ;a header allowing you to pull, save, and print data in in as many registers as desired
-
+;I think I will rename this regstate.ah instead of regstats.ah because it is intended to directly pull, save and convert register state.
 ;byte size of 
 %define basereghexsize 256
 %define baseregbinsize 128
@@ -280,7 +280,7 @@
 	b_r31%1:	dq	0
 	%endif
 %endmacro
-;saving of raw data
+;saving of raw data from base regs
 %macro	takebaseregs 1
 	mov	[b_rax%1],	rax
 	mov	[b_rbx%1],	rbx
@@ -315,6 +315,43 @@
 	mov	[b_r29%1],	r29
 	mov	[b_r30%1],	r30
 	mov	[b_r31%1],	r31
+	%endif
+%endmacro
+;loading of raw data into base regs
+%macro	loadbaseregs 1
+	mov	rax,	[b_rax%1]
+	mov	rbx,	[b_rbx%1]
+	mov	rcx,	[b_rcx%1]
+	mov	rdx,	[b_rdx%1]
+	mov	rbp,	[b_rbp%1]
+	mov	rsp,	[b_rsp%1]
+	mov	rdi,	[b_rdi%1]
+	mov	rsi,	[b_rsi%1]
+	mov	r8,	[b_r8%1]
+	mov	r9,	[b_r9%1]
+	mov	r10,	[b_r10%1]
+	mov	r11,	[b_r11%1]
+	mov	r11,	[b_r12%1]
+	mov	r13,	[b_r13%1]
+	mov	r14,	[b_r14%1]
+	mov	r15,	[b_r15%1]
+	%if	use512	=	1
+	mov	r16,	[b_r16%1]
+	mov	r17,	[b_r17%1]
+	mov	r18,	[b_r18%1]
+	mov	r19,	[b_r19%1]
+	mov	r20,	[b_r20%1]
+	mov	r21,	[b_r21%1]
+	mov	r22,	[b_r22%1]
+	mov	r23,	[b_r23%1]
+	mov	r24,	[b_r24%1]
+	mov	r25,	[b_r25%1]
+	mov	r26,	[b_r26%1]
+	mov	r27,	[b_r27%1]
+	mov	r28,	[b_r28%1]
+	mov	r29,	[b_r29%1]
+	mov	r30,	[b_r30%1]
+	mov	r31,	[b_r31%1]
 	%endif
 %endmacro
 
