@@ -25,6 +25,7 @@
 %define sys_pipe	22	;rdi:pointer to double quadword for pipe read and write file descripter
 %define sys_exec	59	;rdi:cmd char array pnt
 %define	sys_ret		60	;rdi:return value
+%define	sys_time	201	;rdi;memory location to put time value - gets seconds since epoch
 
 ;easier write setup
 ;use:	write	stout,	charbuffer,	[length_charbuffer]
@@ -34,6 +35,24 @@ mov	rdi,	%1
 mov	rsi,	%2
 mov	rdx,	%3
 syscall
+%endmacro
+
+;cwrite	-	CleanWRITE
+;same as above but slower, due to popping and pushing registers, but you can insert it anywhere as long as you don't stack overflow
+%macro	cwrite	3
+push	rax
+push	rdi
+push	rsi
+push	rdx
+mov	rax,	sys_write
+mov	rdi,	%1
+mov	rsi,	%2
+mov	rdx,	%3
+syscall
+pop	rdx
+pop	rsi
+pop	rdi
+pop	rax
 %endmacro
 
 ;easier read setup
