@@ -1,0 +1,8 @@
+;header to easily include common debugging headers for new feature development and testing
+%include	"../genreg.ah"
+%include	"../stack.ah"
+%include	"../cstring.ah"
+%include	"../hex.ah"
+%include	"../dec.ah"
+%include	"../syscall.ah"
+%include	"../regstats.ah"
