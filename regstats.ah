@@ -1143,6 +1143,204 @@ call_Takebaseregs:	takebaseregs	%1
 	vmovdqu	[b_ymm14%1],	ymm14
 	vmovdqu	[b_ymm15%1],	ymm15
 %endmacro
+;takes avx2 regs, rolling converts them to hexadecimal using a stack cache, then outputs them, formatted, into a avx2regoutdata struct given in arguments
+;should be quick compared to other conversions and less memory intesive, due a lack a needed memory read writes
+%macro	avx2regstohout	1
+	push	rax
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm0
+	sub 	rsp,	32
+	vmovdqu	[rsp],	ymm1
+	sub 	rsp,	32
+	vmovdqu	[rsp],	ymm2
+	sub 	rsp,	32
+	vmovdqu	[rsp],	ymm3
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm4
+	sub	rsp,	32
+
+	mov	rax,	0x0001020304050607
+	movq	xmm1,	rax
+	pslldq	xmm1,	8
+	mov	rax,	0x08090A0B0C0D0E0F
+	movq	xmm2,	rax
+	por	xmm1,	xmm2
+	vpermq	ymm4,	ymm1,	0b01000100
+	
+	vmovdqu		ymm3,	ymm5
+	vpermq	ymm5,	ymm5,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm5,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm5%1 + 6],	ymm0
+	vmovdqu		ymm5,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm5%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm6
+	vpermq	ymm6,	ymm6,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm6,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm6%1 + 6],	ymm0
+	vmovdqu		ymm6,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm6%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm7
+	vpermq	ymm7,	ymm7,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm7,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm7%1 + 6],	ymm0
+	vmovdqu		ymm7,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm7%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm8
+	vpermq	ymm8,	ymm8,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm8,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm8%1 + 6],	ymm0
+	vmovdqu		ymm8,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm8%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm9
+	vpermq	ymm9,	ymm9,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm9,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm9%1 + 6],	ymm0
+	vmovdqu		ymm9,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm9%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm10
+	vpermq	ymm10,	ymm10,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm10,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm10%1 + 6],	ymm0
+	vmovdqu		ymm10,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm10%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm11
+	vpermq	ymm11,	ymm11,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm11,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm11%1 + 6],	ymm0
+	vmovdqu		ymm11,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm11%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm12
+	vpermq	ymm12,	ymm12,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm12,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm12%1 + 6],	ymm0
+	vmovdqu		ymm12,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm12%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm13
+	vpermq	ymm13,	ymm13,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm13,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm13%1 + 6],	ymm0
+	vmovdqu		ymm13,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm13%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm14
+	vpermq	ymm14,	ymm14,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm14,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm14%1 + 6],	ymm0
+	vmovdqu		ymm14,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm14%1 + 32 + 6],	ymm0
+	vmovdqu		ymm3,	ymm15
+	vpermq	ymm15,	ymm15,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm15,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm15%1 + 6],	ymm0
+	vmovdqu		ymm15,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm15%1 + 32 + 6],	ymm0
+
+	add	rsp,	32
+	vmovdqu	ymm2,	[rsp]
+	vmovdqu		ymm3,	ymm2
+	vpermq	ymm2,	ymm2,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm2,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm4%1 + 6],	ymm0
+	vmovdqu		ymm2,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm4%1 + 32 + 6],	ymm0
+	
+	add	rsp,	32
+	vmovdqu	ymm2,	[rsp]
+	vmovdqu		ymm3,	ymm2
+	vpermq	ymm2,	ymm2,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm2,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm3%1 + 6],	ymm0
+	vmovdqu		ymm2,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm3%1 + 32 + 6],	ymm0
+	
+	add	rsp,	32
+	vmovdqu	ymm2,	[rsp]
+	vmovdqu		ymm3,	ymm2
+	vpermq	ymm2,	ymm2,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm2,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm2%1 + 6],	ymm0
+	vmovdqu		ymm2,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm2%1 + 32 + 6],	ymm0
+
+	add	rsp,	32
+	vmovdqu	ymm2,	[rsp]
+	vmovdqu		ymm3,	ymm2
+	vpermq	ymm2,	ymm2,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm2,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm1%1 + 6],	ymm0
+	vmovdqu		ymm2,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm1%1 + 32 + 6],	ymm0
+	
+	add	rsp,	32
+	vmovdqu	ymm2,	[rsp]
+	vmovdqu		ymm3,	ymm2
+	vpermq	ymm2,	ymm2,	0b11111110
+	tohexdqu	ymm0,	ymm1,	ymm2,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm0%1 + 6],	ymm0
+	vmovdqu		ymm2,	ymm3
+	tohexdqu	ymm0,	ymm1,	ymm3,	rax
+	vpshufb	ymm0,	ymm0,	ymm4
+	vmovdqu	[s_ymm0%1 + 32 + 6],	ymm0
+	
+	sub	rsp,	128
+	vmovdqu	ymm4,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm3,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm2,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm1,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm0,	[rsp]
+	add	rsp,	32
+	pop	rax
+
+%endmacro
 %macro	avx2regconvm	6
 %push	scope	
 	dgr	%6,	in
