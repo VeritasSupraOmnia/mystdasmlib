@@ -29,11 +29,11 @@
 
 ;push all quadword registers
 %macro	pushaq	0
+push	rsp
+push	rbp
 push	rax
 push	rbx
 push	rcx
-push	rbp
-push	rsp
 push	rdx
 push	rdi
 push	rsi
@@ -59,13 +59,84 @@ pop	r8
 pop	rsi
 pop	rdi
 pop	rdx
-pop	rsp
-pop	rbp
 pop	rcx
 pop	rbx
 pop	rax
+pop	rbp
+pop	rsp
 %endmacro
 
+;push all ywords to stack
+%macro	pushay	0
+	vmovdqu	[rsp],	ymm0
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm1
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm2
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm3
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm4
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm5
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm6
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm7
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm8
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm9
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm10
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm11
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm12
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm13
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm14
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm15
+	sub	rsp,	32
+%endmacro
+
+;pop all ywords from stack
+%macro	popay	0
+	vmovdqu	ymm15,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm14,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm13,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm12,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm11,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm10,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm9,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm8,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm7,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm6,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm5,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm4,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm3,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm2,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm1,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm0,	[rsp]
+	add	rsp,	32
+%endmacro
 
 ;easier write setup
 ;use:	write	stout,	charbuffer,	[length_charbuffer]
@@ -75,18 +146,6 @@ mov	rdi,	%1
 mov	rsi,	%2
 mov	rdx,	%3
 syscall
-%endmacro
-
-;cwrite	-	CleanWRITE
-;same as above but slower, due to popping and pushing registers, but you can insert it anywhere as long as you don't stack overflow
-%macro	cwrite	3
-pushaq
-mov	rax,	sys_write
-mov	rdi,	%1
-mov	rsi,	%2
-mov	rdx,	%3
-syscall
-popaq
 %endmacro
 
 ;easier read setup
