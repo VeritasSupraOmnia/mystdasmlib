@@ -1,0 +1,112 @@
+;a collection of macros for extra stack manipulation capabilities.
+
+;push all quadword registers
+%macro	pushaq	0
+push	rsp
+push	rbp
+push	rax
+push	rbx
+push	rcx
+push	rdx
+push	rdi
+push	rsi
+push	r8
+push	r9
+push	r10
+push	r11
+push	r12
+push	r13
+push	r14
+push	r15
+%endmacro
+;pop all quadword registers
+%macro	popaq	0
+pop	r15
+pop	r14
+pop	r13
+pop	r12
+pop	r11
+pop	r10
+pop	r9
+pop	r8
+pop	rsi
+pop	rdi
+pop	rdx
+pop	rcx
+pop	rbx
+pop	rax
+pop	rbp
+pop	rsp
+%endmacro
+
+;push all ywords to stack
+%macro	pushay	0
+	vmovdqu	[rsp],	ymm0
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm1
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm2
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm3
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm4
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm5
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm6
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm7
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm8
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm9
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm10
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm11
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm12
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm13
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm14
+	sub	rsp,	32
+	vmovdqu	[rsp],	ymm15
+	sub	rsp,	32
+%endmacro
+
+;pop all ywords from stack
+%macro	popay	0
+	vmovdqu	ymm15,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm14,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm13,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm12,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm11,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm10,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm9,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm8,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm7,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm6,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm5,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm4,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm3,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm2,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm1,	[rsp]
+	add	rsp,	32
+	vmovdqu	ymm0,	[rsp]
+	add	rsp,	32
+%endmacro
