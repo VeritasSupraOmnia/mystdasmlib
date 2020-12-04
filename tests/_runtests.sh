@@ -43,7 +43,8 @@ tcc testfind.o -o testfind
 rm testfind testfind.o
 
 #test except.ah
-nasm testexcept.a -o testexcept.o -felf64
-tcc testexcept.o -o testexcept
-./testexcept
-rm testexcept testexcept.o
+#nasm testexcept.a -o testexcept.o -felf64
+#tcc testexcept.o -o testexcept
+#./testexcept
+#rm testexcept testexcept.o
+

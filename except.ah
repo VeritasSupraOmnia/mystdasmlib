@@ -9,49 +9,95 @@
 
 ;I'm of the opinion that exception handling should be
 
-;macro for defining a basic, standard exception in the .data section
-%macro	ex 3
+;macro for defining a basic, standard exception in the .data section that does not return by default
+%macro	exnr 3
 	ex%1_status:	db	0;whether there is an exception or not. 1 or more if there is
-	ex%1_ret:	db	2;whether or not to sys_return after printing message. 0xff for no print or return
+	ex%1_ret:	db	0;whether or not to sys_return after printing message. 0xff for no print or return
+	newstrla	ex%1_msg,	%3
+%endmacro
+;macro for defining a basic, standard exception in the .data section that does return by default
+%macro	exr 3
+	ex%1_status:	db	0
+	ex%1_ret:	db	1
+	newstrla	ex%1_msg,	%3
+%endmacro
+;macro for defining a basic, standard exception in the .data section that does not print or return by default
+%macro	exnpr 3
+	ex%1_status:	db	0
+	ex%1_ret:	db	1
 	newstrla	ex%1_msg,	%3
 %endmacro
 
-;immediately prints if two base registers are equal (really bad for mid algorithm work but good enough for general exception checking between main loop iterations 
+;immediately prints if two base registers are equal then sets exeption status
 %macro	printeq	3;1 is exception id
 %push	scope
 	dgr	%2,	1
 	dgr	%3,	2
 	cmp	g1,	g2
 	jne	%%skp
+	push	rax
+	push	rdi
+	push	rsi
+	push	rdx
 	write	stdout,	sex%1_msg,	[lex%1_msg]
+	pop	rdx
+	pop	rsi
+	pop	rdi
+	pop	rax
+	push	g1
+	mov	g1,	1
+	mov	[ex%1_statusb],	g1b
+	pop	g1
 %%skp:
 %pop
 %endmacro
 ;same as above but does ret check
-%macro	printeq	4;1 is exception id;2-3 are comparators;4 is 
+%macro	printeqr	4;1 is exception id;2-3 are comparators;4 is 
 %push	scope
 	dgr	%2,	1
 	dgr	%3,	2
 	cmp	g1,	g2
 	jne	%%skp
+	push	rax
+	push	rdi
+	push	rsi
+	push	rdx
 	write	stdout,	sex%1_msg,	[lex%1_msg]
+	pop	rdx
+	pop	rsi
+	pop	rdi
+	pop	rax
+
+	push	g1
+	mov	g1,	1
+	mov	[ex%1_statusb],	g1b
+	pop	g1
 %%skp:
 %pop
 %endmacro
 
-;saves state for later detection
-%macro	delayeq 3
+;checks equality and saves exception state for later if equal
+%macro	saveeq 3
 %push	scope
+	dgr	%2,	1
+	dgr	%3,	2
+	cmp	g1,	g2
+	jne	%%skp
+	
+%%skp:
 %pop
 %endmacro
 
 ;checks state and prints if true without return check
-%macro	chkex	1
+%macro	chkeq	1
+	push	rdi
+	push	rsi
+	push	rdx
 	write	stdout,	sex%1_msg,	[lex%1_msg]
 %endmacro
 
 ;checks state and prints if true, then return if needed.
-%macro	chkexr	3
+%macro	chkeqr	3
 %push	scope
 	dgr	%2,	1
 	dgr	%3,	2

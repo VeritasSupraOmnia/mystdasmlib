@@ -1129,5 +1129,14 @@
 	%endif
 %endmacro
 
+;declares a general register for each argument	-	assumes there are arguments	-	scratches i value
+%macro	dga	1
+	%assign	i	1
+	%rep	%[%1]
+	dgr	%[%i],	i
+	%assign	i	i+1
+	%endrep
+
+%endmacro
 ;Possible feature: register-in-use table 
 ;Using a quadword sized number define (with each bit representing a register slot) check-reg-open/check-reg-closed macros, one can keep track of which register is in use and output register use flow as well as enabling the detection of register conflicts.

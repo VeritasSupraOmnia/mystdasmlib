@@ -45,7 +45,8 @@ main:	mov	rax,	[control]
 failure:mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	tf
-	mov	rdx,	trcl+1
+	mov	rdx,	trcl
+	inc	rdx
 	syscall
 	mov	rax,	sys_ret
 	mov	rdi,	2
@@ -53,7 +54,8 @@ failure:mov	rax,	sys_write
 success:mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	ts
-	mov	rdx,	trcl+1
+	mov	rdx,	trcl
+	inc	rdx
 	syscall
 	mov	rax,	sys_ret
 	mov	rdi,	0

@@ -1,2 +1,27 @@
-1 macros for declaring and keeping track of in use registers to aid in both smart writing and assembly-time debugging
-2 macro for easily creating and printing timestamps to stout or log files for automated debugging.
+1	macros for declaring and keeping track of in use registers to aid in both smart writing and assembly-time debugging
+2	macro for easily creating and printing timestamps to stout or log files for automated debugging.
+3	"clean" versions of certain macros for easy to implement realtime printing of register data.
+4	simd conversion of bytes into decimal dword character values
+5	decimal conversion and saving of different sized splits of the 
+6	figuring out a way to do decimal conversion without dividing
+
+10 >> 1 = 5
+5 - 1 = 4
+4 >> 2 = 1
+
+20 >> 1 = 10
+10 - 1 = 9
+9 >> 2 == 4
+
+
+30 >> 1 = 15
+15 - 1 = 14
+14 >> 2 = 3
+
+40 >> 2 = 20
+20 - 1 = 19
+19 >> 2
+
+47 >> 3 = 5
+
+55 >> 3	= 
