@@ -5,19 +5,25 @@
 %include	'../hex.ah'
 %include	'../dec.ah'
 %include	'../regstats.ah'
+
 global	main
 section .data
+	nl:	db	0x0A
 	basereghoutdata	1
-	baseregdoutdata	1
-	basereghexdata	1
-	baseregdecdata	1
+;	basereghoutdata	2
+;	baseregdoutdata	1
+;	basereghexdata	1
+;	baseregdecdata	1
 	baseregbindata	1
-	sseregoutdata	1
-	ssereghexdata	1
-	sseregbindata	1
-	avx2regbindata	1
-	avx2reghexdata	1
+;	baseregbindata	2
+;	sseregoutdata	1
+;	ssereghexdata	1
+;	sseregbindata	1
+;	avx2regbindata	1
+;	avx2regbindata	2
+;	avx2reghexdata	1
 	avx2regoutdata	1
+;	avx2regoutdata	2
 section	.code
 main:
 	mov	rax,	6
@@ -26,41 +32,65 @@ main:
 	mov	r8,	0xffffffffffffffff
 	movq	xmm0,	rax
 	movq	xmm1,	rsi
+	movq	xmm3,	rsi
+	vpermq	ymm3,	ymm3,	0b11110011
 	vpbroadcastq	ymm5,	xmm1
 	vpbroadcastb	ymm6,	xmm0
 	vpor	ymm7,	ymm6,	ymm1
 	vpand	ymm7,	ymm7,	ymm5
-	takebaseregs	1
-	takeavx2regs	1
-	takesseregs	1
-	basereghconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
-	basereghformat	1,	1,	xmm0
-	mov	rax,	sys_write
-	mov	rdi,	stdout
-	mov	rsi,	s_rax1
-	mov	rdx,	ohdat_totalsize
-	syscall
-	baseregdconvm	1,	1,	ymm0,	r8,	r9,	ymm1
-	baseregdformat	1,	1,	ymm0,	ymm1,	r9
-	mov	rax,	sys_write
-	mov	rdi,	stdout
-	mov	rsi,	sd_rax1
-	mov	rdx,	oddat_totalsize
-	syscall
-	sseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
-	sseregformat	1,	1,	xmm0
-	mov	rax,	sys_write
-	mov	rdi,	stdout
-	mov	rsi,	s_xmm01
-	mov	rdx,	osse_totalsize
-	syscall
-	avx2regconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
-	avx2regformat	1,	1,	xmm0
-	mov	rax,	sys_write
-	mov	rdi,	stdout
-	mov	rsi,	s_ymm01
-	mov	rdx,	oavx2_totalsize
-	syscall
+;	takebaseregs	1
+;	takeavx2regs	1
+;	takesseregs	1
+;	basereghconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
+;	basereghformat	1,	1,	xmm0
+;	mov	rax,	sys_write
+;	mov	rdi,	stdout
+;	mov	rsi,	s_rax1
+;	mov	rdx,	ohdat_totalsize
+;	syscall
+;	baseregdconvm	1,	1,	ymm0,	r8,	r9,	ymm1
+;	baseregdformat	1,	1,	ymm0,	ymm1,	r9
+;	mov	rax,	sys_write
+;	mov	rdi,	stdout
+;	mov	rsi,	sd_rax1
+;	mov	rdx,	oddat_totalsize
+;	syscall
+;	sseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
+;	sseregformat	1,	1,	xmm0
+;	mov	rax,	sys_write
+;	mov	rdi,	stdout
+;	mov	rsi,	s_xmm01
+;	mov	rdx,	osse_totalsize
+;	syscall
+;	avx2regconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
+;	avx2regformat	1,	1,	xmm0
+;	mov	rax,	sys_write
+;	mov	rdi,	stdout
+;	mov	rsi,	s_ymm01
+;	mov	rdx,	oavx2_totalsize
+;	syscall
+;	takebaseregs	1
+	baseregstohout	1
+;	takebaseregs	2
+	avx2regstohout	1
+	
+;	basereghconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
+;	basereghformat	1,	1,	xmm0
+;	write	stdout,	s_rax1,	ohdat_totalsize
+;	write	stdout,	nl,	1
+	
+	write	stdout,	s_rax1,	ohdat_totalsize
+	write	stdout,	nl,	1
+
+;	basereghconvm	1,	2,	xmm0,	xmm1,	xmm2,	r8
+;	basereghformat	1,	1,	xmm0
+;	write	stdout,	s_rax1,	ohdat_totalsize
+;	write	stdout,	nl,	1
+	
+	write	stdout,	s_ymm01,	oavx2_totalsize
+	write	stdout,	nl,	1
+
+
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall
