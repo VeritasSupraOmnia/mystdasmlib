@@ -2,18 +2,28 @@
 %include	"../syscall.ah"
 %include	"../genreg.ah"
 %include	"../hex.ah"
+%include	"../cstring.ah"
 
 global	main
+section	.data
+	newstrla	win,	"store.ah	Test success!"
+	newstrla	fail,	"store.ah	Test failure!"
 section	.bss
-	atimepstore	cadd,	8,	this,	q,	that,	x
+	atimepstore	cadd,	8,	this,	q
 section	.code
 main:
 	mov	rax,	0x0f0f0f0f0f0f0f0f
 	mov	[cadd.this],	rax
 	mov	rax,	[cadd.this]
 	tohexqu	xmm0,	xmm1,	xmm2,	rax
-	movdqu	[cadd.that],	xmm0
-	write	stdout,	cadd.that,	16
-	mov	rax,	sys_ret
+	mov	rax,	0x4630463046304630
+	movq	xmm1,	rax
+	vpermq	ymm1,	ymm1,	0b10100000
+	ptest	xmm1,	xmm0
+	jnc	failure	
+	write	stdout,	swin,	[lwin]
+	jmp	end
+failure:write	stdout,	sfail,	[lfail]
+end:	mov	rax,	sys_ret
 	mov	rdx,	0
 	syscall
