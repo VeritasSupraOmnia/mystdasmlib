@@ -1,0 +1,19 @@
+%include	"../store.ah"
+%include	"../syscall.ah"
+%include	"../genreg.ah"
+%include	"../hex.ah"
+
+global	main
+section	.bss
+	atimepstore	cadd,	8,	this,	q,	that,	x
+section	.code
+main:
+	mov	rax,	0x0f0f0f0f0f0f0f0f
+	mov	[cadd.this],	rax
+	mov	rax,	[cadd.this]
+	tohexqu	xmm0,	xmm1,	xmm2,	rax
+	movdqu	[cadd.that],	xmm0
+	write	stdout,	cadd.that,	16
+	mov	rax,	sys_ret
+	mov	rdx,	0
+	syscall
