@@ -73,16 +73,32 @@ incdec.%1:
 
 
 ;assembly time store lookup table
-;put this in the data section
-%macro	atimestorelookuptable	1-*
+;put this in the .bss section
+%macro	atimestorelookuptableq	1-*
+%push	scope
 	;arg1	is table name
 	;arg2	is count of stores in lookup table
 	;arg3+	are the names of the contiguous variable arrays
 
-%push	scope
-	
 	%define	%$name	%1
 	%define	%$count	%2
+	%assign	%$size	( %0 - 2 )
+%define	%$name.count	%$count
+%assign	%[%$name.size]	%$size * 8	;total size of the array in bytes
+	
+
+	%assign	i	0
+	%rep	%$count
+	%rotate	2
+	
+	%rep	%$size
+%[%$name].%1_%[i].address:	resq	1
+%[%$name].%1_%[i].count:	resq	1
+	%rotate	1
+	%endrep
+
+	%assign	i	i + 1
+	%endrep
 
 %pop
 %endmacro

@@ -15,7 +15,7 @@ section	.data
 ;	avx2regoutdata	1
 section	.bss
 	atimepstore	cadd,	8,	this,	q,	that,	z
-
+	atimestorelookuptableq	caddlt,	1,	thisa,	thata
 section	.code
 main:
 	mov	rax,	0x0f0f0f0f0f0f0f0f
@@ -31,6 +31,14 @@ main:
 	vmovdqu	ymm0,	[incdec.incdectest]
 	vmovdqu	ymm1,	[incdecres]
 ;	avx2regstohout	1
+	vptest	ymm0,	ymm1
+	jnc	failure
+
+	mov	rax,	cadd.this
+	mov	[caddlt.thisa_0.address],	rax
+	mov	rax,	[caddlt.thisa_0.address]
+	vmovdqu	ymm0,	[rax]
+	vmovdqu	ymm1,	[cadd.this]
 	vptest	ymm0,	ymm1
 	jnc	failure
 
