@@ -35,3 +35,54 @@
 %endrep
 %pop
 %endmacro
+
+;assembly time saving of tabled increment/decrement amounts into the .data section for simd incrementing and decrementing of contiguously placed counters
+;quadword, dword, word and byte variants - word and byte variants are only useful for very, very niche system needs
+
+;save 4 quadword incdec sizes into a ymm register
+%macro	incdecqy	2-5
+	;arg1	name ( ends as incdec.name)
+	;arg2-5	are the sizes of each inc/dec size in their char representations(b,w,d,q,x,y,z)
+incdec.%1:
+	%assign	i	( %0 - 1 )
+	%rep	4
+	%if	( %0 - 1 ) <=  i
+	%rotate	1
+	%ifidni	%1,	b
+		dq	1
+	%elifidni	%1,	w
+		dq	2
+	%elifidni	%1,	d
+		dq	4
+	%elifidni	%1,	q
+		dq	8
+	%elifidni	%1,	x
+		dq	16
+	%elifidni	%1,	y
+		dq	32
+	%elifidni	%1,	z
+		dq	64
+	%endif
+	%assign	i	i + 1
+	%else
+		dq	0
+	%endif
+	%endrep
+
+%endmacro
+
+
+;assembly time store lookup table
+;put this in the data section
+%macro	atimestorelookuptable	1-*
+	;arg1	is table name
+	;arg2	is count of stores in lookup table
+	;arg3+	are the names of the contiguous variable arrays
+
+%push	scope
+	
+	%define	%$name	%1
+	%define	%$count	%2
+
+%pop
+%endmacro

@@ -3,13 +3,19 @@
 %include	"../genreg.ah"
 %include	"../hex.ah"
 %include	"../cstring.ah"
+%include	"../regstats.ah"
 
 global	main
 section	.data
 	newstrla	win,	"store.ah	Test success!"
 	newstrla	fail,	"store.ah	Test failure!"
+	incdecqy	incdectest,	b,	w,	x,	z
+	incdecres:	dq	1,	2,	16,	64
+
+;	avx2regoutdata	1
 section	.bss
-	atimepstore	cadd,	8,	this,	q
+	atimepstore	cadd,	8,	this,	q,	that,	z
+
 section	.code
 main:
 	mov	rax,	0x0f0f0f0f0f0f0f0f
@@ -21,9 +27,18 @@ main:
 	vpermq	ymm1,	ymm1,	0b10100000
 	ptest	xmm1,	xmm0
 	jnc	failure	
+
+	vmovdqu	ymm0,	[incdec.incdectest]
+	vmovdqu	ymm1,	[incdecres]
+;	avx2regstohout	1
+	vptest	ymm0,	ymm1
+	jnc	failure
+
 	write	stdout,	swin,	[lwin]
 	jmp	end
 failure:write	stdout,	sfail,	[lfail]
-end:	mov	rax,	sys_ret
+end:	
+;	write	stdout,	s_ymm01,	oavx2_totalsize
+	mov	rax,	sys_ret
 	mov	rdx,	0
 	syscall
