@@ -14,35 +14,55 @@ newstrla	failure,	"genreg.ah:	Test failure!"
 section	.code
 
 %macro	testadd	2
-	%push	tadd
+%push	scope
 	dgr	%1,	1
 	dgr	%2,	2
 	mov	g1,	[obj1]
 	mov	g2,	[obj2]
 	add	g1,	g2
-	%pop
+%pop
 %endmacro
 
-main:	mov	rdi,	[obj1]
+main:	
+	mov	rdi,	[obj1]
 	mov	rsi,	[obj2]
 	add	rdi,	rsi
 	testadd	r8,	r9
 	cmp	r8,	rdi
-	je	success
-	mov	rax,	sys_write
-	mov	rdi,	stdout
-	mov	rsi,	sfailure
-	mov	rdx,	[lfailure]
-	syscall
-	mov	rax,	sys_ret
-	mov	rdi,	0
-	syscall
-success:
+	jne	fail
+
+	regsize	rax,	test1
+	mov	rax,	test1
+	mov	rdx,	8
+	cmp	rax,	rdx
+	jne	fail
+
+	regsize	ymm1,	test2
+	mov	rax,	test2
+	mov	rdx,	32
+	cmp	rax,	rdx
+	jne	fail
+
+	regsize	ef1,	test3
+	mov	rax,	test3
+	mov	rdx,	0
+	cmp	rax,	rdx
+	jne	fail
+
+
+	
 	mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	ssuccess
 	mov	rdx,	[lsuccess]
 	syscall
+	jmp	end
+fail:	mov	rax,	sys_write
+	mov	rdi,	stdout
+	mov	rsi,	sfailure
+	mov	rdx,	[lfailure]
+	syscall
+end:
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall
