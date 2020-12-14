@@ -2,6 +2,7 @@
 %include	"../syscall.ah"
 %include	"../genreg.ah"
 %include	"../hex.ah"
+%include	"../dec.ah"
 %include	"../cstring.ah"
 %include	"../regstats.ah"
 
@@ -11,11 +12,15 @@ section	.data
 	newstrla	fail,	"store.ah	Test failure!"
 	incdecqy	incdectest,	b,	w,	x,	z
 	incdecres:	dq	1,	2,	16,	64
-
+	basereghoutdata	1
+	baseregdoutdata 1
+	baseregdecdata	1
+	baseregbindata	1
+	basereghoutdata	2
 ;	avx2regoutdata	1
 section	.bss
 	atimepstore	cadd,	8,	this,	q,	that,	z
-	atimestorelookuptableq	caddlt,	1,	thisa,	thata
+	atimepstorelkuptblq	caddlt,	3,	thisa,	thata
 section	.code
 main:
 	mov	rax,	0x0f0f0f0f0f0f0f0f
@@ -35,18 +40,40 @@ main:
 	jnc	failure
 
 	mov	rax,	cadd.this
-	mov	[caddlt.thisa_0.address],	rax
-	mov	rax,	[caddlt.thisa_0.address]
+	mov	[caddlt_0],	rax
+	mov	[caddlt_1],	rax
+	mov	rax,	[caddlt_0]
 	vmovdqu	ymm0,	[rax]
 	vmovdqu	ymm1,	[cadd.this]
 	vptest	ymm0,	ymm1
 	jnc	failure
+	mov	rax,	[caddlt_1]
+	vmovdqu	ymm0,	[rax]
+	vmovdqu	ymm1,	[cadd.this]
+	vptest	ymm0,	ymm1
+	jnc	failure
+	
+	baseregstohout	1
+	mov	rax,	rsp
+	stackallocpstoreq	caddlt_2,	2,	q,	z
+	mov	rdx,	rsp
+	sub	rax,	rdx
+	mov	rdx,	144
+	takebaseregs	1
+	cmp	rax,	rdx
+	jne	failure
+;	baseregstohout	2
+;	baseregdconvm	1,	1,	ymm0,	r8,	r9,	ymm1
+;	baseregdformat	1,	1,	ymm0,	ymm1,	rax
 
 	write	stdout,	swin,	[lwin]
 	jmp	end
 failure:write	stdout,	sfail,	[lfail]
 end:	
 ;	write	stdout,	s_ymm01,	oavx2_totalsize
+;	write	stdout,	s_rax1,	ohdat_totalsize
+;	write	stdout,	s_rax2,	ohdat_totalsize
+;	write	stdout,	sd_rax1,	oddat_totalsize
 	mov	rax,	sys_ret
 	mov	rdx,	0
 	syscall

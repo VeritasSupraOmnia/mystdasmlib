@@ -73,7 +73,7 @@ incdec.%1:
 
 ;assembly time store lookup table
 ;put this in the .bss section
-%macro	atimepstorelookuptableq	1-*
+%macro	atimepstorelkuptblq	1-*
 %push	scope
 	;arg1	is table name
 	;arg2	is count of stores in lookup table
@@ -83,16 +83,22 @@ incdec.%1:
 	%define	%$count	%2
 	%assign	%$size	( %0 - 2 )
 %define	%$name.count	%$count
-%assign	%[%$name.size]	%$size * 8	;total size of the array in bytes
-	
+%assign	%$name.size	%$size * 8	;total size of the array in bytes
 
+;extra starting label for cleaner code during whole lookup table reads/writes.
+%[%$name]:
 	%assign	i	0
 	%rep	%$count
 	%rotate	2
-	
+;extra index label to make clear an addressing of a whole lookup
+%[%$name]_%[i]:
 	%rep	%$size
-%[%$name].%1_%[i].address:	resq	1
-%[%$name].%1_%[i].count:	resq	1
+	;address variable
+;extra sub-cell lable to make clear an addressing of a whole cell
+%[%$name]_%[i].%1:
+%[%$name]_%[i].%1.a:	resq	1
+	;size variable
+%[%$name]_%[i].%1.s:	resq	1
 	%rotate	1
 	%endrep
 
@@ -104,10 +110,44 @@ incdec.%1:
 
 ;allocate parallelized soa memory to stack at current rsp
 ;saves data directly to a lookup table cell with the same address and count size/and size of each cell.
-%macro	stackallocpstoreq	2-*
+%macro	stackallocpstoreq	3-*
 	;arg1 is the address of a array lookup table cell to save the address' and sizes of each array
 	;arg2 is the count of indexes in each array
 	;arg3+ is the size multiplier of the array
+%push	scope
+	%define	%$target	%1
+	%define	%$count	%2
+	%assign	%$lkupsize	( %0 - 2 )
+	%assign	%$lkuploc	0
+	%assign %$total	0
+	%rotate	2
+	%rep	%$lkupsize
+		mov	[ %$target + ( %$lkuploc * 16 ) ],	rsp
+		%ifidni	%1,	b
+			%assign %$size	%$count
+		%elifidni	%1,	w
+			%assign %$size	2 * %$count
+		%elifidni	%1,	d
+			%assign %$size	4 * %$count
+		%elifidni	%1,	q
+			%assign %$size	8 * %$count
+		%elifidni	%1,	x
+			%assign %$size	16 * %$count
+		%elifidni	%1,	y
+			%assign %$size	32 * %$count
+		%elifidni	%1,	z
+			%assign %$size	64 * %$count
+		%endif
+		%assign	%$total	%$total + %$size
+		push	rax
+		mov	rax,	( %$size * %$count )
+		mov	[ %$target + ( %$lkuploc * 16 ) + 8 ],	rax
+		pop	rax
+		%assign	%$lkuploc	%$lkuploc + 1
+		%rotate	1
+	%endrep
+	sub	rsp,	%$total
+%pop
 %endmacro
 %macro	stackdeallocpstoreq	1-*
 %endmacro
