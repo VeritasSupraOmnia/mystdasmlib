@@ -1,0 +1,72 @@
+;macro library for manually creating elf headers 
+
+;make elf and program header at the top of the program
+%macro c_ehdr 2
+ehdr:
+%if	%1	=	64
+bits	64
+	org	0x00400000
+%else
+bits	32
+	org	0x08048000
+%endif
+ehdr:
+	db	0x7f,0x45,0x4c,0x46
+%if	%1	=	64
+	db	0x02
+%else
+	db	0x01
+%endif
+	db	0x01
+	db	0x01
+	db	0x00
+	dq	0x00					;e_ident_abiversion
+;0x10
+	dw	0x02					;e_type
+	dw	0x3e					;e_machine
+	dd	0x01					;e_version
+%if	%1	=	64
+	dq	%2
+	dq	phdr - $$
+	dq	0
+%else
+	dd	%2
+	dd	phdr - $$
+	dd	0
+%endif
+	dd	0
+	dw	ehdrsize
+	dw	phdrsize
+	dw	1
+	dw	0
+	dw	0
+	dw	0
+ehdrsize	equ	$ - ehdr
+	
+phdr:
+	dd	1
+%if	%1	=	64
+	dd	5
+	dq	0
+	dq	$$
+	dq	$$
+	dq	filesize
+	dq	filesize
+	dq	0x20000000
+%else	
+	dd	0
+	dd	$$
+	dd	$$
+	dd	filesize
+	dd	filesize
+	dd	5
+	dd	0x1000
+%endif
+	
+phdrsize	equ	$ - phdr
+%endmacro
+
+;make the footer to determine the filesize at the end of the file
+%macro	c_ftr	0
+filesize	equ	$	-	$$
+%endmacro
