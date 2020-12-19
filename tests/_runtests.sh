@@ -48,3 +48,20 @@ rm testfind testfind.o
 #./testexcept
 #rm testexcept testexcept.o
 
+#nasm teststack.a -o teststack.o -felf64
+#tcc teststack.o -o teststack
+#./teststack
+#rm teststack teststack.o
+
+#test store.ah
+nasm teststore.a -o teststore.o -felf64
+tcc teststore.o -o teststore
+./teststore
+rm teststore teststore.o
+
+#test head.ah
+nasm testhead.a -o testhead -fbin
+#I need to chmod because nasm doesn't set as executable on it's own
+chmod	755	./testhead
+./testhead
+rm testhead 
