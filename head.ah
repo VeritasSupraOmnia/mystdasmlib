@@ -46,20 +46,20 @@ ehdrsize	equ	$ - ehdr
 phdr:
 	dd	1
 %if	%1	=	64
-	dd	5
+	dd	0b0111
 	dq	0
 	dq	$$
 	dq	$$
 	dq	filesize
 	dq	filesize
-	dq	0x20000000
+	dq	0x0010
 %else	
 	dd	0
 	dd	$$
 	dd	$$
 	dd	filesize
 	dd	filesize
-	dd	5
+	dd	7
 	dd	0x1000
 %endif
 	
