@@ -10,11 +10,10 @@ newstrla	succ,	"head.ah		Test success!"
 newstrla	fail,	"head.ah		Test failure!"
 
 main:	
-	
-	;test stack
-	mov	rax,	42
-	push	rax
-	mov	rdx,	[rsp]
+	;test bss
+	mov	rax,	34
+	mov	[bss - 8],	rax
+	mov	rdx,	[bss - 8]
 	cmp	rax,	rdx
 	jne	fail
 	

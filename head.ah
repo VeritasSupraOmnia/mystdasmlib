@@ -2,6 +2,7 @@
 
 ;make elf and program header at the top of the program
 %macro c_ehdr 3
+%define	bss	filecap + %3
 ehdr:
 %if	%1	=	64
 bits	64
@@ -64,14 +65,11 @@ phdr:
 %endif
 	
 phdrsize	equ	$ - phdr
-%if	%1	=	64
-	mov	rsp,	$$ + filesize + %3 ;point the stack pointer to the stack
-%else
-	mov	esp,	$$ + filesize + %3
-%endif
+
 %endmacro
 
 ;make the footer to determine the filesize at the end of the file
 %macro	c_ftr	0
 filesize	equ	$	-	$$
+filecap	equ	$
 %endmacro
