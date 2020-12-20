@@ -1,7 +1,7 @@
 ;macro library for manually creating elf headers 
 
 ;make elf and program header at the top of the program
-%macro c_ehdr 2
+%macro c_ehdr 3
 ehdr:
 %if	%1	=	64
 bits	64
@@ -51,19 +51,24 @@ phdr:
 	dq	$$
 	dq	$$
 	dq	filesize
-	dq	filesize
+	dq	filesize + %3	;make a stack
 	dq	0x0010
 %else	
 	dd	0
 	dd	$$
 	dd	$$
 	dd	filesize
-	dd	filesize
+	dd	filesize + %3
 	dd	7
 	dd	0x1000
 %endif
 	
 phdrsize	equ	$ - phdr
+%if	%1	=	64
+	mov	rsp,	$$ + filesize + %3 ;point the stack pointer to the stack
+%else
+	mov	esp,	$$ + filesize + %3
+%endif
 %endmacro
 
 ;make the footer to determine the filesize at the end of the file
