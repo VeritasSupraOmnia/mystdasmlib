@@ -3,13 +3,27 @@
 %include	"../head.ah"
 
 ;declare standard, 64 bit elf header with entry-point "main"
-c_ehdr	64,	main
+c_ehdr	64,	main,	4096
 
 ;my god why did I declare this after the main label. I swear to god, I was tearing my hair out trying to figure out why I was segfaulting. I am a fucking brainlet sometimes.
 newstrla	succ,	"head.ah		Test success!"
+newstrla	fail,	"head.ah		Test failure!"
 
 main:	
+	
+	;test stack
+	mov	rax,	42
+	push	rax
+	mov	rdx,	[rsp]
+	cmp	rax,	rdx
+	jne	fail
+	
+	;data section is tested here
 	write	stdout,	ssucc,	[lsucc]
+	jmp	end
+fail:
+	write	stdout,	sfail,	[lfail]
+end:
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall
