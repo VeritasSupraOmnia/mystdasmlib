@@ -365,6 +365,7 @@ call_Takebaseregs:	takebaseregs	%1
 %macro	baseregstohout	1
 	;save needed regs to stack so I can restore them later
 	push	rax
+	sub	rsp,	32
 	vmovdqu	[rsp],	ymm0
 	sub	rsp,	32
 	vmovdqu	[rsp],	ymm1
@@ -372,7 +373,6 @@ call_Takebaseregs:	takebaseregs	%1
 	vmovdqu	[rsp],	ymm2
 	sub	rsp,	32
 	vmovdqu	[rsp],	ymm3
-	sub	rsp,	32
 	
 	;save rax here so I don't need to read it twice, one time to calculate it and one time to reload it on conversion completion
 	movq	xmm0,	rax
@@ -467,7 +467,6 @@ call_Takebaseregs:	takebaseregs	%1
 	movdqu	[s_r15%1 + 4],	xmm0
 
 	;cleanup
-	add	rsp,	32
 	vmovdqu	ymm3,	[rsp]
 	add	rsp,	32
 	vmovdqu	ymm2,	[rsp]
@@ -475,6 +474,7 @@ call_Takebaseregs:	takebaseregs	%1
 	vmovdqu	ymm1,	[rsp]
 	add	rsp,	32
 	vmovdqu	ymm0,	[rsp]
+	add	rsp,	32
 	pop	rax
 %endmacro
 
