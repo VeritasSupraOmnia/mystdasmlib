@@ -256,6 +256,19 @@
 	vpand	g1y,	g1y,	g4y
 %pop
 %endmacro
+%macro	todec2d	3
+%push	scope
+	dgr	%1,	o;yword output	
+	dgr	%2,	in;quadword input
+	dgr	%3,	1
+	dgr	%4,	2
+	movd	g1x,	gind
+	shr	gin,	32
+	movd	gox,	gind
+	vperm2i128	g1y,	g1y,	goy,	0b00100000
+
+%pop
+%endmacro
 
 %macro	frdecb	2
 %push	scope
@@ -316,5 +329,49 @@
 	add	g1,	rax
 %pop
 %endmacro
-
+;scratches rax and rdx
+%macro	frdecq	4
+%push	scope
+	dgr	%1,	o;8 byte output binary data
+	dgr	%2,	in;20 byte input decimal data
+	dgr	%3,	1;temporary register one
+	dgr	%4,	2;temp reg 2
+	vpermq	giny,	giny,	0b11111001
+	movq	g1,	ginx
+	shr	g1,	32
+	mov	g2,	0x0f0f0f0f0f0f0f0f
+	and	g1,	g2
+	xor	eax,	eax
+	mov	al,	g1b
+	mov	g2,	10000000000000000000
+	mul	g2
+	mov	go,	rax
+	%assign	i	1000000000000000000
+	%rep	3
+	shr	g1,	8
+	xor	eax,	eax
+	mov	al,	g1b
+	mov	rdx,	i
+	%assign	i	i / 10
+	mul	rdx
+	add	go,	rax
+	%endrep
+	
+	%rep	2
+	vpermq	giny,	giny,	0b11111001
+	movq	g1,	ginx
+	mov	g2,	0x0f0f0f0f0f0f0f0f
+	and	g1,	g2
+	%rep	8
+	xor	eax,	eax
+	mov	al,	g1b
+	mov	rdx,	i
+	%assign	i	i / 10
+	mul	rdx
+	add	go,	rax
+	shr	g1,	8
+	%endrep
+	%endrep
+%pop
+%endmacro
 ;NOTE:	There has got to be a way to do simd decimal conversions...

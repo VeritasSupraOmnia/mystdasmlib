@@ -1,3 +1,4 @@
+%include	"../head.ah"
 %include	"../genreg.ah"
 %include	"../hex.ah"
 %include	"../regstats.ah"
@@ -5,15 +6,16 @@
 %include	"../cstring.ah"
 %include	"../syscall.ah"
 
-global	main
-section	.data
-	
+c_ehdr	64,	main,	0
+%stacksize	large
 	resb:	db	'0255'
 	testb:	db	0xff
 	resw:	db	'00065535'
 	testw:	dw	0xffff
 	resd:	db	'0000004294967295',0x0A
 	testd:	dd	0xffffffff
+	test2d:	dq	0xfffffffffffffffe
+	res2d:	db	'00000042949672950000004294967295',0x0A
 	resq:	db	'00000000000018446744073709551615',0x0A
 	resqa:	db	'18446744073709551615000000000000',0x0A
 	testq:	dq	0xffffffffffffffff
@@ -21,14 +23,14 @@ section	.data
 
 ;	baseregbindata	1
 ;	basereghexdata	1
-;	basereghoutdata	1
 ;	avx2regbindata	1
 ;	avx2reghexdata	1
-;	avx2regoutdata	1
+	basereghoutdata	1
+	avx2regoutdata	1
 
 	newstrla	failure,	"dec.ah:		Test failure!"
 	newstrla	success,	"dec.ah:		Test success!"
-section	.code
+;section	.code
 main:	xor	rax,	rax
 	mov	al,	[testb]
 	todecb	r8,	rdi
@@ -64,12 +66,28 @@ main:	xor	rax,	rax
 	vptest	xmm0,	xmm1
 	jnc	fail
 	
-	xor	rax,	rax
 	mov	rax,	[testq]
 	todecq	ymm0,	r8,	r9,	ymm1
 	vmovdqu	ymm1,	[resq]
 	vptest	ymm0,	ymm1
 	jnc	fail
+	
+	xor	r8,	r8
+	xor	rax,	rax
+	vmovdqu	ymm0,	[resq]
+	frdecq	r8,	ymm0,	r9,	r10
+	baseregstohout	1
+;	avx2regstohout	1
+	mov	rax,	[testq]
+	cmp	rax,	r8
+	jnc	fail
+
+;	xor	rax,	rax
+;	mov	rax,	[test2d]
+;	todec2d	ymm0,	rax,	ymm1
+;	vmovdqu	ymm1,	[res2d]
+;	vptest	ymm0,	ymm1
+;	jnc	fail
 
 ;	Example of todecqa used and the exactly 20 byte(shh!) memory write detailed in the comments above it in dec.ah
 ;	xor	rax,	rax
@@ -88,12 +106,9 @@ fail:
 	jmp	end
 
 end:	
-;	basereghconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
-;	basereghformat	1,	1,	xmm0
-;	write	stdout,	s_rax1,	ohdat_totalsize
-;	avx2regconvm	1,	1,	xmm0,	xmm1,	xmm3,	r8
-;	avx2regformat	1,	1,	xmm0
+	write	stdout,	s_rax1,	ohdat_totalsize
 ;	write	stdout,	s_ymm01,	oavx2_totalsize
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall
+c_ftr
