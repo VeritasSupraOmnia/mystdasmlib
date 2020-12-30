@@ -298,3 +298,36 @@
 	add	gaw,	0x30
 	%pop
 %endmacro
+%macro tohexql	4
+	%push	scope
+	dgr     %1,     1;output        -       16 byte
+	dgr     %2,     2;bitmask       -       16 byte
+	dgr     %3,     3;arithmetic    -       16 byte
+	dgr     %4,     4;input and broadcast loader -  8 byte
+	bswap   g4
+	movq    g3x,    g4
+	pxor    g2x,    g2x
+	vpunpcklbw      g3x,    g2x,    g3x
+	movdqu  g2x,    g3x
+	psrlw   g2x,    12
+	por     g3x,    g2x
+	mov     g4,     0x0f0f0f0f0f0f0f0f
+	movq    g2x,    g4
+	vpbroadcastb    g2x,    g2x
+	pand    g3x,    g2x
+	mov     g4,     0x0909090909090909
+	movq    g2x,    g4
+	vpbroadcastq    g2x,    g2x
+	vpcmpgtb        g1x,    g3x,    g2x
+	mov     g4b,    0xd8
+	movq    g2x,    g4
+	vpbroadcastb    g2x,    g2x
+	pand    g2x,    g1x
+	psubb   g1x,    g2x
+	paddb   g1x,    g3x
+	mov     g4b,    0x30
+	movq    g2x,    g4
+	vpbroadcastb    g2x,    g2x
+	paddb   g1x,    g2x
+	%pop
+%endmacro
