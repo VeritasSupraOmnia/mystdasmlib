@@ -1,8 +1,8 @@
-1	macros for declaring and keeping track of in use registers to aid in both smart writing and assembly-time debugging
-2	macro for easily creating and printing timestamps to stout or log files for automated debugging.
-3	"clean" versions of certain macros for easy to implement realtime printing of register data.
-4	simd conversion of bytes into decimal dword character values
+1	make assumption macros for conversion libraries ( make macros that assume that the masks they use in calculation are pre-set before the conversion macro is called ). This will allow loops of macros to be much tighter and use the registers more effectively.
+2	macros for declaring and keeping track of in use registers to aid in both smart writing and assembly-time debugging
+3	macro for easily creating and printing timestamps to stout or log files for automated debugging.
+4	"clean" versions of certain macros for easy to implement realtime printing of register data.
 5	decimal conversion and saving of different sized splits of the 
 6	figure out how to do decimal conversion without dividing - even for just bytes would be beneficial
-7	add stack stats macros for determining size and fill
+7	add stack stats macros for determining size and fill of stack
 8	update Readme.md
