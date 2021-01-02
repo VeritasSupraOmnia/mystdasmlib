@@ -374,4 +374,37 @@
 	%endrep
 %pop
 %endmacro
+;scratches rax and rdx
+%macro	frdecqr	3
+%push	scope
+	dgr	%1,	o;8 byte output binary data
+	dgr	%2,	in;20 byte input decimal data
+	dgr	%3,	1;temporary register one
+	vperm2i128	giny,	giny,	0b00000001
+	%assign	%$multiplicand	10000000000000000000
+	%assign	%$iter	3
+	%rep	4
+	vpextrb	rax,	ginx,	%$iter
+	and	al,	0x0f
+	mov	g1,	%$multiplicand
+	mul	g1
+	add	go,	rax
+	xor	eax,	eax
+	%assign	%$iter	%$iter - 1
+	%assign %$multiplicand	%$multiplicand	/	10
+	%endrep
+	vperm2i128	giny,	giny,	0b00000001
+	%assign	%$iter	15
+	%rep	16
+	vpextrb	rax,	ginx,	%$iter
+	and	al,	0x0f
+	mov	g1,	%$multiplicand
+	mul	g1
+	add	go,	rax
+	xor	eax,	eax
+	%assign	%$iter	%$iter - 1
+	%assign %$multiplicand	%$multiplicand	/	10
+	%endrep
+%pop
+%endmacro
 ;NOTE:	There has got to be a way to do simd decimal conversions...
