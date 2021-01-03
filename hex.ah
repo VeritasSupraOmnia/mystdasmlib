@@ -131,12 +131,12 @@
 %endmacro
 %macro	frhexqu	6
 	%push	scope
-	dgr     rax,     1;output reg-   8bytes
-	dgr     rdi,     2;mask reg  -   8bytes
-	dgr     rsi,     3;cross reg -   8bytes
-	dgr     xmm2,     4;arith reg -   16bytes
-	dgr     xmm1,     5;arith reg -   16bytes
-	dgr     xmm0,     6;input reg -   16bytes
+	dgr   	%1,     1;output reg-   8bytes
+	dgr     %2,     2;mask reg  -   8bytes
+	dgr     %3,     3;cross reg -   8bytes
+	dgr     %4,     4;arith reg -   16bytes
+	dgr     %5,     5;arith reg -   16bytes
+	dgr     %6,     6;input reg -   16bytes
 	mov     g2,     0x4040404040404040
 	movq    g5x,    g2
 	vpbroadcastq    g5x,    g5x
