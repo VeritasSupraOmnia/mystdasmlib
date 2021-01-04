@@ -14,7 +14,7 @@ section .data
 ;	basereghoutdata	1
 ;	avx2regbindata	1
 ;	avx2reghexdata	1
-	avx2regoutdata	1
+;	avx2regoutdata	1
 	;testing data is as follows: first char in label is size, second is whether it is converted to or from hexadecimal, third is whether it is the test or desired result, fourth is whether output is uppercase. 
 	;example1:	btt - byte to hexadecimal test 
 	;example2:	qfr - quadword from hexidecimal result 
@@ -90,8 +90,6 @@ main:
 	
 	mov	r10,	[quadbin]
 	tohexql	xmm0,	xmm1,	xmm2,	r10
-	avx2regstohout	1
-	write	stdout,	s_ymm01,	oavx2_totalsize
 	movdqu	xmm1,	[quadhexl]
 	ptest	xmm0,	xmm1
 	jnc	failure
@@ -102,6 +100,12 @@ main:
 	cmp	rax,	rdi
 	jne	failure
 
+	movdqu	xmm0,	[quadhexl]
+	frhexql	rax,	rdi,	rsi,	xmm2,	xmm1,	xmm0
+;	baseregstohout	1
+	mov	rdi,	[quadbin]
+	cmp	rax,	rdi
+	jne	failure
 	
 	movdqu	xmm2,	[dquadbin]
 	tohexdqu	ymm0,	ymm1,	ymm2,	rax
@@ -116,6 +120,8 @@ failure:mov	rax,	sys_write
 	mov	rsi,	sfailure
 	mov	rdx,	[lfailure]
 	syscall
+;	write stdout,	s_rax1,	ohdat_totalsize
+;	write stdout,	s_ymm01,	oavx2_totalsize
 	mov	rax,	sys_ret
 	mov	rdi,	1
 	syscall
@@ -124,6 +130,8 @@ success:mov	rax,	sys_write
 	mov	rsi,	ssuccess
 	mov	rdx,	[lsuccess]
 	syscall
+;	write stdout,	s_rax1,	ohdat_totalsize
+;	write stdout,	s_ymm01,	oavx2_totalsize
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall

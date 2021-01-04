@@ -166,6 +166,40 @@
 	bswap   g1
 	%pop
 %endmacro
+%macro	frhexql	6
+	%push	scope
+	dgr   	%1,     1;output reg-   8bytes
+	dgr     %2,     2;mask reg  -   8bytes
+	dgr     %3,     3;cross reg -   8bytes
+	dgr     %4,     4;arith reg -   16bytes
+	dgr     %5,     5;arith reg -   16bytes
+	dgr     %6,     6;input reg -   16bytes
+	mov     g2b,     0x60
+	movq    g5x,    g2
+	vpbroadcastb    g5x,    g5x
+	vpand   g4x,	g5x,    g6x
+	pcmpeqb	g5x,	g4x
+	mov	g2b,	0x27
+	movq	g4x,	g2
+	vpbroadcastb	g4x,	g4x
+	pand	g5x,	g4x
+	psubb   g6x,    g5x
+	mov     g2b,     0x0f
+	movq	g4x,	g2
+	vpbroadcastb	g4x,	g4x
+	pand	g6x,	g4x
+	movdqu	g5x,	g6x
+	psrldq	g5x,	1
+	psllw	g6x,	4
+	mov	g2,	0x0E0C0A0806040200
+	movq	g4x,	g2
+	pshufb	g6x,	g4x
+	pshufb	g5x,	g4x
+	por	g6x,	g5x
+	movq	g1,	g6x
+	bswap	g1
+	%pop
+%endmacro
 
 ;TODO:	this was just copied from tohexqu. suppose to be 16 byte binary to 32 byte hex using ymm registers
 %macro	tohexdqu	4
