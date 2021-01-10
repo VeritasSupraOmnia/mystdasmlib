@@ -14,7 +14,7 @@ section .data
 ;	basereghoutdata	1
 ;	avx2regbindata	1
 ;	avx2reghexdata	1
-;	avx2regoutdata	1
+	avx2regoutdata	1
 	;testing data is as follows: first char in label is size, second is whether it is converted to or from hexadecimal, third is whether it is the test or desired result, fourth is whether output is uppercase. 
 	;example1:	btt - byte to hexadecimal test 
 	;example2:	qfr - quadword from hexidecimal result 
@@ -99,6 +99,14 @@ main:
 	mov	rdi,	[quadbin]
 	cmp	rax,	rdi
 	jne	failure
+
+	vmovdqu	ymm0,	[dquadhexu]
+	frhexdqu	xmm3,	rsi,	xmm4,	xmm2,	xmm1,	xmm0
+;	avx2regstohout	1
+	vpxor	ymm1,	ymm1,	ymm1
+	movdqu	xmm1,	[dquadbin]
+	ptest	xmm3,	xmm1
+	jnc	failure
 
 	movdqu	xmm0,	[quadhexl]
 	frhexql	rax,	rdi,	rsi,	xmm2,	xmm1,	xmm0
