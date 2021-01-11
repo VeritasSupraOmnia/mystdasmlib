@@ -224,13 +224,13 @@
 	vpand	g3y,	g1y,	g5y
 	vpsllw	g5y,	g5y,	8
 	vpand	g1y,	g1y,	g5y
-	vpsrlw	g1y,	g1y,	4
+	vpsllw	g3y,	g3y,	12
 	vpor	g1y,	g1y,	g3y
-	mov	g2,	0x0e0c0a0806040200
+	mov	g2,	0x01030507090B0D0F
 	movq	g3x,	g2
 	vpermq	g3y,	g3y,	0b10001000
 	vpshufb	g1y,	g1y,	g3y
-	vpermq	g1y,	g1y,	0b11110010
+	vpermq	g1y,	g1y,	0b11111000
 	%pop
 %endmacro
 
@@ -241,9 +241,10 @@
 	dgr     %2,     2;bitmask	-	32 byte
 	dgr     %3,     3;input binary	-	16 byte
 	dgr     %4,     4;bitmask loader-	8 byte
+
 	vpunpcklbw      g2y,    g3y,    g3y
 	vpunpckhbw      g3y,    g3y,    g3y
-	vperm2i128	g3y,	g2y,	g3y,	0x02
+	vperm2i128	g3y,	g2y,	g3y,	0b00100000
 	vmovdqu  g2y,    g3y
 	vpsrlw   g3y,    4
 	mov     g4,     0x0f000f000f000f00
@@ -253,6 +254,12 @@
 	vpsrlw	g1y,	8
 	vpand   g2y,    g2y,	g1y
 	vpor     g3y,    g2y,	g3y
+	mov	g4,	0x08090A0B0C0D0E0F
+	movq	g2x,	g4
+	mov	g4,	0x0001020304050607
+	pinsrq	g2x,	g4,	1
+	vperm2i128	g2y,	g2y,	g2y,	0
+	vpshufb	g3y,	g3y,	g2y
 	mov     g4,     0x0909090909090909
 	movq    g2x,    g4
 	vpbroadcastq    g2y,    g2x
