@@ -1,17 +1,13 @@
-%include	'../genreg.ah'
-%include	'../syscall.ah'
-%include	'../cstring.ah'
+%include	'./head.ah'
+%include	'./genreg.ah'
+%include	'./syscall.ah'
+%include	'./cstring.ah'
 
-;%define	cpu_arch	x86_64
-
-global	main
-section	.data
+c_ehdr	64,	main,	0
 obj1:	dq	0x24ae7f34b8a0d3cc
 obj2:	dq	0xabcdef0123456789
 newstrla	success,	"genreg.ah:	Test success!"
 newstrla	failure,	"genreg.ah:	Test failure!"
-
-section	.code
 
 %macro	testadd	2
 %push	scope
@@ -48,8 +44,6 @@ main:
 	mov	rdx,	0
 	cmp	rax,	rdx
 	jne	fail
-
-
 	
 	mov	rax,	sys_write
 	mov	rdi,	stdout
@@ -66,3 +60,4 @@ end:
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall
+c_ftr

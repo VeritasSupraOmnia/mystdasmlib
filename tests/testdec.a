@@ -1,10 +1,10 @@
-%include	"../head.ah"
-%include	"../genreg.ah"
-%include	"../hex.ah"
-%include	"../regstats.ah"
-%include	"../dec.ah"
-%include	"../cstring.ah"
-%include	"../syscall.ah"
+%include	"./head.ah"
+%include	"./genreg.ah"
+;%include	"./hex.ah"
+;%include	"./regstats.ah"
+%include	"./dec.ah"
+%include	"./cstring.ah"
+%include	"./syscall.ah"
 
 c_ehdr	64,	main,	0
 %stacksize	large
@@ -22,8 +22,8 @@ c_ehdr	64,	main,	0
 	testq:	dq	0xffffffffffffffff
 
 
-	basereghoutdata	1
-	avx2regoutdata	1
+;	basereghoutdata	1
+;	avx2regoutdata	1
 
 	newstrla	failure,	"dec.ah:		Test failure!"
 	newstrla	success,	"dec.ah:		Test success!"

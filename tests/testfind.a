@@ -1,18 +1,18 @@
-%include	"../genreg.ah"
-%include	"../syscall.ah"
-%include	"../cstring.ah"
-%include	"../util.ah"
-%include	"../find.ah"
-%include	"../hex.ah"
-%include	"../regstats.ah"
-global	main
-section	.data
-	baseregbindata	1
-	basereghexdata	1
-	basereghoutdata	1
-	avx2regbindata	1
-	avx2reghexdata	1
-	avx2regoutdata	1
+%include	"./genreg.ah"
+%include	"./head.ah"
+%include	"./syscall.ah"
+%include	"./cstring.ah"
+%include	"./util.ah"
+%include	"./find.ah"
+;%include	"./hex.ah"
+;%include	"./regstats.ah"
+c_ehdr	64,	main,	0
+;	baseregbindata	1
+;	basereghexdata	1
+;	basereghoutdata	1
+;	avx2regbindata	1
+;	avx2reghexdata	1
+;	avx2regoutdata	1
 
 	newstrla	success,	"find.ah		Test success!"
 	newstrla	failure,	"find.ah		Test failure!"
@@ -21,7 +21,6 @@ section	.data
 	newstr		stos32,		"ffaaccllbb2233442288990011fff1gf"
 	res32:		dq		0x1A
 	res8:		dq		0x03
-section	.code
 main:	
 	xor	r8,	r8
 	xor	rdx,	rdx
@@ -33,15 +32,15 @@ main:
 	cmp	rax,	rdx
 	jne	fail
 
-	xor	r8,	r8
-	xor	rdx,	rdx,
-	mov	r10,	4
-	vmovdqu	ymm0,	[sstos32]
-	mov	r8d,	[sstof]
-	fndy	rax,	ymm0,	r8,	r10,	r9,	rdi,	rdx,	ymm1
-	mov	rdx,	[res32]
-	cmp	rax,	rdx
-	jne	fail
+;	xor	r8,	r8
+;	xor	rdx,	rdx,
+;	mov	r10,	4
+;	vmovdqu	ymm0,	[sstos32]
+;	mov	r8d,	[sstof]
+;	fndy	rax,	ymm0,	r8,	r10,	r9,	rdi,	rdx,	ymm1
+;	mov	rdx,	[res32]
+;	cmp	rax,	rdx
+;	jne	fail
 
 	write	stdout,	ssuccess,	[lsuccess]
 	jmp	end
@@ -57,3 +56,4 @@ end:
 	mov	rax,	sys_ret
 	mov	rdx,	0
 	syscall
+c_ftr

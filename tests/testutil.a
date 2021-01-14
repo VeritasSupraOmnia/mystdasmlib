@@ -1,12 +1,11 @@
-%include '../syscall.ah'
-%include '../cstring.ah'
-%include '../genreg.ah'
-%include '../hex.ah'
-%include '../regstats.ah'
-%include '../util.ah'
-
-global	main
-section	.data
+%include './syscall.ah'
+%include './cstring.ah'
+%include './genreg.ah'
+%include './head.ah'
+;%include '../hex.ah'
+;%include '../regstats.ah'
+%include './util.ah'
+c_ehdr	64,	main,	0
 	testmedium:	dq	0x0123456789ABCDEF,0x0123456789ABCDEF,0x0123456789ABCDEF,0x1123456789ABCDEF
 	testconved:	db	"0123456789ABCDEF0123456789ABCDEF"
 	testresult1:	dq	0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301,0xEFCDAB8967452301
@@ -16,10 +15,7 @@ section	.data
 ;	avx2regbindata	1
 ;	avx2reghexdata	1
 ;	avx2regoutdata	1
-section	.code
 	
-dfunc	tohex1,	tohexdqu,	ymm0,	ymm1,	ymm2,	r8
-
 main:	
 	vmovdqu	ymm0,	[testmedium]
 	byteswapdqreg	ymm3,	ymm2,	ymm1,	r8,	xmm0
@@ -37,7 +33,6 @@ main:
 
 	movdqu	xmm3,	[testmedium]
 	nibswapqreg	ymm2,	ymm0,	ymm1,	r8,	ymm3	
-	call	f_tohex1
 	;vmovdqu	[testconved],	ymm0
 	;write	stdout,	testconved,	32
 	vmovdqu	ymm1,	[testconved]
@@ -55,5 +50,4 @@ end:
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall
-
-	
+c_ftr
