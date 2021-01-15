@@ -23,6 +23,7 @@
 %define sys_mumap	11
 %define	sys_brk		12	;rdi:bytes to make brk
 %define sys_pipe	22	;rdi:pointer to double quadword for pipe read and write file descripter
+%define sys_clone	56	;rdi:pointer to function to call as child	rsi: location of top of child's stack	rdx: flags	r10:	address of argv - can be null
 %define sys_exec	59	;rdi:cmd char array pnt
 %define	sys_ret		60	;rdi:return value
 %define	sys_time	201	;rdi;memory location to put time value - gets seconds since epoch
