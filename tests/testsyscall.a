@@ -1,0 +1,44 @@
+%include	"./syscall.ah"
+%include	"./head.ah"
+;test various syscalls and syscall macros detailed in "syscall.ah"
+c_ehdr	64,	main,	1000
+%stacksize	large
+main:
+	brk	2
+	;set original output
+	mov	ax,	0x0A30
+	mov	[output],	ax
+
+	;save parent process id
+	getpid
+	mov	[ppid],	rax
+
+	;new process clone-forked from here
+	clonevm	childstack
+	getpid
+	cmp	rax,	[ppid]
+	jne	prnt
+;	mov	rsi,	rax
+;	mov	rax,	sys_waitid
+;	mov	rdi,	wexited
+;	syscall
+	mov	rcx,	2000000000
+lp:	nop
+	cmp	rcx,	0
+	loopne lp
+	write	stdout,	output,	2
+	mov	rax,	sys_ret
+	xor	edi,	edi
+	syscall
+prnt:	
+	mov	ax,	0x0A41
+	mov	[output],	ax
+	mov	rax,	sys_ret
+	mov	rdi,	SIGCHLD
+	syscall
+c_ftr
+absolute $
+ppid:	resq	1	;parent pid
+	resb	999
+childstack:	resb	1
+output:	resw	1

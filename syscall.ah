@@ -14,6 +14,18 @@
 %define	writeonly	1
 %define	readwrite	2
 
+;standard linux signals
+%define	SIGCHLD	0x11
+
+;sys_clone bitmask values
+%define	clone_vm	0x0100
+%define	clone_files	0x0400
+%define	clone_vfork	0x004000
+%define	clone_thread	0x010000
+
+;sys_wait flags
+%define	wexited	0x04
+
 ;all sys_ functions put ther id numbers (0 for sys_read, 1 for sys_write, etc) into rax and are called with the syscall instruction
 %define	sys_read	0	;rdi:file descriptor	rsi:char buffer address	rdx:byte count
 %define	sys_write	1	;rdi:fd			rsi:char buffer address	rdx:byte count
@@ -23,10 +35,12 @@
 %define sys_mumap	11
 %define	sys_brk		12	;rdi:bytes to make brk
 %define sys_pipe	22	;rdi:pointer to double quadword for pipe read and write file descripter
+%define	sys_getpid	39
 %define sys_clone	56	;rdi:pointer to function to call as child	rsi: location of top of child's stack	rdx: flags	r10:	address of argv - can be null
 %define sys_exec	59	;rdi:cmd char array pnt
 %define	sys_ret		60	;rdi:return value
 %define	sys_time	201	;rdi;memory location to put time value - gets seconds since epoch
+%define sys_waitid	247
 
 ;easier write setup
 ;use:	write	stout,	charbuffer,	[length_charbuffer]
@@ -46,6 +60,24 @@ mov	rdi,	%1
 mov	rsi,	%2
 mov	rdx,	%3
 syscall
+%endmacro
+
+%macro	brk	1
+	mov	rax,	sys_brk
+	mov	rdi,	%1
+	syscall
+%endmacro
+
+%macro	getpid	0
+	mov	rax,	sys_getpid
+	syscall
+%endmacro
+;quick clone for splitting into another thread
+%macro	clonevm 1
+	mov	rax,	sys_clone
+	mov	rdi,	clone_vm
+	mov	rsi,	%1
+	syscall
 %endmacro
 
 %macro	pipedat 0
