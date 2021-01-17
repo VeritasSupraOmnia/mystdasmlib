@@ -76,6 +76,10 @@ syscall
 	mov	rax,	sys_getpid
 	syscall
 %endmacro
+%macro	gettid	0
+	mov	rax,	sys_gettid
+	syscall
+%endmacro
 ;quick clone for splitting into another thread
 %macro	clonevm 1
 	mov	rax,	sys_clone
