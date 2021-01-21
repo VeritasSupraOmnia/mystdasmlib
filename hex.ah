@@ -295,9 +295,9 @@
 	vpsrlw	g1y,	8
 	vpand   g2y,    g2y,	g1y
 	vpor     g3y,    g2y,	g3y
-	mov	g4,	0x0100030205040706
+	mov	g4,	0x0001020304050607
 	movq	g2x,	g4
-	mov	g4,	0x09080B0A0D0C0F0E
+	mov	g4,	0x08090A0B0C0D0E0F
 	pinsrq	g2x,	g4,	1
 	vperm2i128	g2y,	g2y,	g2y,	0
 	vpshufb	g3y,	g3y,	g2y
