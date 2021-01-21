@@ -43,7 +43,7 @@
 %define sys_exec	59	;rdi:cmd char array pnt
 %define	sys_ret		60	;rdi:return value
 %define sys_kill	62	;rdi:pid to send signal to	rsi:signal to send (9 to end unconditionally)
-%define	ses_gettid	186	
+%define	sys_gettid	186	
 %define	sys_tkill	200	;rdi:tid	rsi:signal
 %define	sys_time	201	;rdi;memory location to put time value - gets seconds since epoch
 %define sys_waitid	247
