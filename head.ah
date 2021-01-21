@@ -2,11 +2,11 @@
 
 ;make elf and program header at the top of the program
 %macro c_ehdr 3
-%define	bss	filecap + %3
+%define	membase64	0x0040000
 ehdr:
 %if	%1	=	64
 bits	64
-	org	0x00400000
+	org	membase64
 %else
 bits	32
 	org	0x08048000
@@ -72,4 +72,5 @@ phdrsize	equ	$ - phdr
 %macro	c_ftr	0
 filesize	equ	$	-	$$
 filecap	equ	$
+absolute	$
 %endmacro

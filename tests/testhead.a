@@ -1,27 +1,29 @@
-%include	"../syscall.ah"
-%include	"../cstring.ah"
-%include	"../head.ah"
+%include	"./syscall.ah"
+%include	"./head.ah"
 
 ;declare standard, 64 bit elf header with entry-point "main"
 c_ehdr	64,	main,	4096
 
 ;my god why did I declare this after the main label. I swear to god, I was tearing my hair out trying to figure out why I was segfaulting. I am a fucking brainlet sometimes.
-newstrla	succ,	"head.ah		Test success!"
-newstrla	fail,	"head.ah		Test failure!"
-
+%define		msucc	"head.ah		Test success!"
+%define		mfail	"head.ah		Test failure!"
+%strlen		len	msucc
+ssucc:	db	msucc,0x0A
+sfail:	db	mfail,0x0A
 main:	
-	;test bss
-	mov	rax,	34
-	mov	[bss - 8],	rax
-	mov	rdx,	[bss - 8]
-	cmp	rax,	rdx
-	jne	fail
-	
 	;data section is tested here
-	write	stdout,	ssucc,	[lsucc]
+	mov	rax,	sys_write
+	mov	rdi,	stdout
+	mov	rsi,	ssucc
+	mov	rdx,	len + 1
+	syscall
 	jmp	end
 fail:
-	write	stdout,	sfail,	[lfail]
+	mov	rax,	sys_write
+	mov	rdi,	stdout
+	mov	rsi,	sfail
+	mov	rdx,	len + 1
+	syscall
 end:
 	mov	rax,	sys_ret
 	mov	rdi,	0
