@@ -10,23 +10,19 @@
 ;base newstring macro
 %macro	newstr	2
 s%1:	db	%2
-%strlen	lstr	%2
-l%1:	dq	lstr
-%undef	lstr
+%strlen	l%[%1]	%2
 %endmacro
 
 ;appends a linebreak to the end
 %macro	newstrla	2
 s%1:	db	%2,0x0A
-%strlen	lstr	%2
-l%1:	dq	lstr + 1
-%undef	lstr
+%strlen	l%[%1]	%2
+%assign	l%[%1]	l%[%1] + 1
 %endmacro
 
 ;prepends a linebreak to the beginning
 %macro	newstrlp	2
 s%1:	db	0x0A,%2
-%strlen	lstr	%2
-l%1:	dq	lstr + 1
-%undef	lstr
+%strlen	l%[%1]	%2
+%assign	l%[%1]	l%[%1] + 1
 %endmacro
