@@ -247,7 +247,7 @@
 	vperm2i128	g3y,	g2y,	g3y,	0b00100000
 	vmovdqu  g2y,    g3y
 	vpsrlw   g3y,    4
-	mov     g4,     0x0f000f000f000f00
+	mov     g4,    0x0f000f000f000f00
 	movq    g1x,    g4
 	vpbroadcastq    g1y,    g1x
 	vpand   g3y,    g3y,	g1y
@@ -260,9 +260,9 @@
 	pinsrq	g2x,	g4,	1
 	vperm2i128	g2y,	g2y,	g2y,	0
 	vpshufb	g3y,	g3y,	g2y
-	mov     g4,     0x0909090909090909
-	movq    g2x,    g4
-	vpbroadcastq    g2y,    g2x
+	mov     g4b,	0x09
+	movd    g2x,    g4d
+	vpbroadcastb    g2y,    g2x
 	vpcmpgtb        g1y,    g3y,    g2y
 	mov     g4b,    0x07
 	movq    g2x,    g4

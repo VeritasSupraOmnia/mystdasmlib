@@ -113,7 +113,6 @@ main:
 	
 	movdqu	xmm2,	[dquadbin]
 	tohexdqu	ymm0,	ymm1,	ymm2,	rax
-	vmovdqu	[dquadhexu],	ymm0
 	vmovdqu	ymm1,	[dquadhexu]
 ;	avx2regstohout	1
 ;	write	stdout,	dquadhexu,	32
@@ -125,7 +124,7 @@ main:
 failure:mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	sfailure
-	mov	rdx,	[lfailure]
+	mov	rdx,	lfailure
 	syscall
 ;	write stdout,	s_rax1,	ohdat_totalsize
 ;	write stdout,	s_ymm01,	oavx2_totalsize
@@ -135,7 +134,7 @@ failure:mov	rax,	sys_write
 success:mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	ssuccess
-	mov	rdx,	[lsuccess]
+	mov	rdx,	lsuccess
 	syscall
 ;	write stdout,	s_rax1,	ohdat_totalsize
 ;	write stdout,	s_ymm01,	oavx2_totalsize
