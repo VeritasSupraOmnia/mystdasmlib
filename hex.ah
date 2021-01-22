@@ -247,9 +247,9 @@
 	vperm2i128	g3y,	g2y,	g3y,	0b00100000
 	vmovdqu  g2y,    g3y
 	vpsrlw   g3y,    4
-	mov     g4,    0x0f000f000f000f00
-	movq    g1x,    g4
-	vpbroadcastq    g1y,    g1x
+	mov     g4d,    0x0f000f00
+	movd    g1x,    g4d
+	vpbroadcastd    g1y,    g1x
 	vpand   g3y,    g3y,	g1y
 	vpsrlw	g1y,	8
 	vpand   g2y,    g2y,	g1y
