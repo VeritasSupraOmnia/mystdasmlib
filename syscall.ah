@@ -32,12 +32,26 @@
 %define	sys_write	1	;rdi:fd			rsi:char buffer address	rdx:byte count
 %define	sys_open	2	;rdi:filename address	rsi:flags
 %define	sys_close	3	;rdi:file descriptor
+%define	sys_stat	4	;rdi:file descriptor
+%define	sys_fstat	5	;rdi:file descriptor
+%define	sys_lstat	6	;rdi:file descriptor
+%define	sys_poll	7	;rdi:file descriptor
+%define	sys_lseek	8	;rdi:file descriptor
 %define	sys_mmap	9
+%define	sys_mprotect	10
 %define sys_mumap	11
 %define	sys_brk		12	;rdi:bytes to make brk
+%define	sys_sigaction		13
+%define	sys_sigprocmask		14
+%define	sys_sigreturn		15
+%define	sys_ioctl		16
 %define sys_pread	17	;rdi:fd	rsi:char buffer address	rdx:count	r10:offset
 %define sys_pwrite	18	;rdi:fd	rsi:char buffer address	rdx:count	r10:offset
+%define	sys_readv	19
+%define	sys_writev	20
+%define	sys_access	21
 %define sys_pipe	22	;rdi:pointer to double quadword for pipe read and write file descripter
+%define	sys_select	23
 %define	sys_pause	34
 %define	sys_nanosleep	35
 %define	sys_getpid	39
