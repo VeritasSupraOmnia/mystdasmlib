@@ -15,7 +15,9 @@
 %define	readwrite	2
 
 ;standard linux signals
+%define	SIGKILL	0x09
 %define	SIGCHLD	0x11
+%define	SIGCONT	0x12
 
 ;sys_clone bitmask values
 %define	clone_vm	0x0100
