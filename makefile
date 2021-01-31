@@ -1,8 +1,12 @@
-test:	./tests/testhead ./tests/teststring ./tests/testgenreg ./tests/testhex ./tests/testdec ./tests/testutil ./tests/testfind
+test:	./tests/testhead ./tests/teststring ./tests/testhex ./tests/testdec ./tests/testutil ./tests/testfind ./tests/testsyscall ./tests/testutil
 	@echo "Tests complete."
 clean:
-	@rm tests/testhead tests/teststring tests/testgenreg tests/testhex tests/testdec tests/testutil tests/testfind
+	@rm tests/testhead tests/teststring tests/testhex tests/testdec tests/testutil tests/testfind tests/testsyscall
 
+./tests/testsyscall:	head.ah syscall.ah tests/testsyscall.a
+	nasm tests/testsyscall.a -o tests/testsyscall
+	chmod	755	tests/testsyscall
+	./tests/testsyscall
 ./tests/testhead:	head.ah syscall.ah tests/testhead.a
 	@nasm tests/testhead.a -o tests/testhead
 	@chmod	755	tests/testhead
@@ -11,10 +15,6 @@ clean:
 	@nasm tests/teststring.a -o tests/teststring
 	@chmod 755 ./tests/teststring
 	@./tests/teststring
-./tests/testgenreg: genreg.ah head.ah syscall.ah cstring.ah tests/testgenreg.a
-	@nasm tests/testgenreg.a -o tests/testgenreg
-	@chmod	755	tests/testgenreg
-	@./tests/testgenreg
 ./tests/testhex: hex.ah head.ah genreg.ah syscall.ah cstring.ah tests/testhex.a
 	@nasm tests/testhex.a -o tests/testhex
 	@chmod	755	tests/testhex

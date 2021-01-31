@@ -161,7 +161,18 @@
 
 %%fail:	mov	g1,	-1
 %%end:	
-	takebaseregs	1
-	takeavx2regs	1
+%pop
+%endmacro
+
+;checks whether y reg contains byte using vptest - sets flag nz for contains, z for not contains
+%macro	bcontainsy	3
+%push	scope
+	dgr	%1,	in1;b input - for byte mask
+	dgr	%2,	in2;y input - for input register
+	dgr	%3,	sc;y scratch
+	movd	gscx,	gin1d
+	vpbroadcastb	gscy,	gscx
+	vpcmpeqb	gscy,	gscy,	gin2y
+	vptest	gin2y,	gscy
 %pop
 %endmacro

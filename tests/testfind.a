@@ -32,6 +32,17 @@ main:
 	cmp	rax,	rdx
 	jne	fail
 
+;test for contains
+	mov	al,	"2"
+	vmovdqu	ymm0,	[sstos32]
+	bcontainsy	al,	ymm0,	ymm1
+	jz	fail
+;test for !contains
+	mov	al,	"5"
+	vmovdqu	ymm0,	[sstos32]
+	bcontainsy	al,	ymm0,	ymm1
+	jnz	fail
+
 ;	xor	r8,	r8
 ;	xor	rdx,	rdx,
 ;	mov	r10,	4
@@ -42,10 +53,10 @@ main:
 ;	cmp	rax,	rdx
 ;	jne	fail
 
-	write	stdout,	ssuccess,	[lsuccess]
+	write	stdout,	ssuccess,	lsuccess
 	jmp	end
 fail:	
-	write	stdout,	sfailure,	[lfailure]
+	write	stdout,	sfailure,	lfailure
 end:	
 	;baseregconvm	1,	1,	xmm0,	xmm1,	xmm2,	r8
 	;baseregformat	1,	1,	xmm0
