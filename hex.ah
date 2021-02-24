@@ -233,9 +233,7 @@
 	vpermq	g1y,	g1y,	0b11111000
 	%pop
 %endmacro
-
-;TODO:	Now I use vpmovzx to upscale the 16 bytes to 32. This should now need only 3 registers - by operating on 
-;	only g1y and g2y while retaining g3 as an 8 byte register. RE-WRITE THIS
+;converts 16 bytes of binary to 32 bytes of hex characters
 %macro	tohexdqu	4
 	%push	scope
 	dgr     %1,     1;output	-	32 byte
@@ -245,15 +243,15 @@
 
 	;I used to use the vpunpck instructions here to split up the 16 bytes into 32.
 	vpmovzxbw	g3y,	g3x
-	vmovdqu  g2y,    g3y
-	vpsllw   g3y,    4
+	vpsllw	g2y,	g3y,    4
 	mov     g4d,    0x0f000f00
 	movd    g1x,    g4d
 	vpbroadcastd    g1y,    g1x
-	vpand   g3y,    g3y,	g1y
-	vpsrlw	g1y,	8
 	vpand   g2y,    g2y,	g1y
+	vpsrlw	g1y,	8
+	vpand   g3y,    g3y,	g1y
 	vpor     g3y,    g2y,	g3y
+	;takeavx2regs	1
 	mov	g4,	0x08090A0B0C0D0E0F
 	movq	g2x,	g4
 	mov	g4,	0x0001020304050607
@@ -273,7 +271,6 @@
 	movq    g2x,    g4
 	vpbroadcastb    g2y,    g2x
 	vpaddb   g1y, 	g1y,	g2y
-	;takeavx2regs	1
 	%pop
 %endmacro
 ;just a reverse of tohexdqu
@@ -285,17 +282,13 @@
 	dgr     %4,     4;bitmask loader-	8 byte
 	
 	vpmovzxbw	g3y,	g3x
-;	vpunpcklbw      g2y,    g3y,    g3y
-;	vpunpckhbw      g3y,    g3y,    g3y
-;	vperm2i128	g3y,	g2y,	g3y,	0b00100000
-	vmovdqu  g2y,    g3y
-	vpsllw   g3y,    4
+	vpsllw	g2y,	g3y,	4
 	mov     g4d,     0x0f000f00
 	movd    g1x,    g4d
 	vpbroadcastd    g1y,    g1x
-	vpand   g3y,    g3y,	g1y
-	vpsrlw	g1y,	8
 	vpand   g2y,    g2y,	g1y
+	vpsrlw	g1y,	8
+	vpand   g3y,    g3y,	g1y
 	vpor     g3y,    g2y,	g3y
 	mov	g4,	0x0607040502030001
 	movq	g2x,	g4
@@ -367,7 +360,6 @@
 	add	gaw,	0x3030
 	%pop
 %endmacro
-;
 %macro	tohexbua	2	;to uppercase hex - byte. Fast and small but less modular alt version for r8-15.
 	%push	scope
 	;output on ax
