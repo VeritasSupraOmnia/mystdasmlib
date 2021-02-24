@@ -1,0 +1,63 @@
+;needs genreg cstring.ah and syscall.ah included above this
+
+%macro	newtest1 2
+%push	scope
+	%strcat	%%sstr	%2,	":	success"
+	newstrla	%[%1s],	%%sstr
+	%strcat	%%fstr	%2,	":	failure"
+	newstrla	%[%1f],	%%fstr
+%pop
+%endmacro
+%macro	newtest2 2
+%push	scope
+	%strcat	%%sstr	%2,	":		success"
+	newstrla	%[%1s],	%%sstr
+	%strcat	%%fstr	%2,	":		failure"
+	newstrla	%[%1f],	%%fstr
+%pop
+%endmacro
+%macro	newtest3 2
+%push	scope
+	%strcat	%%sstr	%2,	":			success"
+	newstrla	%[%1s],	%%sstr
+	%strcat	%%fstr	%2,	":			failure"
+	newstrla	%[%1f],	%%fstr
+%pop
+%endmacro
+
+%macro	tstb	4
+%push	scope
+	dgr	%4,	a
+	mov	gab,	[%1]
+	cmp	gab,	%2
+	jne	%%f
+	write	stdout,	%[s%3s],	%[l%3s]
+	jmp	%%e
+%%f:	write	stdout,	%[s%3f],	%[l%3f]
+%%e:
+%pop
+%endmacro
+%macro	tstw	4
+%push	scope
+	dgr	%4,	a
+	mov	ax,	[%1]
+	cmp	ax,	%2
+	jne	%%f
+	write	stdout,	%[s%3s],	%[l%3s]
+	jmp	%%e
+%%f:	write	stdout,	%[s%3f],	%[l%3f]
+%%e:
+%pop
+%endmacro
+%macro	tstd	4
+%push	scope
+	dgr	%4,	a
+	mov	gad,	[%1]
+	cmp	gad,	%2
+	jne	%%f
+	write	stdout,	%[s%3s],	%[l%3s]
+	jmp	%%e
+%%f:	write	stdout,	%[s%3f],	%[l%3f]
+%%e:
+%pop
+%endmacro
