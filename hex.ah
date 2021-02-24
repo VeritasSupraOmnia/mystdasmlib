@@ -244,9 +244,9 @@
 	;I used to use the vpunpck instructions here to split up the 16 bytes into 32.
 	vpmovzxbw	g3y,	g3x
 	vpsllw	g2y,	g3y,    4
-	mov     g4d,    0x0f000f00
+	mov     g4w,    0x0f00
 	movd    g1x,    g4d
-	vpbroadcastd    g1y,    g1x
+	vpbroadcastw    g1y,    g1x
 	vpand   g2y,    g2y,	g1y
 	vpsrlw	g1y,	8
 	vpand   g3y,    g3y,	g1y
@@ -283,9 +283,9 @@
 	
 	vpmovzxbw	g3y,	g3x
 	vpsllw	g2y,	g3y,	4
-	mov     g4d,     0x0f000f00
+	mov     g4w,     0x0f00
 	movd    g1x,    g4d
-	vpbroadcastd    g1y,    g1x
+	vpbroadcastw    g1y,    g1x
 	vpand   g2y,    g2y,	g1y
 	vpsrlw	g1y,	8
 	vpand   g3y,    g3y,	g1y
