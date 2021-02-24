@@ -262,12 +262,12 @@
 	vpbroadcastb    g2y,    g2x
 	vpcmpgtb        g1y,    g3y,    g2y
 	mov     g4b,    0x07
-	movq    g2x,    g4
+	movd    g2x,    g4d
 	vpbroadcastb    g2y,    g2x
 	vpand	g1y,    g1y,	g2y
 	vpaddb	g1y,	g1y,	g3y
 	mov     g4b,    0x30
-	movq    g2x,    g4
+	movd    g2x,    g4d
 	vpbroadcastb    g2y,    g2x
 	vpaddb   g1y, 	g1y,	g2y
 	%pop
@@ -300,12 +300,12 @@
 	vpbroadcastb    g2y,    g2x
 	vpcmpgtb        g1y,    g3y,    g2y
 	mov     g4b,    0x07
-	movq    g2x,    g4
+	movd    g2x,    g4d
 	vpbroadcastb    g2y,    g2x
 	vpand	g1y,    g1y,	g2y
 	vpaddb	g1y,	g1y,	g3y
 	mov     g4b,    0x30
-	movq    g2x,    g4
+	movd    g2x,    g4d
 	vpbroadcastb    g2y,    g2x
 	vpaddb   g1y, 	g1y,	g2y
 	%pop
