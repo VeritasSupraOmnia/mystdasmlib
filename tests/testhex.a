@@ -3,17 +3,19 @@
 %include	'./syscall.ah'
 %include	'./hex.ah'
 %include	'./head.ah'
-;%include	'./regstats.ah'
-
+%define	debug	0
 c_ehdr	64,	main,	0
 	newstrla	failure,	"hex.ah		Test failure!"
 	newstrla	success,	"hex.ah		Test success!"
-;	baseregbindata	1
-;	basereghexdata	1
-;	basereghoutdata	1
-;	avx2regbindata	1
-;	avx2reghexdata	1
-;	avx2regoutdata	1
+%if	debug
+%include	'./regstats.ah'
+	baseregbindata	1
+	basereghexdata	1
+	basereghoutdata	1
+	avx2regbindata	1
+	avx2reghexdata	1
+	avx2regoutdata	1
+%endif
 	;testing data is as follows: first char in label is size, second is whether it is converted to or from hexadecimal, third is whether it is the test or desired result, fourth is whether output is uppercase. 
 	;example1:	btt - byte to hexadecimal test 
 	;example2:	qfr - quadword from hexidecimal result 
@@ -106,7 +108,6 @@ main:
 
 	movdqu	xmm0,	[quadhexl]
 	frhexql	rax,	rdi,	rsi,	xmm2,	xmm1,	xmm0
-;	baseregstohout	1
 	mov	rdi,	[quadbin]
 	cmp	rax,	rdi
 	jne	failure
@@ -114,8 +115,6 @@ main:
 	movdqu	xmm2,	[dquadbin]
 	tohexdqu	ymm0,	ymm1,	ymm2,	rax
 	vmovdqu	ymm1,	[dquadhexu]
-;	avx2regstohout	1
-;	write	stdout,	dquadhexu,	32
 	vptest	ymm1,	ymm0
 	jnc	failure
 
@@ -126,18 +125,19 @@ failure:mov	rax,	sys_write
 	mov	rsi,	sfailure
 	mov	rdx,	lfailure
 	syscall
-;	write stdout,	s_rax1,	ohdat_totalsize
-;	write stdout,	s_ymm01,	oavx2_totalsize
-	mov	rax,	sys_ret
-	mov	rdi,	1
-	syscall
+	jmp end
 success:mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	ssuccess
 	mov	rdx,	lsuccess
 	syscall
+end:	
 ;	write stdout,	s_rax1,	ohdat_totalsize
-;	write stdout,	s_ymm01,	oavx2_totalsize
+%if	debug
+	avx2regconvm	1,	1,	ymm0,	ymm1,	ymm2,	r8
+	avx2regformat	1,	1,	ymm0
+	write stdout,	s_ymm01,	oavx2_totalsize
+%endif
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall

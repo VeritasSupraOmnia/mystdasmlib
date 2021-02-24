@@ -251,7 +251,6 @@
 	vpsrlw	g1y,	8
 	vpand   g3y,    g3y,	g1y
 	vpor     g3y,    g2y,	g3y
-	;takeavx2regs	1
 	mov	g4,	0x08090A0B0C0D0E0F
 	movq	g2x,	g4
 	mov	g4,	0x0001020304050607
