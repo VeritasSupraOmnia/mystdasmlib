@@ -1735,7 +1735,7 @@ call_Takebaseregs:	takebaseregs	%1
 	%assign	%%rind 0
 	%assign %%mind 0
 	%rep	16;only 16 because this is avx2
-	vmovdqu	[%1 + %%mindd],	ymm%%rind
+	vmovdqu	[%1 + %%mind],	ymm%%rind
 	%assign	%%rind	%%rind + 1
 	%assign	%%mind	%%mind + 3
 	%endrep
