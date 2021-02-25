@@ -1724,3 +1724,20 @@ call_Takebaseregs:	takebaseregs	%1
 	vmovdqu	[s_ymm15%1 + 6 + 32],	gtempy
 %pop
 %endmacro
+;fill the avx2 registers with a whole section of data for future printing - useful for broad mem debugging
+%define	avx2regtotalb	512
+%define	avx2regtotalw	256
+%define	avx2regtotald	128
+%define	avx2regtotalq	64
+%macro	memfillavx2	1
+%push	scope
+	;assign the incrementation to keep this light
+	%assign	%%rind 0
+	%assign %%mind 0
+	%rep	16;only 16 because this is avx2
+	vmovdqu	[%1 + %%mindd],	ymm%%rind
+	%assign	%%rind	%%rind + 1
+	%assign	%%mind	%%mind + 3
+	%endrep
+%pop
+%endmacro
