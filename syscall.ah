@@ -13,6 +13,8 @@
 %define	readonly	0
 %define	writeonly	1
 %define	readwrite	2
+%define create		0x40
+%define append		0x0400
 
 ;standard linux signals
 %define	SIGKILL	0x09
