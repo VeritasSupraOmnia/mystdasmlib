@@ -1241,7 +1241,7 @@ call_Takebaseregs:	takebaseregs	%1
 			dq	0,0,0,0,0,0,0,0
 			db	0x0A
 %endmacro
-%macro	takeavx2regs	1
+%macro	takeavx2reg	1
 	vmovdqu	[b_ymm0%1],	ymm0
 	vmovdqu	[b_ymm1%1],	ymm1
 	vmovdqu	[b_ymm2%1],	ymm2
@@ -1261,7 +1261,7 @@ call_Takebaseregs:	takebaseregs	%1
 %endmacro
 ;takes avx2 regs, rolling converts them to hexadecimal using a stack cache, then outputs them, formatted, into a avx2regoutdata struct given in arguments
 ;should be quick compared to other conversions and less memory intesive, due a lack a needed memory read writes
-%macro	avx2regstohout	1
+%macro	avx2regtohout	1
 	push	rax
 	sub	rsp,	32
 	vmovdqu	[rsp],	ymm0
