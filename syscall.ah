@@ -49,6 +49,18 @@
 ;sys_wait flags
 %define	wexited	0x04
 
+;sys_mmap prot states
+%define	prot_read	0x01
+%define	prot_write	0x02
+%define	prot_exec	0x04
+%define	prot_none	0x00
+
+;sys_mmap flags
+%define	map_shared	0x01
+%define	map_private	0x02
+%define	map_fixed	0x10
+%define	map_populate	0x8000
+
 ;all sys_ functions put ther id numbers (0 for sys_read, 1 for sys_write, etc) into rax and are called with the syscall instruction
 %define	sys_read	0	;rdi:file descriptor	rsi:char buffer address	rdx:byte count
 %define	sys_write	1	;rdi:fd			rsi:char buffer address	rdx:byte count
