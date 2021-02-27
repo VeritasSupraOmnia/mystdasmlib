@@ -118,7 +118,7 @@
 %define	sys_socketpair	53
 %define	sys_setsockopt	54
 %define	sys_getsockopt	55
-%define sys_clone	56	;rdi:pointer to function to call as child	rsi: location of top of child's stack	rdx: flags	r10:	address of argv - can be null
+%define sys_clone	56	;rdi: flags	rsi: location of top of child's stack	xor the other shit
 %define sys_fork	57
 %define sys_vfork	58
 %define sys_exec	59	;rdi:cmd char array pnt
