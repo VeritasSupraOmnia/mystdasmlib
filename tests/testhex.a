@@ -33,6 +33,7 @@ c_ehdr	64,	main,	0
 	quadhexl:	dq	'01234567','89abcdef'
 	dquadbin:	dq	0xA123456789ABCDEF,0xFEDCBA9876543210
 	dquadhexu:	dq	'A1234567','89ABCDEF','FEDCBA98','76543210'
+	dquadhexur:	dq	'EFCDAB89','674523A1','10325476','98BADCFE'
 	dquadhexl:	dq	'01234567','89abcdef','fedcba98','76543210'
 main:
 	mov	dl,	[bytebin]
@@ -118,7 +119,17 @@ main:
 	vptest	ymm1,	ymm0
 	jnc	failure
 
-
+	movdqu	xmm2,	[dquadbin]
+	tohexdqur	ymm0,	ymm1,	ymm2,	rax
+	vmovdqu	ymm1,	[dquadhexur]
+	vptest	ymm1,	ymm0
+	jnc	failure
+	tohexdqur_setup	ymm2,	ymm3,	ymm4,	ymm5,	ymm6,	rax
+	movdqu	xmm1,	[dquadbin]
+	tohexdqur_assume	ymm0,	ymm1,	ymm2,	ymm3,	ymm4,	ymm5,	ymm6
+	vmovdqu	ymm1,	[dquadhexur]
+	vptest	ymm1,	ymm0
+	jnc	failure
 	jmp	success
 failure:mov	rax,	sys_write
 	mov	rdi,	stdout
@@ -137,8 +148,12 @@ end:
 	avx2regconvm	1,	1,	ymm0,	ymm1,	ymm2,	r8
 	avx2regformat	1,	1,	ymm0
 	write stdout,	s_ymm01,	oavx2_totalsize
+	write stdout,	testout,	32
 %endif
 	mov	rax,	sys_ret
 	mov	rdi,	0
 	syscall
 c_ftr
+%if	debug
+	testout:	resq	4
+%endif
