@@ -30,8 +30,9 @@ main:
 	mov	rdi,	[obj1]
 	mov	rsi,	[obj2]
 	add	rdi,	rsi
-	%define targlist r8, r9
-	testadd	%[targlist]
+;	%define targlist r8, r9
+	arglist	ta,	r8,	r9
+	testadd	ta
 	cmp	r8,	rdi
 	jne	fail
 %if 0

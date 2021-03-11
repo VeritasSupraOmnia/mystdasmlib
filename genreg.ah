@@ -1,6 +1,6 @@
+; --PUBLIC DOMAIN SOFTWARE--
+;github.com/VeritasSupraOmnia
 ;generalized registers in nasm assembly.
-;Written by Keaton G.C. Hatcher
-
 ;purpose: Less headache for developing assembly macro libraries with optimized register fill.
 
 ;use - basic dgr and udgr:
@@ -1596,6 +1596,9 @@
 	%endif
 %endmacro
 
+%macro	arglist	2+
+	%define %[%1] %2
+%endmacro
 
 
 
