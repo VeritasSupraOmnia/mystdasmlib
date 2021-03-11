@@ -27,6 +27,14 @@ main:
 	cmp	r8,	rdi
 	jne	fail
 
+	mov	rdi,	[obj1]
+	mov	rsi,	[obj2]
+	add	rdi,	rsi
+	%define targlist r8, r9
+	testadd	%[targlist]
+	cmp	r8,	rdi
+	jne	fail
+%if 0
 	regsize	rax,	test1
 	mov	rax,	test1
 	mov	rdx,	8
@@ -44,17 +52,19 @@ main:
 	mov	rdx,	0
 	cmp	rax,	rdx
 	jne	fail
+
+%endif
 	
 	mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	ssuccess
-	mov	rdx,	[lsuccess]
+	mov	rdx,	lsuccess
 	syscall
 	jmp	end
 fail:	mov	rax,	sys_write
 	mov	rdi,	stdout
 	mov	rsi,	sfailure
-	mov	rdx,	[lfailure]
+	mov	rdx,	lfailure
 	syscall
 end:
 	mov	rax,	sys_ret

@@ -1,8 +1,12 @@
-test:	./tests/testhead ./tests/teststring ./tests/testhex ./tests/testdec ./tests/testutil ./tests/testfind ./tests/testsyscall ./tests/testutil
+test:	./tests/testhead ./tests/teststring ./tests/testhex ./tests/testdec ./tests/testutil ./tests/testfind ./tests/testsyscall ./tests/testutil ./tests/testgenreg
 	@echo "Tests complete."
 clean:
 	@rm tests/testhead tests/teststring tests/testhex tests/testdec tests/testutil tests/testfind tests/testsyscall
 
+./tests/testgenreg:	head.ah syscall.ah genreg.ah tests/testgenreg.a
+	@nasm tests/testgenreg.a -o tests/testgenreg
+	@chmod	755	tests/testgenreg
+	@./tests/testgenreg
 ./tests/testsyscall:	head.ah syscall.ah tests/testsyscall.a
 	nasm tests/testsyscall.a -o tests/testsyscall
 	chmod	755	tests/testsyscall
