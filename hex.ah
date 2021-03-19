@@ -365,6 +365,85 @@
 	vpaddb	gouty,	gouty,	gm5y
 %pop
 %endmacro
+;same as above but with pointer input
+%macro	tohexdqur_min_assume 7
+%push	scope
+	;output and input registers and 5 specificly ordered mask registers
+	dgr	%1,	out;clobbered
+	dgr	%2,	in;clobbered
+	;%3 is the memory input
+	dgr	%4,	m1;and mask
+	dgr	%5,	m2;pshuf mask
+	dgr	%6,	m3;0x09mask
+	dgr	%7,	m4;0x07mask
+	dgr	%8,	m5;0x30mask
+	vpmovzxbw	giny,	[%3];spread out input
+	vpsllw	gouty,	giny,	4;split it up and offset it
+	vpand   gouty,    gouty,	gm1y;and one register with and mask
+	vpsrlw	gm1y,	8
+	vpand   giny,    giny,	gm1y;and other register with and mask
+	vpsllw	gm1y,	8;revert it back for the next loop
+	vpor	gouty,	giny,	gouty;combine the two registers
+	vpshufb	gouty,	gouty,	gm2y;shuffle bytes around
+	vpcmpgtb        giny,    gouty,    gm3y
+	vpand	giny,    giny,	gm4y
+	vpaddb	gouty,	gouty,	giny
+	vpaddb	gouty,	gouty,	gm5y
+%pop
+%endmacro
+;same as above but with pointer output
+%macro	tohexdqur_mout_assume 7
+%push	scope
+	;output and input registers and 5 specificly ordered mask registers
+	dgr	%1,	out;clobbered
+	dgr	%2,	in;clobbered
+	;%3 is the memory output
+	dgr	%4,	m1;and mask
+	dgr	%5,	m2;pshuf mask
+	dgr	%6,	m3;0x09mask
+	dgr	%7,	m4;0x07mask
+	dgr	%8,	m5;0x30mask
+	vpmovzxbw	giny,	ginx;spread out input
+	vpsllw	gouty,	giny,	4;split it up and offset it
+	vpand   gouty,    gouty,	gm1y;and one register with and mask
+	vpsrlw	gm1y,	8
+	vpand   giny,    giny,	gm1y;and other register with and mask
+	vpsllw	gm1y,	8;revert it back for the next loop
+	vpor	gouty,	giny,	gouty;combine the two registers
+	vpshufb	gouty,	gouty,	gm2y;shuffle bytes around
+	vpcmpgtb        giny,    gouty,    gm3y
+	vpand	giny,    giny,	gm4y
+	vpaddb	gouty,	gouty,	giny
+	vpaddb	[%3],	gouty,	gm5y
+%pop
+%endmacro
+;same as above but with pointer input and output
+%macro	tohexdqur_minout_assume 7
+%push	scope
+	;output and input registers and 5 specificly ordered mask registers
+	dgr	%1,	out;clobbered
+	dgr	%2,	in;clobbered
+	;%3 is the memory output
+	;%4 is the memory output
+	dgr	%5,	m1;and mask
+	dgr	%6,	m2;pshuf mask
+	dgr	%7,	m3;0x09mask
+	dgr	%8,	m4;0x07mask
+	dgr	%9,	m5;0x30mask
+	vpmovzxbw	giny,	[%3];spread out input
+	vpsllw	gouty,	giny,	4;split it up and offset it
+	vpand   gouty,    gouty,	gm1y;and one register with and mask
+	vpsrlw	gm1y,	8
+	vpand   giny,    giny,	gm1y;and other register with and mask
+	vpsllw	gm1y,	8;revert it back for the next loop
+	vpor	gouty,	giny,	gouty;combine the two registers
+	vpshufb	gouty,	gouty,	gm2y;shuffle bytes around
+	vpcmpgtb        giny,    gouty,    gm3y
+	vpand	giny,    giny,	gm4y
+	vpaddb	gouty,	gouty,	giny
+	vpaddb	[%4],	gouty,	gm5y
+%pop
+%endmacro
 
 
 ;TODO: Fix this macro
