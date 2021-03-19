@@ -366,7 +366,7 @@
 %pop
 %endmacro
 ;same as above but with pointer input
-%macro	tohexdqur_min_assume 7
+%macro	tohexdqur_min_assume 8
 %push	scope
 	;output and input registers and 5 specificly ordered mask registers
 	dgr	%1,	out;clobbered
@@ -392,7 +392,7 @@
 %pop
 %endmacro
 ;same as above but with pointer output
-%macro	tohexdqur_mout_assume 7
+%macro	tohexdqur_mout_assume 8
 %push	scope
 	;output and input registers and 5 specificly ordered mask registers
 	dgr	%1,	out;clobbered
@@ -418,7 +418,7 @@
 %pop
 %endmacro
 ;same as above but with pointer input and output
-%macro	tohexdqur_minout_assume 7
+%macro	tohexdqur_minout_assume 9
 %push	scope
 	;output and input registers and 5 specificly ordered mask registers
 	dgr	%1,	out;clobbered
