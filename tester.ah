@@ -2,26 +2,26 @@
 
 %macro	newtest1 2
 %push	scope
-	%strcat	%%sstr	%2,	":	success"
-	newstrla	%[%1s],	%%sstr
-	%strcat	%%fstr	%2,	":	failure"
-	newstrla	%[%1f],	%%fstr
+	%defstr		%%suc	%2':	success'
+	%defstr		%%fai	%2':	failure'
+	newstrla	%1s,	%%suc
+	newstrla	%1f,	%%fai
 %pop
 %endmacro
 %macro	newtest2 2
 %push	scope
-	%strcat	%%sstr	%2,	":		success"
-	newstrla	%[%1s],	%%sstr
-	%strcat	%%fstr	%2,	":		failure"
-	newstrla	%[%1f],	%%fstr
+	%defstr		%%suc	%2':		success'
+	%defstr		%%fai	%2':		failure'
+	newstrla	%1s,	%%suc
+	newstrla	%1f,	%%fai
 %pop
 %endmacro
 %macro	newtest3 2
 %push	scope
-	%strcat	%%sstr	%2,	":			success"
-	newstrla	%[%1s],	%%sstr
-	%strcat	%%fstr	%2,	":			failure"
-	newstrla	%[%1f],	%%fstr
+	%defstr		%%suc	%2':			success'
+	%defstr		%%fai	%2':			failure'
+	newstrla	%1s,	%%suc
+	newstrla	%1f,	%%fai
 %pop
 %endmacro
 
