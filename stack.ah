@@ -110,3 +110,25 @@ pop	rsp
 	vmovdqu	ymm0,	[rsp]
 	add	rsp,	32
 %endmacro
+
+;now that the cringe is out of the way, it's STACK VARIABLE TIME.
+
+;generic push
+%macro gpush 2
+;gpush varname value
+
+;STacK Top Offset
+;Accessors subtract the wanted variable offset from this, to find the amount
+;from rsp one must add to access the variable.
+%ifndef stkto
+	%assign stkto 8
+%else
+	%assign stkto stkto + 8
+%endif
+%assign %[g%1] 
+
+%endmacro
+
+;generig pop
+%macro gpop 1
+%endmacro
