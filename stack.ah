@@ -131,7 +131,11 @@ push %2
 
 ;Load Generic Variable
 %macro lgvar 2
-	mov %1, [rsp + (%$stkto - %2)]
+	mov %1,	[rsp + (%$stkto - %2)]
+%endmacro
+;Save(or Set) Generic Variable
+%macro sgvar 2
+	mov [rsp + (%$stkto - %1)],	%2
 %endmacro
 
 ;CLeaRGenericSTacK

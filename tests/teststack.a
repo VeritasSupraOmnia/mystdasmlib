@@ -15,12 +15,19 @@ main:
 		;for checking gstack collapse later on
 		mov rax,	rsp
 
-		;check basic gstack variables
+		;check basic gstack variable loading
 		mov	ecx,	0x42
-		gpush variable, rcx
+		gpush %$variable, rcx
 		xor	ebx,	ebx
-		lgvar	rbx,	variable
+		lgvar	rbx,	%$variable
 		cmp	ecx,	ebx
+		jne failure
+
+		;check basic gstack variable setting/saving
+		mov ecx,	0x69
+		sgvar %$variable, rcx
+		lgvar	rbx,	%$variable
+		cmp ecx,	ebx
 		jne failure
 
 		;check gstack collapse mechanism
