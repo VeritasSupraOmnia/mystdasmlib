@@ -1,0 +1,41 @@
+%include "./head.ah"
+%include "./cstring.ah"
+%include "./stack.ah"
+%include "./genreg.ah"
+%include "./hex.ah"
+%include "./syscall.ah"
+%include "./tester.ah"
+
+c_ehdr 64, main, 0
+data:
+	newstrla succ, "teststack: success!"
+	newstrla fail, "teststack: failure!"
+main:
+	%push scope
+		;for checking gstack collapse later on
+		mov rax,	rsp
+
+		;check basic gstack variables
+		mov	ecx,	0x42
+		gpush variable, rcx
+		xor	ebx,	ebx
+		lgvar	rbx,	variable
+		cmp	ecx,	ebx
+		jne failure
+
+		;check gstack collapse mechanism
+		clrgstk
+		cmp rsp, rax
+		jne	failure
+
+		write	stdout,	ssucc,	lsucc
+		jmp	end;
+failure:
+		write	stdout,	sfail,	lfail
+end:
+		mov eax,	sys_ret
+		xor	edi,	edi
+		syscall
+	%pop
+c_ftr
+

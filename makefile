@@ -1,4 +1,4 @@
-test:	./tests/testhead ./tests/teststring ./tests/testhex ./tests/testdec ./tests/testutil ./tests/testfind ./tests/testsyscall ./tests/testutil ./tests/testgenreg
+test:	./tests/testhead ./tests/teststring ./tests/testhex ./tests/testdec ./tests/testutil ./tests/testfind ./tests/testsyscall ./tests/testutil ./tests/testgenreg ./tests/teststack
 	@echo "Tests complete."
 clean:
 	@rm tests/testhead tests/teststring tests/testhex tests/testdec tests/testutil tests/testfind tests/testsyscall
@@ -35,3 +35,7 @@ clean:
 	@nasm ./tests/testfind.a -o ./tests/testfind
 	@chmod	755	./tests/testfind
 	@./tests/testfind
+./tests/teststack:	head.ah syscall.ah genreg.ah syscall.ah cstring.ah stack.ah tests/teststack.a
+	@nasm ./tests/teststack.a -o ./tests/teststack
+	@chmod	755	./tests/teststack
+	@./tests/teststack
