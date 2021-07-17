@@ -317,21 +317,37 @@
 ;easier write setup
 ;use:	write	stout,	charbuffer,	[length_charbuffer]
 %macro	write	3
-mov	rax,	sys_write
-mov	rdi,	%1
+mov	rdi,	%1		;non immediates first to stave off some possible reg clobber bugs
 mov	rsi,	%2
 mov	rdx,	%3
+mov	eax,	sys_write	;1
 syscall
+%endmacro
+
+;like write but only to stdout
+%macro	print	2
+mov	rsi,	%1		
+mov	rdx,	%2
+mov	eax,	sys_write
+mov	edi,	eax		;stdout is same as sys_write
 %endmacro
 
 ;easier read setup
 ;use	read	stdin,	charbuffer,	[num_chars_to_read]
 %macro	read	3
-mov	rax,	sys_read
 mov	rdi,	%1
 mov	rsi,	%2
 mov	rdx,	%3
+xor	eax,	eax	;sys_read is equal to 0
 syscall
+%endmacro
+
+;like read but only from stin
+%macro sinput	2
+mov	rsi,	%1
+mov	rdx,	%2
+xor	eax,	eax
+xor	edi,	edi
 %endmacro
 
 %macro	pread	4
