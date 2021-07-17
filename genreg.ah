@@ -670,7 +670,7 @@
 	%endif
 %endmacro
 
-;redefines nonlocal macro to context local macro for easy typing
+;redefines nonlocal macro to context local macro for ease of typing
 ;this is actually kind of genious. Only redefines labels smaller that are to be defined anyway.
 %macro	redef	1
 	%define	g%1	%$g%1
@@ -1129,7 +1129,9 @@
 	%endif
 %endmacro
 
-;returns the size of a given register and 0 if the symbol is NOT a register
+;returns the size of a given register and 0 if the symbol is NOT a register.
+;useful for making macros that change based on input much like regular x86
+;instruction
 %macro	regsize	2
 	%ifidni	%1,	al
 	%assign	%2	1
@@ -1601,16 +1603,5 @@
 %endmacro
 
 
-
-
-;declares a general register for each argument	-	assumes there are arguments	-	scratches i value
-%macro	dga	1
-	%assign	i	1
-	%rep	%[%1]
-	dgr	%[%i],	i
-	%assign	i	i+1
-	%endrep
-
-%endmacro
 ;Possible feature: register-in-use table 
 ;Using a quadword sized number define (with each bit representing a register slot) check-reg-open/check-reg-closed macros, one can keep track of which register is in use and output register use flow as well as enabling the detection of register conflicts.
