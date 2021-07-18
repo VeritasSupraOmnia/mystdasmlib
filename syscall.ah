@@ -325,11 +325,12 @@ syscall
 %endmacro
 
 ;like write but only to stdout
-%macro	print	2
+%macro	printbuff	2
 mov	rsi,	%1		
 mov	rdx,	%2
 mov	eax,	sys_write
 mov	edi,	eax		;stdout is same as sys_write
+syscall
 %endmacro
 
 ;easier read setup
