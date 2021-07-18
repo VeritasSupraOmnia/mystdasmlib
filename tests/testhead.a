@@ -2,22 +2,45 @@
 %include	"./head.ah"
 
 ;declare standard, 64 bit elf header with entry-point "main"
-c_ehdr	64,	main,	0
+c_ehdr	64,	main,	8
 
 ;my god why did I declare this after the main label. I swear to god, I was tearing my hair out trying to figure out why I was segfaulting. I am a fucking brainlet sometimes.
 %define		msucc	"head.ah		Test success!"
 %define		mfail	"head.ah		Test failure!"
 %strlen		len	msucc
+;cmd args test data
+cmdarg1:	db	"arg1",0
+cmdarg2:	db	"arg2",0
+cmdarg3:	db	"arg3",0
+nl:		db	0x0a
+
 ssucc:	db	msucc,0x0A
 sfail:	db	mfail,0x0A
-
 fail:
 	printbuff	sfail,	len+1
 	jmp end
 main:	
-	;testing command line arguments
+	;TESTING COMMANDLINE ARGUMENT COUNT
 
-	;data section is tested here
+	;register
+	rargc	rcx
+	cmp	ecx,	4
+	jne	fail
+
+	;direct memcopy scratching rsi and rdi
+	margc	cmdargc
+	cmp	qword [cmdargc],	4
+	jne	fail
+
+	;testing commandline argument indexing
+	rargv	rsi
+	mov	rcx,	1
+	riargvr	rax,	rsi,	rcx
+	mov	eax,	[rax]
+	mov	ebx,	[cmdarg1]
+	cmp	eax,	ebx
+	jne	fail
+
 	printbuff	ssucc,	len+1
 end:
 	mov	rax,	sys_ret
@@ -26,3 +49,6 @@ end:
 
 ;declare footer, just finds file end address for header generation
 c_ftr
+absolute $
+cmdargc:	resq	1
+cmdarvin:	resd	1

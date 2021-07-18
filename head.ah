@@ -74,3 +74,27 @@ filesize	equ	$	-	$$
 filecap	equ	$
 absolute	$
 %endmacro
+
+;ARGUMENT HANDLING
+;Assumes these are called at the start of the program.
+
+;puts argc into a register
+%macro	rargc	1
+	mov	%1,	[rsp]
+%endmacro
+;scratches rsi and rdi and does a 
+%macro	margc	1
+	mov	rsi,	rsp
+	mov	rdi,	%1
+	movsq
+%endmacro
+;gets argv (the meta pointer) and puts it into a register
+%macro	rargv	1
+	lea	%1,	[rsp+8]
+%endmacro
+;gets the index address of argv using the pointer in a register and puts into a register
+%macro	riargvr	3
+	;output - input - index
+	mov	%1,	[%2+(8*%3)]
+%endmacro
+
