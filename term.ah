@@ -14,12 +14,19 @@
 %define ce_clear CSI,0x32,0x4A
 %define ce_clear_size csi_size+2
 
-;--ce_*_altbuff
+;--ce_en_altbuff-- --ce_di_altbuff--
 ; enable or disable alternate buffer
 %define ce_en_altbuff CSI,"?1049h"
 %define ce_en_altbuff_size csi_size+6
 %define ce_di_altbuff CSI,"?1049l"
 %define ce_di_altbuff_size csi_size+6
+
+;--ce_fgc-- --ce_bgc--
+; change the foreground or background color
+%define ce_fgc(color) CSI,"38;5;colorm"
+%define ce_fgc_size csi_size+7
+%define ce_bgc(color) CSI,"48;5;colorm"
+%define ce_bgc_size csi_size+7
 
 ;--ce_save_cur--
 ; saves cursor position
@@ -29,6 +36,10 @@
 ; loads cursor position
 %define ce_load_cur CSI,"u"
 %define ce_load_cur_size csi_size+1
+;--ce_reset--
+; reset terminal to original state (graphics, etc)
+%define ce_reset CSI,"c"
+%define ce_reset_size csi_size+1
 
 ;--sequence_modification--
 ;for setting part of a data segment containing a goxy escape sequence
@@ -37,12 +48,14 @@
 	mov	[%1+5], byte %3
 %endmacro
 
+;--new_ccode--
 ;see -escaped_sequences- for arg 1 of this macro
 %macro new_ccode 2
 	%2:	db %1
 %endmacro
 ;arg 2 is just the label you want to use
 
+;--send_ccode--
 ;sends the code, saved at the label in arg 1, that has the size of the sequence in arg 2
 %macro send_ccode 2
 	xor edi,edi
