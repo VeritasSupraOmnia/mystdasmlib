@@ -1,0 +1,56 @@
+;A library for handling console manipulation through directly escaped keycodes
+%define CSI 0x1B,0x5B
+%define csi_size 2
+
+;--escaped_sequences--: put these into data segments and write them to stdin
+
+;--ce_goxy--
+; go to x,y which are bytes sized coordinates
+%define ce_goxy(ex,wy)	CSI,ex,0x3B,wy,0x66
+%define ce_goxy_size csi_size+4 
+
+;--ce_clear--
+; clears whole terminal screen
+%define ce_clear CSI,0x32,0x4A
+%define ce_clear_size csi_size+2
+
+;--ce_*_altbuff
+; enable or disable alternate buffer
+%define ce_en_altbuff CSI,"?1049h"
+%define ce_en_altbuff_size csi_size+6
+%define ce_di_altbuff CSI,"?1049l"
+%define ce_di_altbuff_size csi_size+6
+
+;--ce_save_cur--
+; saves cursor position
+%define ce_save_cur CSI,"s"
+%define ce_save_cur_size csi_size+1
+;--ce_load_cur--
+; loads cursor position
+%define ce_load_cur CSI,"u"
+%define ce_load_cur_size csi_size+1
+
+;--sequence_modification--
+;for setting part of a data segment containing a goxy escape sequence
+%macro set_goxy_const 3	; TODO: Set this up with genreg
+	mov [%1+3], byte %2
+	mov	[%1+5], byte %3
+%endmacro
+
+;see -escaped_sequences- for arg 1 of this macro
+%macro new_ccode 2
+	%2:	db %1
+%endmacro
+;arg 2 is just the label you want to use
+
+;sends the code, saved at the label in arg 1, that has the size of the sequence in arg 2
+%macro send_ccode 2
+	xor edi,edi
+	xor eax,eax
+	mov rsi,%1
+
+	; this is so you can have multiple "goxy" labels saved at a time
+	mov rdx,%2
+	inc eax
+	syscall	;	write the code to stdin
+%endmacro
