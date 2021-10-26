@@ -1,8 +1,39 @@
 ;A library for handling console manipulation through directly escaped keycodes
-%define CSI 0x1B,0x5B
+%define ESC 0x1B
+%define CSI ESC,0x5B
 %define csi_size 2
 
+;--mode_setting--: set or reset different modes
+
+;--ms_srm-- --mr_srm--
+; set/reset send/receive mode
+%define ms_srm CSI,"12",0x68
+%define mr_srm CSI,"12",0x6c
+%define ms_srm_size csi_size+3
+%define mr_srm_size csi_size+3
+
+;--ms_kam-- --mr_kam--
+; set/reset keyboard action mode
+%define ms_kam CSI,"2",0x68
+%define mr_kam CSI,"2",0x6c
+%define ms_kam_size csi_size+2
+%define mr_kam_size csi_size+2
+
+;--ms_ttm-- --mr_ttm--
+; set/reset transfer terminationmode
+%define ms_ttm CSI,"16",0x68
+%define mr_ttm CSI,"16",0x6c
+%define ms_ttm_size csi_size+2
+%define mr_ttm_size csi_size+2
+
 ;--escaped_sequences--: put these into data segments and write them to stdin
+
+;--ce_emi-- --ce_dmi--
+; enable or disable manual input
+%define ce_emi ESC,0x62
+%define ce_dmi ESC,0x60
+%define ce_emi_size 2
+%define ce_dmi_size 2
 
 ;--ce_goxy--
 ; go to x,y which are bytes sized coordinates
@@ -17,25 +48,48 @@
 ;--ce_en_altbuff-- --ce_di_altbuff--
 ; enable or disable alternate buffer
 %define ce_en_altbuff CSI,"?1049h"
-%define ce_en_altbuff_size csi_size+6
 %define ce_di_altbuff CSI,"?1049l"
+%define ce_en_altbuff_size csi_size+6
 %define ce_di_altbuff_size csi_size+6
 
+;--ce_en_bracketpaste-- --ce_di_bracketpaste--
+; enable and disable bracket pastingg
+%define ce_en_bracketpaste CSI,"?2004h"
+%define ce_di_bracketpaste CSI,"?2004l"
+%define ce_en_bracketpaste_size csi_size+6 
+%define ce_di_bracketpaste_size csi_size+6 
+
+;--ce_en_manualin-- --ce_di_manualin--
+; enable and disable manual input into the device
+%define ce_en_manualin 0x1B,0x60
+%define ce_di_manualin 0x1B,0x62
+
+
+;--ce_color--
+; change the graphics mode in 16 color mode
+%define ce_color(col) CSI,"1;34;",col,"m"
+; size without the color code
+%define ce_color_size csi_size+6
+
+
 ;--ce_fgc-- --ce_bgc--
-; change the foreground or background color
-%define ce_fgc(color) CSI,"38;5;colorm"
-%define ce_fgc_size csi_size+7
-%define ce_bgc(color) CSI,"48;5;colorm"
-%define ce_bgc_size csi_size+7
+; change the foreground or background color, 256 color
+%define ce_fgc(col) CSI,"38;5;",col,"m"
+%define ce_bgc(col) CSI,"48;5;",col,"m"
+; size without color code
+%define ce_fgc_size csi_size+6
+%define ce_bgc_size csi_size+6
 
 ;--ce_save_cur--
 ; saves cursor position
 %define ce_save_cur CSI,"s"
 %define ce_save_cur_size csi_size+1
+
 ;--ce_load_cur--
 ; loads cursor position
 %define ce_load_cur CSI,"u"
 %define ce_load_cur_size csi_size+1
+
 ;--ce_reset--
 ; reset terminal to original state (graphics, etc)
 %define ce_reset CSI,"c"
@@ -66,4 +120,26 @@
 	mov rdx,%2
 	inc eax
 	syscall	;	write the code to stdin
+%endmacro
+
+;--cbreak-- --rawmode--
+
+; linux uses the ioctl system call to change these modes that ncurses would otherwise change
+%define I_SRDOPT 0x5306
+
+;--input_modes--
+;normal
+%define RDNORM 0
+;cbreak
+%define RPROTDAT 4
+;raw
+%define RPROTDIS 8
+
+; changes the read mode to the equivalent of ncurses "cbreak", "raw" or normal modes
+%macro ch_rdmode 1
+	mov eax, 16
+	xor edi, edi
+	mov esi, I_SRDOPT
+	mov edx, %1
+	syscall
 %endmacro

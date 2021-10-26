@@ -2,6 +2,7 @@
 %include "head.ah"
 %include "term.ah"
 %include "cstring.ah"
+%include "input.ah"
 
 c_ehdr 64, main, 8
 goxy:	db ce_goxy("0","0")
@@ -9,17 +10,30 @@ cls:	db ce_clear
 col:	db ce_bgc("2")
 eal:	db ce_en_altbuff
 dal:	db ce_di_altbuff
-res:	db ce_reset
+emi:	db ce_emi
+dmi:	db ce_dmi
+tty:	db "/dev/tty",0
+ft_tty:	dq	0
+
 main:
 	send_ccode eal, ce_en_altbuff_size
 	send_ccode cls, ce_clear_size
 	send_ccode goxy, ce_goxy_size
-;	send_ccode col, ce_bgc_size
-	read	0,		temp,	8
+	send_ccode col, ce_bgc_size+1
+	send_ccode dmi, ce_dmi_size
+;	ch_rdmode RPROTDIS
+	open_r	tty
+	mov edi, eax
+	mov eax, sys_read
+	mov esi, temp
+	mov edx, 1
+	syscall
+;	ch_rdmode RDNORM
 	send_ccode dal, ce_di_altbuff_size
-;	send_ccode res, ce_reset_size
+	send_ccode emi, ce_emi_size
 	mov		eax,	sys_ret
 	xor		edi,	edi
 	syscall
 c_ftr
 temp: resq 2
+
