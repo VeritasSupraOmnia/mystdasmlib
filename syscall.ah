@@ -416,7 +416,7 @@ syscall
 %endmacro
 
 ;exit without returning error
-%macro nominal_exit
+%macro nominal_exit 0
 	mov eax, sys_ret
 	xor edi,edi
 	syscall
