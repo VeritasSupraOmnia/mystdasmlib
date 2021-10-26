@@ -1,9 +1,11 @@
-test:	test_term test_genreg test_syscall test_head test_string test_hex test_dec test_find test_stack
+test:	test_term test_genreg test_syscall test_head test_string test_hex test_dec test_find test_stack test_input
 	@echo "Tests complete."
 clean:
 	@rm tests/testhead tests/teststring tests/testhex tests/testdec tests/testutil tests/testfind tests/testsyscall
 
 test_term:		./tests/testterm
+	@./tests/testterm
+test_input:		./tests/testinput
 	@./tests/testterm
 test_genreg:	./tests/testgenreg
 	@./tests/testgenreg
@@ -52,3 +54,4 @@ test_stack:		./tests/teststack
 ./tests/teststack:		head.ah syscall.ah genreg.ah syscall.ah cstring.ah stack.ah tests/teststack.a
 	@nasm ./tests/teststack.a -o ./tests/teststack
 	@chmod	755	./tests/teststack
+./tests/testinput:		head.ah syscall.ah cstring.ah input.ah

@@ -1,0 +1,26 @@
+%include "head.ah"
+%include "syscall.ah"
+%include "input.ah"
+%include "cstring.ah"
+
+c_ehdr	64,main,termios_struct_size*2
+newstrla mesg, "Press any key to continue..."
+buff:	db 0
+main:
+	get_termios tios				; get virgin termios
+
+	set_noncannon tios				; molest a termios copy
+	set_noecho tios
+
+	set_termios tios				; set as new termios
+
+	write stdout, smesg, lmesg
+	read stdin,buff,1
+
+	set_cannon tios					; born-again virgin
+	set_echo tios
+	set_termios tios				
+
+	nominal_exit
+c_ftr
+termios_struct tios
