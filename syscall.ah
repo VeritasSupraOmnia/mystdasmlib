@@ -59,6 +59,7 @@
 %define	map_shared	0x01
 %define	map_private	0x02
 %define	map_fixed	0x10
+%define map_anon	0x20
 %define	map_populate	0x8000
 
 ;all sys_ functions put ther id numbers (0 for sys_read, 1 for sys_write, etc) into rax and are called with the syscall instruction
