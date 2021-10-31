@@ -35,9 +35,9 @@
 %define	stickybit	0x1000
 
 ;standard linux signals
-%define	SIGKILL	0x09
-%define	SIGCHLD	0x11
-%define	SIGCONT	0x12
+;%define	SIGKILL	0x09
+;%define	SIGCHLD	0x11
+;%define	SIGCONT	0x12
 
 ;sys_clone bitmask values
 %define	clone_vm	0x0100
@@ -65,13 +65,13 @@
 ;all sys_ functions put ther id numbers (0 for sys_read, 1 for sys_write, etc) into rax and are called with the syscall instruction
 %define	sys_read	0	;rdi:file descriptor	rsi:char buffer address	rdx:byte count
 %define	sys_write	1	;rdi:fd			rsi:char buffer address	rdx:byte count
-%define	sys_open	2	;rdi:filename address	rsi:flags
-%define	sys_close	3	;rdi:file descriptor
-%define	sys_stat	4	;rdi:file descriptor
-%define	sys_fstat	5	;rdi:file descriptor
-%define	sys_lstat	6	;rdi:file descriptor
-%define	sys_poll	7	;rdi:file descriptor
-%define	sys_lseek	8	;rdi:file descriptor
+%define	sys_open	2	;rdi:path-string-pointer	rsi:flags
+%define	sys_close	3	;rdi:file-descriptor
+%define	sys_stat	4	;rdi:file-descriptor
+%define	sys_fstat	5	;rdi:file-descriptor
+%define	sys_lstat	6	;rdi:file-descriptor
+%define	sys_poll	7	;rdi:file-descriptor
+%define	sys_lseek	8	;rdi:file-descriptor	rsi:offset	rdx:
 %define	sys_mmap	9
 %define	sys_mprotect	10
 %define sys_mumap	11
@@ -315,21 +315,83 @@
 %define sys_request_key	249
 %define sys_keyctl	250
 
+; OPENING MACROS
+
 %macro open_r 1
 	mov	eax, sys_open
-	xor edi, edi
+	mov rdi, %1
+	mov esi, readonly
+	xor edx, edx
 	syscall
 %endmacro
 %macro open_w 1
 	mov	eax, sys_open
-	mov edi, writeonly
+	mov rdi, %1
+	mov esi, writeonly
+	xor edx, edx
 	syscall
 %endmacro
 %macro open_wr 1
 	mov	eax, sys_open
-	mov edi, readwrite
+	mov rdi, %1
+	mov esi, readwrite
+	xor edx, edx
 	syscall
 %endmacro
+%macro close_fd 1
+	mov rdi, %1
+	mov eax, sys_close
+	syscall
+%endmacro
+
+; SEEKING MACROS
+
+%define seek_set 0
+%define seek_cur 1
+%define seek_end 2
+
+; first arg is always fd
+
+; seek beginning offset
+%macro seekb 2
+	mov rdi, %1
+	mov rsi, %2
+	mov edx, seek_set
+	mov eax, sys_lseek
+	syscall
+%endmacro
+
+; seek current position offset
+%macro seekc 2
+	mov rdi, %1
+	mov rsi, %2
+	mov edx, seek_cur
+	mov eax, sys_lseek
+	syscall
+%endmacro
+
+; seek end offset
+%macro seeke 2
+	mov rdi, %1
+	mov rsi, %2
+	mov edx, seek_end
+	mov eax, sys_lseek
+	syscall
+%endmacro
+
+%macro getfilesize 2
+	seekc %1, 0
+	mov %2, rax
+	seeke %1, 0
+	xchg %2, rax
+	mov rsi, rax
+	mov edx, seek_set
+	mov rdi, %1
+	mov eax, sys_lseek
+	syscall
+%endmacro
+
+; IO MACROS
 
 ;easier write setup
 ;use:	write	stout,	charbuffer,	[length_charbuffer]
@@ -420,5 +482,18 @@ syscall
 %macro nominal_exit 0
 	mov eax, sys_ret
 	xor edi,edi
+	syscall
+%endmacro
+
+;uses mmap to allocate a chunk of memory using address %1 of 0, or reallocate with an address
+%macro alloc 2
+	mov eax, sys_mmap
+	mov rdi, %1
+	mov rsi, %2
+	mov edx, prot_read|prot_write
+	mov ecx, map_private|map_anon
+	xor r8,r8
+	xor r9,r9
+	xor r10,r10
 	syscall
 %endmacro
