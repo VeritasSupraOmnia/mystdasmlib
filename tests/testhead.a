@@ -2,7 +2,7 @@
 %include	"./head.ah"
 
 ;declare standard, 64 bit elf header with entry-point "main"
-c_ehdr	64,	main,	8
+c_ehdr	64,	main,	8 + bss_size
 
 ;my god why did I declare this after the main label. I swear to god, I was tearing my hair out trying to figure out why I was segfaulting. I am a fucking brainlet sometimes.
 %define		msucc	"head.ah		Test success!"
@@ -20,6 +20,7 @@ fail:
 	printbuff	sfail,	len+1
 	jmp end
 main:	
+	jmp test_bss	; TEMPORARY FOR TESTING PURPOSES
 	;TESTING COMMANDLINE ARGUMENT COUNT
 
 	;register
@@ -40,6 +41,8 @@ main:
 	mov	ebx,	[cmdarg1]
 	cmp	eax,	ebx
 	jne	fail
+test_bss:
+	mov [temp], rax
 
 	printbuff	ssucc,	len+1
 end:
@@ -49,6 +52,7 @@ end:
 
 ;declare footer, just finds file end address for header generation
 c_ftr
-absolute $
 cmdargc:	resq	1
 cmdarvin:	resd	1
+addbss temp, 40
+endbss
