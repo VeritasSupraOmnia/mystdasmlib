@@ -98,3 +98,17 @@ absolute	$
 	mov	%1,	[%2+(8*%3)]
 %endmacro
 
+
+; use this define in the last argument of the header creation macro and the following macro
+; to automatically count how much bss memory you need to reserve, and automatically reserve
+; it in the header.
+%macro addbss 2
+	%ifndef startbss
+		%define startbss 1
+		start_bss:
+	%endif
+	%1:	resb %2
+%endmacro
+%macro endbss 0
+	bss_size equ $-start_bss
+%endmacro
