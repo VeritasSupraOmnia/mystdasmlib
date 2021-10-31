@@ -52,7 +52,7 @@ end:
 
 ;declare footer, just finds file end address for header generation
 c_ftr
-cmdargc:	resq	1
-cmdarvin:	resd	1
-addbss temp, 40
-endbss
+bsq cmdargc,	1
+bsq cmdarvin,	1
+bsq temp, 40
+e_bss
