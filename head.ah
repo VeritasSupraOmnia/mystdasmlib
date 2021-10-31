@@ -68,15 +68,20 @@ phdrsize	equ	$ - phdr
 
 %endmacro
 
-;make the footer to determine the filesize at the end of the file
+; Create Fast Elf HeaDeR
+%macro c_fehdr 1
+	c_ehdr 64, %1, bss_size
+%endmacro
+
+; Make the footer to determine the filesize at the end of the file
 %macro	c_ftr	0
 filesize	equ	$	-	$$
 filecap	equ	$
 absolute	$
 %endmacro
 
-;ARGUMENT HANDLING
-;Assumes these are called at the start of the program.
+; ARGUMENT HANDLING
+; Assumes these are called at the start of the program.
 
 ;puts argc into a register
 %macro	rargc	1
