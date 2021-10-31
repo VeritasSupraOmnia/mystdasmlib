@@ -1,44 +1,46 @@
 %include	"./syscall.ah"
+%include	"./cstring.ah"
 %include	"./head.ah"
+
 ;test various syscalls and syscall macros detailed in "syscall.ah"
-c_ehdr	64,	main,	1000
-%stacksize	large
+c_ehdr	64,	main,	bss_size
+newstrla fail, "test_syscall	failure!"
+newstrla succ, "test_syscall	success!"
+path:	db "./tests/testfile.txt",0
 main:
-	brk	2
-	;set original output
-	mov	ax,	0x0A30
-	mov	[output],	ax
 
-	;save parent process id
-	getpid
-	mov	[ppid],	rax
+	open_r path		; Test open to right file descriptor
+	cmp rax, 3
+	jne fail
 
-	;new process clone-forked from here
-	clonevm	childstack
-	getpid
-	cmp	rax,	[ppid]
-	jne	prnt
-;	mov	rsi,	rax
-;	mov	rax,	sys_waitid
-;	mov	rdi,	wexited
-;	syscall
-	mov	rcx,	2000000000
-lp:	nop
-	cmp	rcx,	0
-	loopne lp
-	write	stdout,	output,	2
-	mov	rax,	sys_ret
-	xor	edi,	edi
-	syscall
-prnt:	
-	mov	ax,	0x0A41
-	mov	[output],	ax
-	mov	rax,	sys_ret
-	mov	rdi,	SIGCHLD
-	syscall
+	mov r14, rax	; Save file descriptor to preserved register
+
+	seeke r14, 0	; test seek to end
+	cmp rax, 64
+	jne fail
+
+	seekb r14, 0	; test seek to beginning
+	cmp rax, 0
+	jne fail
+	
+	getfilesize r14, r15
+	cmp r15, 64		; test file size get
+	jne fail
+	cmp rax, 0		; test also returned to beginning
+	jne fail
+
+	
+	write stdout, ssucc, lsucc
+	jmp exit
+
+fail:
+	write stdout, sfail, lfail
+
+exit:
+	close_fd r14
+	nominal_exit
 c_ftr
-absolute $
-ppid:	resq	1	;parent pid
-	resb	999
-childstack:	resb	1
-output:	resw	1
+bsq fd, 1
+thex: resq 2
+resb 1
+e_bss
