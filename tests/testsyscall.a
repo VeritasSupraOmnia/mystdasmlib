@@ -29,18 +29,48 @@ main:
 	cmp rax, 0		; test also returned to beginning
 	jne fail
 
+	close_fd r14	; this fd is no longer needed
+	
+					; Test clear_bss macro with chunk and leftover testing
+	call fill_bss	; -fill_bss-
+	mov eax, 0x69
+	mov [other_data], al
+	clear_bss
+	call test_bss	; -test_bss-
 	
 	write stdout, ssucc, lsucc
 	jmp exit
+
+fill_bss:			; --fill_bss--
+	mov rcx, bss_size
+	shr rcx, 3
+	mov rdi, data
+	mov rax, 0x6969696969696969
+ .loop:
+	mov [rdi], rax
+	add rdi, 8
+	loop .loop
+	ret
+
+test_bss:			; --test_bss--
+	mov rcx, bss_size
+	shr rcx, 3
+	mov rsi, data
+	xor edi, edi
+ .loop:
+ 	mov rax, [rsi]
+	cmp rax, rdi
+	jne fail
+	add rsi, 8
+	loop .loop
+	ret
 
 fail:
 	write stdout, sfail, lfail
 
 exit:
-	close_fd r14
 	nominal_exit
 c_ftr
-bsq fd, 1
-thex: resq 2
-resb 1
+bsq data,	42
+bsb other_data, 1
 e_bss
