@@ -83,30 +83,37 @@ absolute	$
 ; ARGUMENT HANDLING
 ; Assumes these are called at the start of the program.
 
-;puts argc into a register
+; Puts argc into a register
 %macro	rargc	1
-	mov	%1,	[rsp]
+	mov	%1,	[rsp+8]
 %endmacro
-;scratches rsi and rdi and does a 
+
+; Scratches rsi and rdi to move argc out of the stack.
 %macro	margc	1
-	mov	rsi,	rsp
+	lea	rsi,	[rsp+8]
 	mov	rdi,	%1
 	movsq
 %endmacro
+
 ;gets argv (the meta pointer) and puts it into a register
 %macro	rargv	1
-	lea	%1,	[rsp+8]
+	lea	%1,	[rsp+16]
 %endmacro
+
+; Does the same thing as margc but with argv
+%macro margv 1
+	lea rsi, [rsp+16]
+	mov rdi, %1
+	movsq
+%endmacro 
+
 ;gets the index address of argv using the pointer in a register and puts into a register
 %macro	riargvr	3
 	;output - input - index
 	mov	%1,	[%2+(8*%3)]
 %endmacro
 
-
-; use this define in the last argument of the header creation macro and the following macro
-; to automatically count how much bss memory you need to reserve, and automatically reserve
-; it in the header.
+; integrated bss. Use these for bss reservation, instead of resb, while using custom header.
 %macro bsb 2
 	%ifndef startbss
 		%define startbss 1
@@ -135,6 +142,41 @@ absolute	$
 	%endif
 	%1:	resq %2
 %endmacro
-%macro e_bss 0
+
+%macro e_bss 0		; must use this to end bss
 	bss_size equ $-start_bss
+%endmacro
+
+; clears whole bss
+%macro clear_bss 0
+	mov rcx, bss_size		; size grab
+	mov rax, rcx	; save for leftovers
+
+	shr rcx, 5 		; divide by 32
+
+	mov rdx, rcx	; to find how many leftovers
+	shl rdx, 5		
+
+	mov rdi, start_bss		; prepare for wipe
+	vpxor ymm0, ymm0, ymm0
+
+	cmp rcx, 0		; deal with small bss case
+	je %%loop2_setup
+
+%%loop:
+	vmovdqu [rdi], ymm0		; wipe main
+	add rdi, 32
+loop %%loop
+
+	sub rax, rdx	; find leftovers
+	mov rcx, rax
+
+%%loop2_setup:
+	xor eax, eax
+
+%%loop2:	
+	mov [rdi], al
+	inc rdi
+loop %%loop2
+	
 %endmacro
