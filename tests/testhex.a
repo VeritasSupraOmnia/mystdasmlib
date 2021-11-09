@@ -118,6 +118,12 @@ main:
 	vmovdqu	ymm1,	[dquadhexu]
 	vptest	ymm1,	ymm0
 	jnc	failure
+	tohexdqu_setup	ymm2,	ymm3,	ymm4,	ymm5,	ymm6,	rax
+	movdqu	xmm1,	[dquadbin]
+	tohexdqu_assume	ymm0,	ymm1,	ymm2,	ymm3,	ymm4,	ymm5,	ymm6
+	vmovdqu	ymm1,	[dquadhexu]
+	vptest	ymm1,	ymm0
+	jnc	failure
 
 	movdqu	xmm2,	[dquadbin]
 	tohexdqur	ymm0,	ymm1,	ymm2,	rax

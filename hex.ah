@@ -272,6 +272,60 @@
 	vpaddb   g1y, 	g1y,	g2y
 	%pop
 %endmacro
+;to setup for mass conversion without constant assignment
+%macro	tohexdqu_setup 6
+%push	scope
+	;5 free mask registers and a free general register
+	dgr	%1,	1;and mask
+	dgr	%2,	2;pshuf mask
+	dgr	%3,	3;0x09 mask
+	dgr	%4,	4;0x07mask
+	dgr	%5,	5;0x30mask
+	dgr	%6,	load;clobbered
+	mov	gloadw,	0x0f00
+	movd	g1x,	gloadd
+	vpbroadcastw	g1y,	g1x
+	mov	gload,	0x08090A0B0C0D0E0F
+	movq	g2x,	gload
+	mov	gload,	0x0001020304050607
+	pinsrq	g2x,	gload,	1
+	vperm2i128	g2y,	g2y,	g2y,	0
+	mov	gloadb,	0x09
+	movd	g3x,	gloadd
+	vpbroadcastb	g3y,	g3x
+	mov	gloadb,	0x07
+	movd	g4x,	gloadd
+	vpbroadcastb	g4y,	g4x
+	mov	gloadb,	0x30
+	movd	g5x,	gloadd
+	vpbroadcastb	g5y,	g5x
+%pop
+%endmacro
+;mass conversion without constant assignment - assuming the proper masks are in the proper registers
+%macro	tohexdqu_assume 7
+%push	scope
+	;output and input registers and 5 specificly ordered mask registers
+	dgr	%1,	out;clobbered
+	dgr	%2,	in;clobbered
+	dgr	%3,	m1;and mask
+	dgr	%4,	m2;pshuf mask
+	dgr	%5,	m3;0x09mask
+	dgr	%6,	m4;0x07mask
+	dgr	%7,	m5;0x30mask
+	vpmovzxbw	giny,	ginx;spread out input
+	vpsllw	gouty,	giny,	4;split it up and offset it
+	vpand   gouty,    gouty,	gm1y;and one register with and mask
+	vpsrlw	gm1y,	8
+	vpand   giny,    giny,	gm1y;and other register with and mask
+	vpsllw	gm1y,	8;revert it back for the next loop
+	vpor	gouty,	giny,	gouty;combine the two registers
+	vpshufb	gouty,	gouty,	gm2y;shuffle bytes around
+	vpcmpgtb        giny,    gouty,    gm3y
+	vpand	giny,    giny,	gm4y
+	vpaddb	gouty,	gouty,	giny
+	vpaddb	gouty,	gouty,	gm5y
+%pop
+%endmacro
 ;just a reverse of tohexdqu
 %macro	tohexdqur	4
 	%push	scope
@@ -340,7 +394,8 @@
 	vpbroadcastb	g5y,	g5x
 %pop
 %endmacro
-;mass conversion without constant assignment - assuming the proper masks are in the proper registers
+; same as tohexdqu_assume but labeled properly for clarity
+; might take this out later
 %macro	tohexdqur_assume 7
 %push	scope
 	;output and input registers and 5 specificly ordered mask registers
