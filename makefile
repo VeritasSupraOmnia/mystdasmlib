@@ -23,6 +23,8 @@ test_find:		./tests/testfind
 	@./tests/testfind
 test_stack:		./tests/teststack
 	@./tests/teststack
+test_fb:		./tests/testfb
+	@./tests/testfb
 
 ./tests/testterm:		head.ah syscall.ah term.ah tests/testterm.a
 	@nasm tests/testterm.a -o tests/testterm
@@ -54,4 +56,7 @@ test_stack:		./tests/teststack
 ./tests/teststack:		head.ah syscall.ah genreg.ah syscall.ah cstring.ah stack.ah tests/teststack.a
 	@nasm ./tests/teststack.a -o ./tests/teststack
 	@chmod	755	./tests/teststack
+./tests/testfb:		head.ah syscall.ah syscall.ah ./tests/testfb.a fb.ah
+	@nasm ./tests/testfb.a -o ./tests/testfb
+	@chmod	755	./tests/testfb
 ./tests/testinput:		head.ah syscall.ah cstring.ah input.ah
