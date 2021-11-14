@@ -1,0 +1,9 @@
+; library containing macros pertaining to linux frame buffer manipulaition.
+
+%macro dfbdevpath 1
+	; path to fb device
+	%push context
+	%defstr %%dev %[%1]
+	%1: db "/dev/",%%dev,0x00
+	%pop
+%endmacro
