@@ -5,16 +5,43 @@
 %include "syscall.ah"
 %include "fb.ah"
 
-c_ehdr 64,main,0
+c_fehdr main
 
 dfbdevpath fb0
-
+green:
+%rep 8
+	dd 0x0000ff00
+%endrep
+ay:	dd 0x00000000,0x0000ff00,0x0000ff00,0x00000000
+	dd 0x0000ff00,0x00000000,0x00000000,0x0000ff00
+	dd 0x0000ff00,0x00000000,0x00000000,0x0000ff00
+	dd 0x0000ff00,0x00000000,0x00000000,0x0000ff00
+	dd 0x0000ff00,0x0000ff00,0x0000ff00,0x0000ff00
+	dd 0x0000ff00,0x00000000,0x00000000,0x0000ff00
+	dd 0x0000ff00,0x00000000,0x00000000,0x0000ff00
+	dd 0x0000ff00,0x00000000,0x00000000,0x0000ff00
+dfont4by8 green, 0x0000ff00,0x00000000
+dfont4by8 blue, 0x000000ff,0x00000000
+dfont4by8 whiteblue, 0x000000ff,0x00ffffff
 main:
 
 	; draw a square
 
-	write stdout, fb0, 9
+	%define line_size 1920	; just test for right now
+	open_w fb0
+	mov r14, rax
+	square_from_line 800, 800
+	draw_w4by8_font 300, 400, 1920, green_a
+	draw_w4by8_font 340, 440, 1920, blue_a
+	draw_w4by8_font 380, 480, 1920, whiteblue_a
+	draw_w4by8_font 383, 480, 1920, whiteblue_b
+	write rax, buffer, 1920*1080*4
+	
+	read stdin, inbuffer, 1
 
 	nominal_exit
 
 c_ftr
+bsb buffer, 1920*1080*4
+bsb	inbuffer, 100
+e_bss
