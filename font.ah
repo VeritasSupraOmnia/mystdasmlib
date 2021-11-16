@@ -1,0 +1,57 @@
+; framebuffer fonts including for my scriptum binorum alternate latin script
+; needs fb.ah included above it
+
+%ifndef libfb
+	%error font.ah needs fb.ah included above it.
+%endif
+
+
+;declare 4x 8y pixel font - 16x8 bytes
+%macro dfont4by8 3
+%push scope
+	%define %%name %1
+	%define %%F %2
+	%define %%B %3
+%[%%name]_a:	dd 	s4px(%%B,%%B,%%B,%%B)
+				dd 	s4px(%%B,%%B,%%B,%%B)
+				dd	s4px(%%F,%%F,%%F,%%B)
+				dd	s4px(%%B,%%B,%%B,%%F)
+				dd	s4px(%%B,%%F,%%F,%%F)
+				dd	s4px(%%F,%%B,%%B,%%F)
+				dd	s4px(%%F,%%B,%%B,%%F)
+				dd	s4px(%%B,%%F,%%F,%%B)
+
+%[%%name]_b:	dd 	s4px(%%F,%%B,%%B,%%B)
+				dd 	s4px(%%F,%%B,%%B,%%B)
+				dd	s4px(%%F,%%B,%%B,%%B)
+				dd	s4px(%%F,%%B,%%B,%%B)
+				dd	s4px(%%F,%%F,%%F,%%B)
+				dd	s4px(%%F,%%B,%%B,%%F)
+				dd	s4px(%%F,%%B,%%B,%%F)
+				dd	s4px(%%B,%%F,%%F,%%B)
+%pop
+%endmacro
+
+%macro dbinorumfont4by3 3
+%endmacro
+%macro draw_w4by8_font 5
+%push scope
+	%define %%line_size %3
+	%define %%X_loc %1
+	%define %%Y_loc %2
+	%define %%source %4
+	%define %%target %5
+	; same as above but height is 8 and width is 4
+	; also rsi is scratched and increased by 16
+	mov rdi, %%target + (%%Y_loc*%%line_size*4) + (%%X_loc*4)
+	mov rsi, %%source
+	vmovdqu xmm0, [rsi]
+	vmovdqu [rdi], xmm0
+%rep 7
+	add rdi, (1920*4)
+	add rsi, 16
+	vmovdqu xmm0, [rsi]
+	vmovdqu [rdi],xmm0
+%endrep
+%pop
+%endmacro
