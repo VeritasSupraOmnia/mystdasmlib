@@ -1,15 +1,15 @@
-;syscalls for linux
+; Syscalls for linux
 %define	libsyscall	1
 
-;-1 for return checking
+; -1 for return checking
 %define	err		0xffffffffffffffff
 
-;standard file descriptions
+; Standard file descriptions
 %define	stdin		0
 %define	stdout		1
 %define	stderr		2
 
-;standard file access values
+; Standard file access values
 %define	readonly	0
 %define	writeonly	1
 %define	readwrite	2
@@ -17,7 +17,7 @@
 %define append		0x0400
 %define	truncate	0x0200
 
-;standard file access modes
+; Standard file access modes
 %define	rwxu		0x0700
 %define	ru		0x0400
 %define	wu		0x0200
@@ -34,286 +34,318 @@
 %define	setgroupid	0x2000
 %define	stickybit	0x1000
 
-;standard linux signals
+; Standard linux signals
 ;%define	SIGKILL	0x09
 ;%define	SIGCHLD	0x11
 ;%define	SIGCONT	0x12
 
-;sys_clone bitmask values
+; sys_clone bitmask values
 %define	clone_vm	0x0100
 %define	clone_io	0x80000000
 %define	clone_files	0x0400
 %define	clone_vfork	0x004000
 %define	clone_thread	0x010000
 
-;sys_wait flags
+; sys_wait flags
 %define	wexited	0x04
 
-;sys_mmap prot states
+; sys_mmap prot states
 %define	prot_read	0x01
 %define	prot_write	0x02
 %define	prot_exec	0x04
 %define	prot_none	0x00
 
-;sys_mmap flags
+; sys_mmap flags
 %define	map_shared	0x01
 %define	map_private	0x02
 %define	map_fixed	0x10
 %define map_anon	0x20
 %define	map_populate	0x8000
 
-;all sys_ functions put ther id numbers (0 for sys_read, 1 for sys_write, etc) into rax and are called with the syscall instruction
-%define	sys_read	0	;rdi:file descriptor	rsi:char buffer address	rdx:byte count
-%define	sys_write	1	;rdi:fd			rsi:char buffer address	rdx:byte count
-%define	sys_open	2	;rdi:path-string-pointer	rsi:flags
-%define	sys_close	3	;rdi:file-descriptor
-%define	sys_stat	4	;rdi:file-descriptor
-%define	sys_fstat	5	;rdi:file-descriptor
-%define	sys_lstat	6	;rdi:file-descriptor
-%define	sys_poll	7	;rdi:file-descriptor
-%define	sys_lseek	8	;rdi:file-descriptor	rsi:offset	rdx:
-%define	sys_mmap	9
-%define	sys_mprotect	10
-%define sys_mumap	11
-%define	sys_brk		12	;rdi:bytes to make brk
-%define	sys_sigaction		13
-%define	sys_sigprocmask		14
-%define	sys_sigreturn		15
-%define	sys_ioctl		16
-%define sys_pread	17	;rdi:fd	rsi:char buffer address	rdx:count	r10:offset
-%define sys_pwrite	18	;rdi:fd	rsi:char buffer address	rdx:count	r10:offset
-%define	sys_readv	19
-%define	sys_writev	20
-%define	sys_access	21
-%define sys_pipe	22	;rdi:pointer to double quadword for pipe read and write file descripter
-%define	sys_select	23
-%define	sys_shed_yeild	24
-%define	sys_mremap	25
-%define	sys_msync	26
-%define	sys_mincore	27
-%define	sys_madvise	28
-%define	sys_shmget	29
-%define	sys_shmat	30
-%define	sys_shmctl	31
-%define	sys_dup	32
-%define	sys_dup2	33
-%define	sys_pause	34
-%define	sys_nanosleep	35
-%define	sys_getitimer	36
-%define	sys_alarm	37
-%define	sys_setitimer	38
-%define	sys_getpid	39
-%define	sys_sendfile	40
-%define	sys_socket	41
-%define	sys_connect	42
-%define	sys_accept	43
-%define	sys_sendto	44
-%define	sys_recvfrom	45
-%define	sys_sendmsg	46
-%define	sys_recvmsg	47
-%define	sys_shutdown	48
-%define	sys_bind	49
-%define	sys_listen	50
-%define	sys_getsocketname	51
-%define	sys_getpeername	52
-%define	sys_socketpair	53
-%define	sys_setsockopt	54
-%define	sys_getsockopt	55
-%define sys_clone	56	;rdi: flags	rsi: location of top of child's stack	xor the other shit
-%define sys_fork	57
-%define sys_vfork	58
-%define sys_exec	59	;rdi:cmd char array pnt
-%define	sys_ret		60	;rdi:return value
-%define	sys_wait4	61
-%define sys_kill	62	;rdi:pid to send signal to	rsi:signal to send (9 to end unconditionally)
-%define sys_uname	63
-%define sys_semget	64
-%define sys_semop	65
-%define sys_semctl	66
-%define sys_shmdt	67
-%define sys_msgget	68
-%define sys_msgsnd	69
-%define sys_msgrcv	70
-%define sys_msgctl	71
-%define sys_fcntl	72
-%define sys_flock	73
-%define sys_fsync	74
-%define sys_fdatasync	75
-%define sys_truncate	76
-%define sys_ftruncate	77
-%define sys_getdents	78
-%define sys_getcwd	79
-%define sys_chdir	80
-%define sys_fchdir	81
-%define sys_rename	82
-%define sys_mkdir	83
-%define sys_rmdir	84
-%define sys_creat	85
-%define sys_link	86
-%define sys_unlink	87
-%define sys_symlink	88
-%define sys_readlink	89
-%define sys_chmod	90
-%define sys_fchmod	91
-%define sys_chown	92
-%define sys_fchown	93
-%define sys_lchown	94
-%define sys_umask	95
-%define sys_gettimeofday	96
-%define sys_getrlimit	97
-%define sys_getusage	98
-%define sys_sysinfo	99
-%define sys_times	100
-%define sys_ptrace	101
-%define sys_getuid	102
-%define sys_syslog	103
-%define sys_getgid	104
-%define sys_setuid	105
-%define sys_setgid	106
-%define sys_geteuid	107
-%define sys_getegid	108
-%define sys_setpgid	109
-%define	sys_getppid	110
-%define	sys_getpgrp	111
-%define	sys_setsid	112
-%define	sys_setreuid	113
-%define	sys_setregid	114
-%define	sys_getgroups	115
-%define	sys_setgroups	116
-%define	sys_setresuid	117
-%define	sys_getresuid	118
-%define	sys_setresgid	119
-%define	sys_getresgid	120
-%define	sys_getpgid	121
-%define	sys_setfsuid	122
-%define	sys_setfsgid	123
-%define	sys_getsid	124
-%define	sys_capget	125
-%define	sys_capset	126
-%define	sys_rt_sigpending	127
-%define	sys_rt_sigtimedwait	128
-%define	sys_rt_sigqueueinfo	129
-%define	sys_rt_sigsuspend	130
-%define	sys_sigaltstack	131
-%define	sys_utime	132
-%define	sys_mknod	133
-%define	sys_uselib	134
-%define	sys_personality	135
-%define	sys_ustat	136
-%define	sys_statfs	137
-%define	sys_fstatfs	138
-%define	sys_sysfs	139
-%define	sys_getpriority	140
-%define	sys_setpriority	141
-%define	sys_shed_setparam	142
-%define	sys_shed_getparam	143
-%define	sys_shed_setsheduler	144
-%define	sys_shed_getsheduler	145
+; All sys_ functions put ther id numbers (0 for sys_read, 1 for sys_write, etc) into rax and are called with the
+; syscall instruction.
+%define	sys_read					0	;rdi: fd	rsi: char buffer address	rdx: byte count
+%define	sys_write					1	;rdi: fd	rsi: char buffer address	rdx: byte count
+%define	sys_open					2	;rdi: path-string-pointer	rsi: flags
+%define	sys_close					3	;rdi: fd
+%define	sys_stat					4	;rdi: fd
+%define	sys_fstat					5	;rdi: fd
+%define	sys_lstat					6	;rdi: fd
+%define	sys_poll					7	;rdi: fd
+;------------------------------------
+%define	sys_lseek					8	;rdi: fd		rsi:offset				rdx:
+%define	sys_mmap					9
+%define	sys_mprotect				10
+%define sys_mumap					11
+%define	sys_brk						12	;rdi: bytes to make brk
+%define	sys_sigaction				13
+%define	sys_sigprocmask				14
+%define	sys_sigreturn				15
+;------------------------------------
+%define	sys_ioctl					16
+%define sys_pread					17	;rdi:fd		rsi:char buffer address	rdx:byte count	r10:offset
+%define sys_pwrite					18	;rdi:fd		rsi:char buffer address	rdx:byte count	r10:offset
+%define	sys_readv					19
+%define	sys_writev					20
+%define	sys_access					21
+%define sys_pipe					22	;rdi:pointer to double quadword for pipe read and write file descripter
+%define	sys_select					23
+;------------------------------------
+%define	sys_shed_yeild				24
+%define	sys_mremap					25
+%define	sys_msync					26
+%define	sys_mincore					27
+%define	sys_madvise					28
+%define	sys_shmget					29
+%define	sys_shmat					30
+%define	sys_shmctl					31
+;------------------------------------
+%define	sys_dup						32
+%define	sys_dup2					33
+%define	sys_pause					34
+%define	sys_nanosleep				35
+%define	sys_getitimer				36
+%define	sys_alarm					37
+%define	sys_setitimer				38
+%define	sys_getpid					39
+;------------------------------------
+%define	sys_sendfile				40
+%define	sys_socket					41
+%define	sys_connect					42
+%define	sys_accept					43
+%define	sys_sendto					44
+%define	sys_recvfrom				45
+%define	sys_sendmsg					46
+%define	sys_recvmsg					47
+;------------------------------------
+%define	sys_shutdown				48
+%define	sys_bind					49
+%define	sys_listen					50
+%define	sys_getsocketname			51
+%define	sys_getpeername				52
+%define	sys_socketpair				53
+%define	sys_setsockopt				54
+%define	sys_getsockopt				55
+;------------------------------------
+%define sys_clone					56	;rdi: flags	rsi: location of top of child's stack	xor the other shit
+%define sys_fork					57
+%define sys_vfork					58
+%define sys_exec					59	;rdi:	cmd char array pnt
+%define	sys_ret						60	;rdi:	return value
+%define	sys_wait4					61
+%define sys_kill					62	;rdi:	pid to send signal to	rsi:signal to send (9 to end unconditionally)
+%define sys_uname					63
+;------------------------------------
+%define sys_semget					64
+%define sys_semop					65
+%define sys_semctl					66
+%define sys_shmdt					67
+%define sys_msgget					68
+%define sys_msgsnd					69
+%define sys_msgrcv					70
+%define sys_msgctl					71
+;------------------------------------
+%define sys_fcntl					72
+%define sys_flock					73
+%define sys_fsync					74
+%define sys_fdatasync				75
+%define sys_truncate				76
+%define sys_ftruncate				77
+%define sys_getdents				78
+%define sys_getcwd					79
+;------------------------------------
+%define sys_chdir					80
+%define sys_fchdir					81
+%define sys_rename					82
+%define sys_mkdir					83
+%define sys_rmdir					84
+%define sys_creat					85
+%define sys_link					86
+%define sys_unlink					87
+;------------------------------------
+%define sys_symlink					88
+%define sys_readlink				89
+%define sys_chmod					90
+%define sys_fchmod					91
+%define sys_chown					92
+%define sys_fchown					93
+%define sys_lchown					94
+%define sys_umask					95
+;------------------------------------
+%define sys_gettimeofday			96
+%define sys_getrlimit				97
+%define sys_getusage				98
+%define sys_sysinfo					99
+%define sys_times					100
+%define sys_ptrace					101
+%define sys_getuid					102
+%define sys_syslog					103
+;------------------------------------
+%define sys_getgid					104
+%define sys_setuid					105
+%define sys_setgid					106
+%define sys_geteuid					107
+%define sys_getegid					108
+%define sys_setpgid					109
+%define	sys_getppid					110
+%define	sys_getpgrp					111
+;------------------------------------
+%define	sys_setsid					112
+%define	sys_setreuid				113
+%define	sys_setregid				114
+%define	sys_getgroups				115
+%define	sys_setgroups				116
+%define	sys_setresuid				117
+%define	sys_getresuid				118
+%define	sys_setresgid				119
+;------------------------------------
+%define	sys_getresgid				120
+%define	sys_getpgid					121
+%define	sys_setfsuid				122
+%define	sys_setfsgid				123
+%define	sys_getsid					124
+%define	sys_capget					125
+%define	sys_capset					126
+%define	sys_rt_sigpending			127
+;------------------------------------
+%define	sys_rt_sigtimedwait			128
+%define	sys_rt_sigqueueinfo			129
+%define	sys_rt_sigsuspend			130
+%define	sys_sigaltstack				131
+%define	sys_utime					132
+%define	sys_mknod					133
+%define	sys_uselib					134
+%define	sys_personality				135
+;------------------------------------
+%define	sys_ustat					136
+%define	sys_statfs					137
+%define	sys_fstatfs					138
+%define	sys_sysfs					139
+%define	sys_getpriority				140
+%define	sys_setpriority				141
+%define	sys_shed_setparam			142
+%define	sys_shed_getparam			143
+;------------------------------------
+%define	sys_shed_setsheduler		144
+%define	sys_shed_getsheduler		145
 %define	sys_shed_get_priority_max	146
 %define	sys_shed_get_priority_min	147
 %define	sys_shed_rr_get_interval	148
-%define	sys_mlock	149
-%define	sys_munlock	150
-%define	sys_mlockall	151
-%define	sys_munlockall	152
-%define	sys_vhangup	153
-%define	sys_modify_ldt	154
-%define	sys_pivot_root	155
-%define	sys_sysctl	156
-%define	sys_prctl	157
-%define	sys_arch_prctl	158
-%define	sys_adjtimex	159
-%define	sys_setrlimit	160
-%define	sys_chroot	161
-%define	sys_sync	162
-%define	sys_acct	163
-%define	sys_settimeofday	164
-%define	sys_mount	165
-%define	sys_umount	166
-%define	sys_swapon	167
-%define	sys_swapoff	168
-%define	sys_reboot	169
-%define	sys_sethostname	170
-%define	sys_setdomainname	171
-%define	sys_iopl	172
-%define	sys_ioperm	173
-%define	sys_create_module	174
-%define	sys_init_module	175
-%define	sys_delete_module	176
-%define	sys_get_kernel_syms	177
-%define	sys_query_module	178
-%define	sys_quotactl	179
-%define	sys_nfsservctl	180
-%define	sys_getpmsg	181
-%define	sys_putpmsg	182
-%define	sys_afs_syscall	183
-%define	sys_tuxcall	184
-%define	sys_security	185
-%define	sys_gettid	186
-%define	sys_readahead	187
-%define	sys_setxattr	188
-%define	sys_lsetxattr	189
-%define	sys_fsetxattr	190
-%define	sys_getxattr	191
-%define	sys_lgetxattr	192
-%define	sys_fgetxattr	193
-%define	sys_listxattr	194
-%define	sys_llistxattr	195
-%define	sys_flistxattr	196
-%define	sys_removexattr	197
-%define	sys_lremovexattr	198
-%define	sys_fremovexattr	199
-%define	sys_tkill	200	;rdi:tid	rsi:signal
-%define	sys_time	201	;rdi;memory location to put time value - gets seconds since epoch
-%define	sys_futex	202
-%define	sys_shed_setaffinity	203
-%define	sys_shed_getaffinity	204
-%define	sys_set_thread_area	205
-%define	sys_io_setup	206
-%define	sys_io_destroy	207
-%define	sys_io_getevents	208
-%define	sys_io_submit	209
-%define	sys_io_cancel	210
-%define	sys_get_thread_area	211
-%define	sys_lookup_dcookie	212
-%define	sys_epoll_create	213
-%define	sys_epoll_ctl_old	214
-%define	sys_epoll_wait_old	215
-%define	sys_remap_file_pages	216
-%define	sys_getdents64	217
-%define	sys_set_tid_address	218
-%define	sys_restart_syscall	219
-%define	sys_semtimedop	220
-%define	sys_fadvise64	221
-%define	sys_timer_create	222
-%define	sys_timer_settime	223
-%define	sys_timer_gettime	224
-%define	sys_timer_getoverrun	225
-%define	sys_timer_delete	226
-%define	sys_clock_settime	227
-%define	sys_clock_gettime	228
-%define	sys_clock_getres	229
-%define	sys_clock_nanosleep	230
-%define	sys_exit_group	231
-%define	sys_epoll_wait	232
-%define	sys_epoll_ctl	233
-%define	sys_tgkill	234
-%define	sys_utimes	235
-%define	sys_vserver	236
-%define	sys_mbind	237
-%define	sys_set_mempolicy	238
-%define	sys_get_mempolicy	239
-%define	sys_mq_open	240
-%define	sys_mq_unlink	241
-%define	sys_mq_timedsend	242
-%define	sys_mq_timedreceive	243
-%define	sys_mq_notify	244
-%define	sys_mq_getsetattr	245
-%define	sys_kexec_load	246
-%define sys_waitid	247
-%define sys_add_key	248
-%define sys_request_key	249
-%define sys_keyctl	250
+%define	sys_mlock					149
+%define	sys_munlock					150
+%define	sys_mlockall				151
+;------------------------------------
+%define	sys_munlockall				152
+%define	sys_vhangup					153
+%define	sys_modify_ldt				154
+%define	sys_pivot_root				155
+%define	sys_sysctl					156
+%define	sys_prctl					157
+%define	sys_arch_prctl				158
+%define	sys_adjtimex				159
+;------------------------------------
+%define	sys_setrlimit				160
+%define	sys_chroot					161
+%define	sys_sync					162
+%define	sys_acct					163
+%define	sys_settimeofday			164
+%define	sys_mount					165
+%define	sys_umount					166
+%define	sys_swapon					167
+;------------------------------------
+%define	sys_swapoff					168
+%define	sys_reboot					169
+%define	sys_sethostname				170
+%define	sys_setdomainname			171
+%define	sys_iopl					172
+%define	sys_ioperm					173
+%define	sys_create_module			174
+%define	sys_init_module				175
+;------------------------------------
+%define	sys_delete_module			176
+%define	sys_get_kernel_syms			177
+%define	sys_query_module			178
+%define	sys_quotactl				179
+%define	sys_nfsservctl				180
+%define	sys_getpmsg					181
+%define	sys_putpmsg					182
+%define	sys_afs_syscall				183
+;------------------------------------
+%define	sys_tuxcall					184
+%define	sys_security				185
+%define	sys_gettid					186
+%define	sys_readahead				187
+%define	sys_setxattr				188
+%define	sys_lsetxattr				189
+%define	sys_fsetxattr				190
+%define	sys_getxattr				191
+;------------------------------------
+%define	sys_lgetxattr				192
+%define	sys_fgetxattr				193
+%define	sys_listxattr				194
+%define	sys_llistxattr				195
+%define	sys_flistxattr				196
+%define	sys_removexattr				197
+%define	sys_lremovexattr			198
+%define	sys_fremovexattr			199
+;------------------------------------
+%define	sys_tkill					200	;rdi:tid	rsi:signal
+%define	sys_time					201	;rdi;memory location to put time value - gets seconds since epoch
+%define	sys_futex					202
+%define	sys_shed_setaffinity		203
+%define	sys_shed_getaffinity		204
+%define	sys_set_thread_area			205
+%define	sys_io_setup				206
+%define	sys_io_destroy				207
+;------------------------------------
+%define	sys_io_getevents			208
+%define	sys_io_submit				209
+%define	sys_io_cancel				210
+%define	sys_get_thread_area			211
+%define	sys_lookup_dcookie			212
+%define	sys_epoll_create			213
+%define	sys_epoll_ctl_old			214
+%define	sys_epoll_wait_old			215
+;------------------------------------
+%define	sys_remap_file_pages		216
+%define	sys_getdents64				217
+%define	sys_set_tid_address			218
+%define	sys_restart_syscall			219
+%define	sys_semtimedop				220
+%define	sys_fadvise64				221
+%define	sys_timer_create			222
+%define	sys_timer_settime			223
+;------------------------------------
+%define	sys_timer_gettime			224
+%define	sys_timer_getoverrun		225
+%define	sys_timer_delete			226
+%define	sys_clock_settime			227
+%define	sys_clock_gettime			228
+%define	sys_clock_getres			229
+%define	sys_clock_nanosleep			230
+%define	sys_exit_group				231
+;------------------------------------
+%define	sys_epoll_wait				232
+%define	sys_epoll_ctl				233
+%define	sys_tgkill					234
+%define	sys_utimes					235
+%define	sys_vserver					236
+%define	sys_mbind					237
+%define	sys_set_mempolicy			238
+%define	sys_get_mempolicy			239
+;------------------------------------
+%define	sys_mq_open					240
+%define	sys_mq_unlink				241
+%define	sys_mq_timedsend			242
+%define	sys_mq_timedreceive			243
+%define	sys_mq_notify				244
+%define	sys_mq_getsetattr			245
+%define	sys_kexec_load				246
+%define sys_waitid					247
+;------------------------------------
+%define sys_add_key					248
+%define sys_request_key				249
+%define sys_keyctl					250
 
 ; OPENING MACROS
 
@@ -350,9 +382,9 @@
 %define seek_cur 1
 %define seek_end 2
 
-; first arg is always fd
+; First arg is always fd
 
-; seek beginning offset
+; Seek beginning offset
 %macro seekb 2
 	mov rdi, %1
 	mov rsi, %2
@@ -361,7 +393,7 @@
 	syscall
 %endmacro
 
-; seek current position offset
+; Seek current position offset
 %macro seekc 2
 	mov rdi, %1
 	mov rsi, %2
@@ -370,7 +402,7 @@
 	syscall
 %endmacro
 
-; seek end offset
+; Seek end offset
 %macro seeke 2
 	mov rdi, %1
 	mov rsi, %2
@@ -393,17 +425,17 @@
 
 ; IO MACROS
 
-;easier write setup
-;use:	write	stout,	charbuffer,	[length_charbuffer]
+; Easier write setup
+; use:	write	stout,	charbuffer,	[length_charbuffer]
 %macro	write	3
-mov	rdi,	%1		;non immediates first to stave off some possible reg clobber bugs
+mov	rdi,	%1		; non immediates first to stave off some possible reg clobber bugs
 mov	rsi,	%2
 mov	rdx,	%3
 mov	eax,	sys_write	;1
 syscall
 %endmacro
 
-;like write but only to stdout
+; Like write but only to stdout.
 %macro	printbuff	2
 mov	rsi,	%1		
 mov	rdx,	%2
@@ -412,8 +444,8 @@ mov	edi,	eax		;stdout is same as sys_write
 syscall
 %endmacro
 
-;easier read setup
-;use	read	stdin,	charbuffer,	[num_chars_to_read]
+; Easier read setup.
+; Use	read	stdin,	charbuffer,	[num_chars_to_read]
 %macro	read	3
 mov	rdi,	%1
 mov	rsi,	%2
@@ -422,7 +454,7 @@ xor	eax,	eax	;sys_read is equal to 0
 syscall
 %endmacro
 
-;like read but only from stin
+; Like read but only from stin.
 %macro sinput	2
 mov	rsi,	%1
 mov	rdx,	%2
@@ -465,7 +497,7 @@ syscall
 	mov	rax,	sys_gettid
 	syscall
 %endmacro
-;quick clone for splitting into another thread
+; Quick clone for splitting into another thread.
 %macro	clonevm 1
 	mov	rax,	sys_clone
 	mov	rdi,	clone_vm | clone_thread | clone_files | clone_io
@@ -478,14 +510,14 @@ syscall
 	pwrite:	dq	0
 %endmacro
 
-;exit without returning error
+; Exit without returning error.
 %macro nominal_exit 0
 	mov eax, sys_ret
 	xor edi,edi
 	syscall
 %endmacro
 
-;uses mmap to allocate a chunk of memory using address %1 of 0, or reallocate with an address
+; Uses mmap to allocate a chunk of memory using address %1 of 0, or reallocate with an address.
 %macro alloc 2
 	mov eax, sys_mmap
 	mov rdi, %1
