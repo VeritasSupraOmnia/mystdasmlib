@@ -26,7 +26,7 @@
 %define spx(color) 0xffffffff&color
 ; for setting 4 double words at a time
 %define s4px(first,second,third,fourth) spx(first),spx(second),spx(third),spx(fourth)
-
+%define s8px(fst,scnd,thd,frth,fth,sxth,svth,eith) s4px(fst,scnd,thd,frth),s4px(fth,sxth,svth,eith)
 
 %macro drawbuffer 3
 %push scope
@@ -37,7 +37,8 @@
 	shl rdx, 2
 	mov rsi, %%buffer
 	mov rdi, %%fd
-	mov eax, 1
+	xor r10, r10
+	mov eax, 18
 	syscall
 %pop
 %endmacro
