@@ -1,0 +1,115 @@
+
+; test for mouse.ah
+%include "head.ah"
+%include "syscall.ah"
+%include "fb.ah"
+%include "term.ah"
+%include "font.ah"
+%include "cstring.ah"
+%include "mouse.ah"
+%include "genreg.ah"
+%include "hex.ah"
+
+c_fehdr main
+doaltb:	db ce_en_altbuff
+undoaltb:	db ce_di_altbuff
+dfbdevpath fb0
+nl:	db 0x0a
+; prefixes
+xp: db "X:	"
+yp: db "Y:	"
+; coordinate words
+xw: dw	0
+yw: dw	0
+coord_hex: dd 0
+main:
+
+	; set up testing environment
+
+	get_termios tios
+
+	set_noncannon tios				; molest a termios copy
+	set_noecho tios
+
+	set_termios tios				; set as new termios
+
+	open_w fb0
+	mov r13, rax
+
+	; test mouse
+
+	opendevmouse 0
+.lp:
+	getdevmousein 0
+	xor eax, eax
+
+	; get mouse x
+	xor ecx,ecx
+	mov cl, [mouse_0_x]
+	mov eax, ecx
+	sub ax, 256
+	cmp ecx, 128
+	cmovge ecx, eax
+	mov ax, cx
+	xor ebx, ebx
+	add cx, [xw]
+	cmp cx, 1920
+	cmovae eax, ebx
+	add [xw], ax
+
+	; get mouse y
+	xor ecx,ecx
+	mov cl, [mouse_0_y]
+	mov eax, ecx
+	sub ax, 256
+	cmp ecx, 128
+	cmovge ecx, eax
+	mov ax, cx
+	xor ebx, ebx
+	add cx, [yw]
+	cmp cx, 1080
+	cmovae eax, ebx
+	add [yw], ax
+
+	; calculate row offset
+	xor eax, eax
+	mov ax, [yw]
+	mov ecx, 1920
+	mul rcx
+	mov rcx,  1920*1080
+	sub rcx, rax
+	mov rax, rcx
+
+	; calculate column offset
+	xor ecx, ecx
+	mov cx, [xw]
+	add rax, rcx
+	
+	; offset by buffer amount
+	shl rax, 2
+	lea rax, [rax+buffer]
+	
+	xor ecx, ecx
+	mov ecx, 0x00ffffff
+	mov [rax], ecx
+
+	drawbuffer r13, buffer, 1920*1080*4
+
+	jmp .lp
+
+
+	; clean up
+
+	set_cannon tios					; born-again virgin
+	set_echo tios
+	set_termios tios				
+
+	nominal_exit
+
+c_ftr
+bsb buffer, 1920*1080*4
+bsb	inbuffer, 100
+termios_struct tios
+mouseinbuff 0
+bsb hexout, 8
+e_bss
