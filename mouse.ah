@@ -1,0 +1,36 @@
+; For dealing with mouse input, such as in a framebuffer program, via /dev/mouse0 on linux.
+
+%macro mouseinbuff 1
+	mouse_%1_fd: resd 1
+	mouse_%1: 
+	mouse_%1_d: resb 1
+	mouse_%1_x: resb 1
+	mouse_%1_y: resb 1
+%endmacro
+
+%macro opendevmouse 1
+	; a basic /dev/mouse for 99% of cases
+	%ifndef defined_mouse_device_path
+	%define defined_mouse_device_path 1
+	jmp %%skp_def
+	dev_mouse: db "/dev/input/mice",0
+	%%skp_def:
+	%endif
+	; so it doesn't get redefined in the off chance one needs to open this in
+	; different ways depending on circumstance.
+	mov eax, 2		; sys_open
+	mov rdi, dev_mouse
+	xor esi, esi	; readonly
+	syscall
+	; save in memory so it isn't lost by accident
+	mov [mouse_%1_fd], eax
+%endmacro
+
+%macro getdevmousein 1
+	xor eax, eax
+	mov edi, [mouse_%1_fd]
+	mov rsi, mouse_%1
+	mov edx, 3
+	syscall
+%endmacro
+
