@@ -1,14 +1,14 @@
 
 ; test for mouse.ah
 %include "head.ah"
+%include "genreg.ah"
 %include "syscall.ah"
 %include "fb.ah"
 %include "term.ah"
 %include "font.ah"
 %include "cstring.ah"
-%include "mouse.ah"
-%include "genreg.ah"
 %include "hex.ah"
+%include "mouse.ah"
 
 c_fehdr main
 doaltb:	db ce_en_altbuff
@@ -22,6 +22,7 @@ yp: db "Y:	"
 xw: dw	0
 yw: dw	0
 coord_hex: dd 0
+cursor: dd 0x0000ff00
 main:
 
 	; set up testing environment
@@ -39,6 +40,8 @@ main:
 	; test mouse
 
 	opendevmouse 0
+	drawbuffer r13, pbuffer, 1920*1080*4
+
 .lp:
 	getdevmousein 0
 	xor eax, eax
@@ -85,18 +88,45 @@ main:
 	mov cx, [xw]
 	add rax, rcx
 	
-	; offset by buffer amount
+	; offset by pixel size
 	shl rax, 2
-	lea rax, [rax+buffer]
-	
-	xor ecx, ecx
-	mov ecx, 0x00ffffff
-	mov [rax], ecx
+	mov r14, rax
 
-	drawbuffer r13, buffer, 1920*1080*4
+	; get wether a mouse button is down
+	ismousebutton1down 0, rbx
+	ismousebutton2down 0, rcx
+	or bx, cx
+	jz .mouseonly
+
+	xor edx, edx
+	mov edx, 0x00ffffff
+
+	cmp bx, 0x01
+	cmove ecx, edx
+	mov edx, 0x00000000
+	cmovg ecx, edx
+
+	; if drawing, offset by  output buffer
+	lea rbx, [rax+buffer]
+
+	; draw white pixel
+	mov [rbx], ecx
+
+.mouseonly:
+	
+	; push canvas to output buffer
+	cpbuff pbuffer, buffer, 1920*1080*4
+
+	lea rbx, [r14+pbuffer]
+	xor ecx, ecx
+	mov eax, [rbx]
+	mov ecx, 0xffffffff
+	xor ecx, eax
+	mov [rbx], ecx
+
+	drawbuffer r13, pbuffer, 1920*1080*4
 
 	jmp .lp
-
 
 	; clean up
 
@@ -108,6 +138,7 @@ main:
 
 c_ftr
 bsb buffer, 1920*1080*4
+bsb pbuffer, 1920*1080*4
 bsb	inbuffer, 100
 termios_struct tios
 mouseinbuff 0
