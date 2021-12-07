@@ -71,10 +71,10 @@
 %define	sys_stat					4	;rdi: fd
 %define	sys_fstat					5	;rdi: fd
 %define	sys_lstat					6	;rdi: fd
-%define	sys_poll					7	;rdi: fd
+%define	sys_poll					7	;rdi: fdpoll struct aray pointer (8 bytes)	rsi: fd count	rdx: timeout
 ;------------------------------------
-%define	sys_lseek					8	;rdi: fd		rsi:offset				rdx:
-%define	sys_mmap					9
+%define	sys_lseek					8	;rdi: fd		rsi:offset			rdx:
+%define	sys_mmap					9	;rdi: addr		rsi: len			rdx: prot	r10: flags	r8: fd	r9: offset
 %define	sys_mprotect				10
 %define sys_mumap					11
 %define	sys_brk						12	;rdi: bytes to make brk
