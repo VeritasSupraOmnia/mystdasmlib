@@ -9,13 +9,14 @@
 %define	stdout		1
 %define	stderr		2
 
-; Standard file access values
+; Standard file access flag values
 %define	readonly	0
 %define	writeonly	1
 %define	readwrite	2
 %define create		0x40
 %define append		0x0400
 %define	truncate	0x0200
+%define nonblock	0x0800
 
 ; Standard file access modes
 %define	rwxu		0x0700
@@ -524,8 +525,37 @@ syscall
 	mov rsi, %2
 	mov edx, prot_read|prot_write
 	mov ecx, map_private|map_anon
-	xor r8,r8
+	mov r8, -1
 	xor r9,r9
 	xor r10,r10
 	syscall
+%endmacro
+
+;maps file directly into bss memory - template for other 
+%macro bssmmap_t 5
+	mov rdi, %1 ; bss memory location - needs to be alignedb'd to page width (4096)
+	mov rsi, %2 ; length of map
+	%if %3 = 0
+	xor r8, r8
+	%else
+	mov r8, %3	; file descriptor
+	%endif
+	%if %4 = 0
+	xor r9, r9
+	%else
+	mov r9, %4	; offset
+	%endif
+	mov edx, %5	; passed from -bssmmap_r-, -bssmmap_w- and -bssmmap_rw-
+	mov r10d, map_shared | map_fixed | map_populate
+	mov eax, sys_mmap
+	syscall
+%endmacro
+%macro bssmmap_r 4 ; --bssmmap_r--
+	bssmmap_t %1, %2, %3, %4, prot_read
+%endmacro
+%macro bssmmap_w 4 ; --bssmmap_w--
+	bssmmap_t %1, %2, %3, %4, prot_write
+%endmacro
+%macro bssmmap_rw 4 ; --bssmmap_rw--
+	bssmmap_t %1, %2, %3, %4, prot_write | prot_read
 %endmacro
