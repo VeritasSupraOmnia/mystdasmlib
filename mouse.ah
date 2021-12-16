@@ -5,7 +5,7 @@
 	mouse_%1: 
 	mouse_%1_d: resb 1
 	mouse_%1_x: resb 1
-	mouse_%1_y: resb 1
+	mouse_%1_y: resw 1
 %endmacro
 
 %macro opendevmouse 1
@@ -21,6 +21,7 @@
 	mov eax, 2		; sys_open
 	mov rdi, dev_mouse
 	xor esi, esi	; readonly
+	xor edx, edx
 	syscall
 	; save in memory so it isn't lost by accident
 	mov [mouse_%1_fd], eax
@@ -34,3 +35,97 @@
 	syscall
 %endmacro
 
+%macro ismousebutton1down 2	; mouse datastructure id - register for output
+	%ifndef genregs
+		%error Need genreg.ah define above mouse.ah to use macro ismousebutton1down
+	%endif
+%push scope
+	dgr %2, 1
+	xor g1, g1
+	mov g1b, [mouse_%1]
+	and g1d, 0x01
+%pop
+%endmacro
+%macro ismousebutton2down 2	; mouse datastructure id - register for output
+	%ifndef genregs
+		%error Need genreg.ah define above mouse.ah to use macro ismousebutton1down
+	%endif
+%push scope
+	dgr %2, 1
+	xor g1, g1
+	mov g1b, [mouse_%1]
+	and g1d, 0x02
+%pop
+%endmacro
+
+%macro curlocstruc 1
+	cur_%1_x:	resw 1
+	cur_%1_y:	resw 1
+%endmacro
+%macro curlocstrucinit 1
+	cur_%1_x:	dw 0
+	cur_%1_y:	dw 0
+%endmacro
+
+; calculates current x and y based on recent mouse change
+%macro update_cursor 4	; output, input, width, height
+	; calculate current mouse x position
+	xor ecx,ecx
+	mov cl, [%[mouse_%2_x]]
+	mov eax, ecx
+	sub ax, 256
+	cmp ecx, 128
+	cmovge ecx, eax
+	mov ax, cx
+	xor ebx, ebx
+	add cx, [%[cur_%1_x]]
+	cmp cx, %3
+	cmovae eax, ebx
+	add [%[cur_%1_x]], ax
+
+	; calculate current mouse y position
+	xor ecx,ecx
+	mov cl, [%[mouse_%2_y]]
+	mov eax, ecx
+	sub ax, 256
+	cmp ecx, 128
+	cmovge ecx, eax
+	mov ax, cx
+	xor ebx, ebx
+	add cx, [%[cur_%1_y]]
+	cmp cx, %4
+	cmovae eax, ebx
+	add [%[cur_%1_y]], ax
+%endmacro
+
+%macro curlocbuffstruc 1
+	cur_buff_%1_x:	resd 1	; offset into line
+	cur_buff_%1_y:	resd 1	; offset of current line line
+	cur_buff_%1_a:	resq 1	; absolute location in buffer
+%endmacro
+
+%macro calculate_cursor_index 4	; output, input, width, height
+	; calculate row offset of mouse position on the actual display
+	xor eax, eax
+	mov ax, [cur_%2_y]
+	mov ecx, %3
+	mul rcx
+	mov rcx, %3*%4
+	sub rcx, rax
+	mov rax, rcx
+
+	; save row location for row, based framebuffer updating
+	
+	shl rax, 2
+	mov [cur_buff_%1_y], eax
+
+	; calculate column offset
+	xor ecx, ecx
+	mov cx, [cur_%2_x]
+	shl rcx, 2
+	mov [cur_buff_%1_x], ecx
+	add rax, rcx
+	mov [cur_buff_%1_a], eax
+	
+	; offset by pixel size (4 bytes)
+%endmacro
