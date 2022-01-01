@@ -45,7 +45,8 @@
 %define	clone_io	0x80000000
 %define	clone_files	0x0400
 %define	clone_vfork	0x004000
-%define	clone_thread	0x010000
+%define	clone_thread	0x010000	; clone_thread requires clone_sighand
+%define clone_sighand	0x800		; clone_sighand requires clone_vm
 
 ; sys_wait flags
 %define	wexited	0x04
@@ -62,6 +63,9 @@
 %define	map_fixed	0x10
 %define map_anon	0x20
 %define	map_populate	0x8000
+
+%define fcntl_getfl 0x03
+%define fcntl_setfl 0x04
 
 ; All sys_ functions put ther id numbers (0 for sys_read, 1 for sys_write, etc) into rax and are called with the
 ; syscall instruction.
@@ -146,7 +150,7 @@
 %define sys_msgrcv					70
 %define sys_msgctl					71
 ;------------------------------------
-%define sys_fcntl					72
+%define sys_fcntl					72	;rdi: fd	rsi: cmd	rdx: (if a set command) input data
 %define sys_flock					73
 %define sys_fsync					74
 %define sys_fdatasync				75

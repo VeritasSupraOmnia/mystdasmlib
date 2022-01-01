@@ -58,7 +58,7 @@
 %pop
 %endmacro
 
-%macro curlocstruc 1
+%macro curlocstruc 1	; --curlocstruc--
 	cur_%1_x:	resw 1
 	cur_%1_y:	resw 1
 %endmacro
@@ -98,9 +98,9 @@
 	add [%[cur_%1_y]], ax
 %endmacro
 
-%macro curlocbuffstruc 1
+%macro curlocbuffstruc 1	;	--curlocbuffstruc--
 	cur_buff_%1_x:	resd 1	; offset into line
-	cur_buff_%1_y:	resd 1	; offset of current line line
+	cur_buff_%1_y:	resd 1	; offset of current line
 	cur_buff_%1_a:	resq 1	; absolute location in buffer
 %endmacro
 
@@ -128,4 +128,7 @@
 	mov [cur_buff_%1_a], eax
 	
 	; offset by pixel size (4 bytes)
+%endmacro
+
+%macro getcurlocbuffdelta 2	;	--getcurlocbuffdelta--
 %endmacro
