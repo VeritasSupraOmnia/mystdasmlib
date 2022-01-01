@@ -1,5 +1,8 @@
 ; library containing macros pertaining to linux frame buffer manipulaition.
 %define libfb 1
+%ifndef genregs
+	%error Need genreg.ah included above fb.ah.
+%endif
 
 %macro dfbdevpath 1
 	; path to fb device
@@ -29,16 +32,92 @@
 %define s8px(fst,scnd,thd,frth,fth,sxth,svth,eith) s4px(fst,scnd,thd,frth),s4px(fth,sxth,svth,eith)
 
 %macro drawbuffer 3
-%push scope
 	%define %%fd %1
 	%define %%buffer %2
 	%define %%res %3
-	mov rdx, %%res
-	shl rdx, 2
+	mov rdx, (%%res)*4
+;	shl rdx, 2
 	mov rsi, %%buffer
 	mov rdi, %%fd
 	xor r10, r10
 	mov eax, 18
 	syscall
+%endmacro
+
+%macro copy_pow32_bitmap 5	;	destination - source - destination line width - source width in 32 byte blocks - source height in pixels - ymm register to copy with
+%push scope
 %pop
 %endmacro
+
+; copy buffer
+%macro cpbuff 3
+	mov rcx, (%3)/32
+	mov rax, 0
+%%lp:	
+	vmovdqu ymm0, [%2+rax]
+	vmovdqu [%1+rax], ymm0
+	add rax, 32
+	loop %%lp
+%endmacro
+
+; convert sixteen color byte to raw 0RGB quadword 
+%macro sxtncbtorawq 3
+%push scope
+	dgl inr, %1	; input register,		general register,	scratched
+	dgl our, %2	; output register,		general register,	scratched
+	dgl tr, %3	; temporary register,	general register,	scratched
+	; setup
+	mov tr, 0x0001010100010101
+	; get base color,
+	pdep tr, inr, tr
+	mov our, tr
+	shl tr, 1
+	or our, tr
+	shl tr, 2
+	or tr, our
+	shl tr, 4
+	or our, tr
+
+	; set light or dark pixel state
+	shr inr, 6
+	mov tr, 0x0000008000000080
+	pdep tr, ir, tr 
+	mov ir, tr
+	shl tr, 8
+	or  ir, tr
+	shl tr, 8
+	or  ir, tr
+	and our, ir
+
+%pop
+%endmacro	
+
+; convert raw 0RGB yword to 16 color dword
+%macro rawqwto16cb 6
+%push scope
+	dgr inr, %2	; input register,		ymm register,		scratched
+	dgr our, %1	; output register,		general register,	scratched
+	dgr tr0, %3	; temporary register,	general register,	scratched
+	dgr tr3, %4	; temporary register,	general register,	scratched
+	dgr tr1, %5	; temporary register,	ymm register,		scratched
+	dgr tr2, %6	; temporary register,	ymm register,		scratched
+
+	; get bytemask of existing bytes
+	mov tr0d, 0x7f
+	movd tr2x,	tr0d
+	vpbroadcastb tr2y, tr2x
+	vpand tr1y, inry, tr2y
+	vpxor tr2y, tr2y, tr2y
+	vpcmpgtb tr1y, tr1y, tr2y
+	vpextrq tr0, yr1x, 0
+
+	mov tr3, 0x01010100010101	; deposit first 6 bits into first byte
+	pdep our, tr0, tr3
+
+	vpextrq tr0, yr1x, 1		; deposit second 6 bits into second byte
+	pdep tr0, tr0, tr3
+	shl tr0, 8					
+
+
+%pop
+%endmacro	
