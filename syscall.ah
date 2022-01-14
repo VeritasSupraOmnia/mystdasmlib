@@ -19,21 +19,21 @@
 %define nonblock	0x0800
 
 ; Standard file access modes
-%define	rwxu		0x0700
-%define	ru		0x0400
-%define	wu		0x0200
-%define	xu		0x0100
-%define	rwxg		0x0070
-%define	rg		0x0040
-%define	wg		0x0020
-%define	xg		0x0010
-%define	rwxo		0x0007
-%define	ro		0x0004
-%define	wo		0x0002
-%define	xo		0x0001
-%define	setuserid	0x4000
-%define	setgroupid	0x2000
-%define	stickybit	0x1000
+%define	rwxu		0o0700
+%define	ru		0o0400
+%define	wu		0o0200
+%define	xu		0o0100
+%define	rwxg	0o0070
+%define	rg		0o0040
+%define	wg		0o0020
+%define	xg		0o0010
+%define	rwxo	0o0007
+%define	ro		0o0004
+%define	wo		0o0002
+%define	xo		0o0001
+%define	setuserid	0o4000
+%define	setgroupid	0o2000
+%define	stickybit	0o1000
 
 ; Standard linux signals
 ;%define	SIGKILL	0x09
