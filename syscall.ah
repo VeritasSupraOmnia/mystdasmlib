@@ -563,3 +563,39 @@ syscall
 %macro bssmmap_rw 4 ; --bssmmap_rw--
 	bssmmap_t %1, %2, %3, %4, prot_write | prot_read
 %endmacro
+
+%macro sysvcall 1-7
+	%if %0 > 0
+	%if %0 > 1
+		%ifnidni %2, rdi
+			mov rdi, %2
+		%endif
+	%endif
+	%if %0 > 2
+		%ifnidni %3, rsi
+			mov rsi, %3
+		%endif
+	%endif
+	%if %0 > 3
+		%ifnidni %4, rdx
+			mov rdx, %4
+		%endif
+	%endif
+	%if %0 > 4
+		%ifnidni %5, r8
+			mov r8, %5
+		%endif
+	%endif
+	%if %0 > 5
+		%ifnidni %6, r9
+			mov r9, %6
+		%endif
+	%endif
+	%if %0 > 6
+		%ifnidni %7, r10
+			mov r10, %7
+		%endif
+	%endif
+	%endif
+	call %1
+%endmacro
