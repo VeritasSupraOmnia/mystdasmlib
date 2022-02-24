@@ -5,7 +5,7 @@ height	equ 1080		; framebuffer height
 
 cwidth	equ 64*4	; cell width in grid
 cheight	equ 64		; cell height in grid
-gwidth	equ 6		; cell width of grid
+gwidth	equ 4		; cell width of grid
 gheight	equ 4		; cell height of grid
 ;	--DEFAULT COLORS--
 fgcolor	equ 0x00ffffff ; default foreground and background color
@@ -20,19 +20,8 @@ key_mark	equ "m"
 key_save	equ "s"
 key_redraw	equ	"r"
 
-; which color format to save to, load from and edit in
-loadcolor equ 0	
-savecolor equ 0
-editcolor equ 0
-; 0		= argb			- Raw framebuffer datA
-; 8		= 8 color		- Least space but less color and can only be read start to finish, used for image compression.
-;						  Extra two bits can signal pixel repeat compression
-; 16	= 16 color		- Comparable space to 8 color but with no inbuilt compression and double the colors.
-;						  Little drawback to using 16 color mode to edit, save and load 8 color images besides speed.
-; 256	= 256 color		- Standard 1 byte per pixel 256 color mode.
-
-%define ipath "doc_blackboard.1920.1080.raw"
-%define opath "doc_blackboard.1920.1080.raw"
+%define ipath "bittest.bit" ; testing bitwise pixel data
+%define opath "bittest.bit" ; all changed data at -bitwise-
 
 %include "head.ah"
 %include "genreg.ah"
@@ -42,8 +31,8 @@ editcolor equ 0
 %include "cstring.ah"
 %include "mouse.ah"
 
+
 c_fehdr main
-%if
 ; file paths
 infile:		db ipath,0
 outfile:	db opath,0
@@ -52,8 +41,6 @@ infd:	dq	0
 dfbdevpath fb0
 ; keyboard data
 keyin:	db 0
-; stay alive signal
-stayalive:	db 1
 
 ; for forking threads via the function return stack swap technique
 kbdstack:	dq kbdthread	; -kbdthread-
@@ -95,7 +82,8 @@ main:
 	mov edi, eax
 	xor eax, eax
 	mov rsi, buffer
-	mov edx, width*height*4
+;	mov edx, width*height*4  
+	mov edx, (width*height)/8	;--bitwise--
 	syscall
 	mov eax, sys_close
 	mov rdi, [infd]
@@ -106,7 +94,7 @@ main:
 	call start_thread
 
 	; copy initial buffer to framebuffer to display file
-	cpbuff fbuffer, buffer, width*height*4
+	; cpbuff fbuffer, buffer, width*height
 
 lp:
 done_old_clean:
@@ -206,9 +194,15 @@ nomex:	; --nomex--		ref-by: -kbdthread-
 	; draw single white pixel
 mb1:
 	; copy pixel to print buffer
-	lea rbx, [r14+buffer]
+	mov rsi, r14	;--bitwise--
+	mov rdx, r14
+	shr rsi, 5
+	shr rdx, 2
+	mov eax, 1
+	and edx, 0b111
+	shlx eax, eax, edx
+	or [rsi+buffer], al
 	mov eax, fgcolor
-	mov [rbx], eax
 	lea rbx, [r14+fbuffer]
 	mov [rbx], eax
 
@@ -262,11 +256,28 @@ mb2:
 ; for cleaning after cursor point
 clean_cursor:	;--clean_cursor--
 	mov rbx, r15
-	mov rax, [rbx+buffer]
-	mov [rbx+fbuffer], rax
-	add rbx, width*4
-	mov eax, [rbx+buffer]
-	mov [rbx+fbuffer], eax
+	mov r8, rbx
+	shr rbx, 5
+	shr r8, 2
+	mov cx, [rbx+buffer] ; little endian so ch will have index 0 and cl will have index 1
+	and r8, 0b111
+	shrx ecx, ecx, r8d
+	mov eax, ecx
+	mov edi, -1
+	and eax, 1
+	cmovnz eax, edi
+	mov [r15+fbuffer], eax
+	
+	and ecx, 2
+	cmovnz eax, edi
+.cont:	
+	
+	mov [r15+(fbuffer+4)], eax
+	mov al, [rbx+(buffer+(width/8))] 
+	shrx eax, eax, r8d
+	and eax, 1
+	cmovnz eax, edi
+	mov [r15+(fbuffer+(width*4))], eax
 
 	jmp done_clean
 
@@ -283,7 +294,7 @@ clean_erase:	;--clean_erase--
 	mov eax, [rbx+buffer]
 	mov [rbx+fbuffer], eax
 	mov eax, [rbx+buffer+60]
-	MOV [rbx+fbuffer+60], eax
+	mov [rbx+fbuffer+60], eax
 
 	add rbx, width*4*14			; clean penultimate bottom
 	mov eax, [rbx+buffer]
@@ -353,13 +364,34 @@ draw_grid:	;	--draw_grid--		from	-KEY SWITCH-
 	jmp kbdthread	;	-kbdthread-
 
 redraw_fb:	; --redraw_fb--				from	-KEY SWITCH-
-	mov ecx, ((width*height*4)/32)
 	xor eax, eax
+	xor ebx, ebx
+	mov r8, (width*height)/64	;--bitwise--
+	vpxor ymm0, ymm0, ymm0
+	mov rdx, 0x0101010101010101	;--bitwise--
 .lp:	
-	vmovdqu ymm0, [rax+buffer]
-	vmovdqu [rax+fbuffer], ymm0
-	add eax, 32
-	loop .lp
+	mov rsi, [rax+buffer]		;--bitwise--
+	mov ecx, 8
+.slp:
+	pdep rdi, rsi, rdx		;--bitwise--
+	movd  xmm1, edi			;--bitwise--
+	shr rsi, 8			;--bitwise--
+	shr rdi, 32			;--bitwise--
+	movd  xmm2, edi			;--bitwise--
+	vpunpcklbw xmm1, xmm1, xmm1
+	vpunpcklbw xmm2, xmm2, xmm2
+	vpunpcklwd xmm1, xmm1, xmm1
+	vpunpcklwd xmm2, xmm2, xmm2
+	vperm2i128 ymm1, ymm2, ymm1, 0x02
+	vpcmpgtd ymm1, ymm1, ymm0	;--bitwise--
+	vpsrld ymm1, ymm1, 8
+	vmovdqu [rbx+fbuffer], ymm1
+	add rbx, 32
+	sub ecx, 1
+	jnz .slp
+	add rax, 8			;--bitwise--
+	sub r8, 1
+	jnz .lp
 	jmp kbdthread
 
 clear_fb:	; --clear_fb--				from	-KEY SWITCH-
@@ -382,26 +414,21 @@ save_file:	; --save_file--				from	-KEY SWITCH-
 	mov edi, eax
 	mov eax, sys_write
 	mov rsi, buffer
-	mov edx, width*height*4
+;	mov edx, width*height*4
+	mov edx, (width*height)/8 ; --bitwise--
 	syscall
 	write stdout, ssavemsg, lsavemsg
 	jmp kbdthread	;	-kbdthread-
 
-insert_mode:	; --insert_mode--		from	-KEY SWITCH-
-.lp:
-	read stdin, keyin, 1
-	mov   al, [keyin]
-	cmp al, 0x1B
-	je kbdthread	;	-kbdthread-
-	jmp .lp
-
 mark_coord:		; --mark_coord--		from	-KEY SWITCH-
+	; ACTUALLY MARK CO-ORD
 	vmovdqu xmm0, [cur_buff_0_x]		; mouse.ah -curlocbuffstruc-
 	vmovdqu [cur_buff_marker_x], xmm0
-	mov eax, [cur_0_x]					; mouse.ah -curlocstruc-
+	mov eax, [cur_0_x]			; mouse.ah -curlocstruc-
 	mov [cur_marker_x], eax
 	vpextrq rbx, xmm0, 1	
-	mov eax, mrkcolor					;	-DEFAULT COLORS-
+	; DRAW COOL MARKER ON SCREEN
+	mov eax, mrkcolor			;	-DEFAULT COLORS-
 	movd xmm0,	eax
 	vpbroadcastd ymm0, xmm0
 	vmovdqu [rbx+(fbuffer-16)],	xmm0	; horizontal line
@@ -409,21 +436,6 @@ mark_coord:		; --mark_coord--		from	-KEY SWITCH-
 	mov [rbx+(fbuffer-(width*8))], eax	
 	mov [rbx+(fbuffer-(width*12))], eax	
 	jmp kbdthread						;	-kbdthread-
-
-mark_other_coord:		; --mark_other_coord--		from	-KEY SWITCH-
-	vmovdqu xmm0, [cur_buff_0_x]	
-	vmovdqu [cur_buff_other_marker_x], xmm0
-	mov eax, [cur_0_x]				
-	mov [cur_other_marker_x], eax
-	vpextrq rbx, xmm0, 1	
-	mov eax, mrkcolor	;	-DEFAULT COLORS-
-	movd xmm0,	eax
-	vpbroadcastd ymm0, xmm0
-	vmovdqu [rbx+(fbuffer-(width*4))],	xmm0	; horizontal line
-	mov [rbx+((fbuffer+(width*4))-4)], eax		; bottom pixels
-	mov [rbx+((fbuffer+(width*8))-4)], eax	
-	mov [rbx+((fbuffer+(width*12))-4)], eax	
-	jmp kbdthread	;	-kbdthread-
 
 delete_to_mark:	; --delete_to_mark--	from	-KEY SWITCH-
 
@@ -462,95 +474,6 @@ delete_to_mark:	; --delete_to_mark--	from	-KEY SWITCH-
 	jge kbdthread	;	-kbdthread-
 	jmp .mlp
 
-newstrla yankmsg, "Yanked!"
-
-yank:	;--yank--
-	; get line offset
-	vmovdqu xmm0, [cur_buff_0_x]
-	mov ebx, [cur_buff_marker_y] ; get line offset
-	vpextrd eax, xmm0, 1
-
-	cmp rax, rbx
-	cmovle rdi, rax	; start y offset
-	cmovle rdx, rbx	; end y offset
-	cmovg rdi, rbx
-	cmovg rdx, rax
-
-	; get actual line count and save it
-	mov eax, 0
-	mov ebx, 0
-	cmovle ax, 	[cur_marker_y]
-	cmovle bx, 	[cur_0_y]
-	cmovg ax, 	[cur_0_y]
-	cmovg bx, 	[cur_marker_y]
-	
-	sub eax, ebx
-	;mov [yb_y], eax
-	mov edx, eax
-
-	mov ebx, [cur_buff_marker_x] ; get pixel offset
-	movd eax, xmm0
-	cmp eax, ebx
-
-	cmovle esi, eax	; start x offset
-	cmovle ecx, ebx	; end x offset
-	cmovg esi, ebx
-	cmovg ecx, eax
-
-	sub ecx, esi	; get difference
-	mov [yb_x], ecx
-	shr ecx, 2
-	mov r8, rcx	; save for sub loop counter
-	xor r9, r9
-	xor eax, eax	; erase brush
-
-.mlp:
-	mov rcx, r8	; load sub loop counter
-	mov ebx, esi
-
-.slp:
-	mov eax, [rdi+rbx+buffer]
-	mov [r9+ybuffer], eax
-	add r9,		4
-	add rbx,	4
-
-	loop	.slp
-
-	add rdi,	width*4
-	sub edx, 1
-;	cmp rdi,	rdx
-;	jge .exit
-	jz .exit
-	jmp .mlp
-
-.exit: ; save x and total 
-	mov [yb_t], r9d
-	write stdout, syankmsg, lyankmsg
-	jmp kbdthread	;	-kbdthread-
-	
-paste:	;--paste--
-	mov r8, [cur_buff_0_a]
-	mov ecx, [yb_t]
-	mov edx, [yb_x]
-	mov rsi, ybuffer
-	xor edi, edi
-.lp:
-	mov eax, [rsi]
-	mov [r8+rdi+buffer],	eax
-	mov [r8+rdi+fbuffer],	eax
-	add rsi, 4
-	add rdi, 4
-	cmp edi, edx
-	jge .add_width
-.test:
-	sub ecx, 4
-	jnz .lp
-	jmp kbdthread
-.add_width:
-	add r8, width*4
-	xor edi, edi
-	jmp .test
-
 kbdthread:	; --kbdthread--	started-by -start_thread-
 .lp:
 	read stdin, keyin, 1
@@ -569,130 +492,21 @@ kbdthread:	; --kbdthread--	started-by -start_thread-
 	cmp al, "g"
 	je draw_grid		;-draw_grid- 
 	cmp al, "i"
-	je insert_mode		;-insert_mode-
-	cmp al, "m"			
 	je mark_coord		;-mark_coord-
 	cmp al, "M"		
-	je mark_other_coord	;-mark_other_coord-
-	cmp al, "d"
 	je delete_to_mark	;-delete_to_mark-
-	cmp al, "y"
-	je yank				;-yank-
-	cmp al, "p"
-	je paste			;-paste-
-	cmp al, "l"
-;	je line			;-line-
 	jmp .lp
-; what am I thinking? If the user doesn't want to overwrite framebuffer content drawn by the keyboard, he simply should learn not to move his mouse while interacting with it.
+
+; what am I thinking? If the user doesn't want to overwrite framebuffer content drawn by the keyboard, he simply should
+; learn not to move his mouse while interacting with it.
 ; Fucks sake, the point is low latency, not intuitive usability. Fuck grandma.
+
 mousethread:
 
-; --glyph_maps--
-binarum_glyph_map:	; --binarum_glyph_map--
-	.a:	db 0b11000000
-		db 0b10100000
-		db 0b11110000
-		db 0b10001000
-	.b:	db 0b10010000
-		db 0b10101000
-		db 0b11000100
-		db 0b10000000
-	.c:	db 0b10111000
-		db 0b10010000
-		db 0b10100000
-		db 0b11000000
-	.d:	db 0b10010010
-		db 0b10101100
-		db 0b11001000
-		db 0b11000000
-	.e:	db 0b11111111
-		db 0b10000000
-		db 0b10000000
-		db 0b10000000
-	.f:	db 0b11111111
-		db 0b10000000
-		db 0b10100000
-		db 0b11000000
-	.g:	db 0b11111111
-		db 0b10001000
-		db 0b10001000
-		db 0b10000000
-	.h:	db 0b10000010
-		db 0b11000100
-		db 0b10101000
-		db 0b10010000
-	.j:	db 0b10000010
-		db 0b11111110
-		db 0b10000010
-		db 0b10000010
-	.k:	db 0b11111110
-		db 0b11000010
-		db 0b10110010
-		db 0b10001110
-	.l:	db 0b11111110
-		db 0b10000010
-		db 0b10000010
-		db 0b11111110
-	.m:	db 0b11111110
-		db 0b10000100
-		db 0b10001000
-		db 0b10000000
-	.n:	db 0b11111000
-		db 0b10010000
-		db 0b10100000
-		db 0b11000000
-	.o:	db 0b10001000
-		db 0b10010000
-		db 0b10100000
-		db 0b11000000
-	.p:	db 0b10000000
-		db 0b10000000
-		db 0b11111100
-		db 0b10000000
-	.q:	db 0b11000100
-		db 0b10110100
-		db 0b10001100
-		db 0b11111100
-	.r:	db 0b11111100
-		db 0b10000100
-		db 0b10000100
-		db 0b10000100
-	.s:	db 0b11000000
-		db 0b10110000
-		db 0b10001000
-		db 0b11111100
-	.t:	db 0b11111111
-		db 0b11000000
-		db 0b10100000
-		db 0b10010000
-	.u:	db 0b10000010
-		db 0b10000010
-		db 0b11111110
-		db 0b10000000
-	.v:	db 0b11000000
-		db 0b10100000
-		db 0b10010000
-		db 0b10001000
-	.w:	db 0b11001000
-		db 0b10110000
-		db 0b10100000
-		db 0b11000000
-	.x:	db 0b11010000
-		db 0b10100000
-		db 0b11010000
-		db 0b11111000
-	.y:	db 0b11001000
-		db 0b10101000
-		db 0b10011000
-		db 0b11111000
-	.z:	db 0b11001100
-		db 0b10101010
-		db 0b10011001
-		db 0b10000000
-
 c_ftr
-bsb offsetbeg, (width*height*4)/2
-bsb buffer, width*height*4
+
+bsb offsetbeg, (width*height)/16
+bsb buffer, (width*height)/8
 bsb offsetmid, (width*height*4)/2
 alignb 4096
 bsb fbuffer, (width*height*4)
@@ -705,8 +519,6 @@ bsq yb_t,	1
 bsb	inbuffer, 100
 curlocstruc marker
 curlocbuffstruc marker			;	-mark_coord-		--marked_coord--
-curlocstruc other_marker
-curlocbuffstruc other_marker	;	-mark_other_coord-	--other_marked_coord--
 termios_struct tios
 mouseinbuff 0
 curlocstruc 0
