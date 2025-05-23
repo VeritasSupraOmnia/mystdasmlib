@@ -1,8 +1,11 @@
-;macro library for manually creating elf headers 
+; Header for both header declaration and basic organizational shortcuts.
 
-;make elf and program header at the top of the program
+;Make elf and program header at the top of the program. Needs c_ftr
+;              archsizr, entry_point, bss_size
+;Example: c_ehdr     64,        main,      256
 %macro c_ehdr 3
-%define	membase64	0x0040000
+
+membase64  equ	0x0040000
 ehdr:
 %if	%1	=	64
 bits	64
@@ -65,86 +68,194 @@ phdr:
 %endif
 	
 phdrsize	equ	$ - phdr
+fullhdrsize equ $ - ehdr
 
 %endmacro
 
 ; Create Fast Elf HeaDeR
 %macro c_fehdr 1
-	c_ehdr 64, %1, bss_size
+ c_ehdr 64, %1, bss_size
+ %define fehdr 1
+ %assign rvarheight 0
 %endmacro
 
 ; Make the footer to determine the filesize at the end of the file
 %macro	c_ftr	0
-filesize	equ	$	-	$$
-filecap	equ	$
-absolute	$
+ filesize	equ	$	-	$$
+ filecap	equ	$
+ absolute	$
+ %ifdef fehdr
+  start_bss equ $
+ %endif
 %endmacro
 
-; ARGUMENT HANDLING
-; Assumes these are called at the start of the program.
-
-; Puts argc into a register
-%macro	rargc	1
-	mov	%1,	[rsp+8]
+%macro	rvar	1-3
+ %defstr %%name %1
+ %substr %%size  %%name 1
+ %if %%size = 'b'
+  %define %%size 1
+ %elif %%size = 'w'
+  %define %%size 2
+ %elif %%size = 'd'
+  %define %%size 4
+ %elif %%size = 'q'
+  %define %%size 8
+ %elif %%size = 'x'
+  %define %%size 16
+ %elif %%size = 'y'
+  %define %%size 32
+ %elif %%size = 'z'
+  %define %%size 64
+ %endif
+ %if %0 > 1	; If array of values...
+  %if %0 > 2	; If alignment is desired
+   %assign %%alignoff (%3 - (%3 % rvarheight))
+  %else
+   %assign %%alignoff 0
+  %endif
+  %1 equ start_rvar_mem + rvarheight + %%alignoff
+  %assign rvarheight rvarheight + (%%size * %2) + %%alignoff
+ %else		; If single value...
+  %1 equ start_rvar_mem + rvarheight
+  %assign rvarheight rvarheight + (%%size)
+ %endif
+%endmacro
+; DEFINECONTEXTLOCALVARIABLE
+%macro rlvar 1-3
+ %defstr %%name %1
+ %substr %%size %%name 1
+ %if %%size = 'b'
+  %define %%size 1
+ %elif %%size = 'w'
+  %define %%size 2
+ %elif %%size = 'd'
+  %define %%size 4
+ %elif %%size = 'q'
+  %define %%size 8
+ %elif %%size = 'x'
+  %define %%size 16
+ %elif %%size = 'y'
+  %define %%size 32
+ %elif %%size = 'z'
+  %define %%size 64
+ %endif
+ %if %0 > 1	; If array of values...
+  %if %0 > 2	; If alignment is desired
+   %assign %%alignoff (%3 - (%3 % rvarheight))
+  %else
+   %assign %%alignoff 0
+  %endif
+  %$%[%1] equ start_rvar_mem + rvarheight + %%alignoff
+  %assign rvarheight rvarheight + (%%size * %2) + %%alignoff
+ %else		; If single value...
+  %$%[%1] equ start_rvar_mem + rvarheight
+  %assign rvarheight rvarheight + (%%size)
+ %endif
+ %define %[%%name] %$%[%1]
 %endmacro
 
-; Scratches rsi and rdi to move argc out of the stack.
-%macro	margc	1
-	lea	rsi,	[rsp+8]
-	mov	rdi,	%1
-	movsq
+%macro e_bss 0-1	; must use this to end bss, 
+ %ifdef fehdr; do reserve variable
+  %if %0 > 0
+   alignb %1
+  %else
+   alignb 4096 ; elf defaults to page alignment
+  %endif
+  bss_size equ ($+rvarheight)-start_bss
+  start_rvar_mem equ $
+ %else
+  bss_size equ $ - start_bss
+ %endif
 %endmacro
 
-;gets argv (the meta pointer) and puts it into a register
-%macro	rargv	1
-	lea	%1,	[rsp+16]
+%macro rcall 1
+ mov r15, %%ret
+ jmp %1
+%%ret:
+%endmacro
+%macro	tcall	2-9	; Do tail calls where the target labels are assigned to a register stack.
+ %define	%%init	%1
+ %rotate	-1
+ %assign	%%i	15
+ %rep	%0-1			; 1 to 8 tail calls, last arg is always r15.
+ %ifnidni	%i,	-pc	; -pc in place of any argument omits that register from being assigned.
+ mov	r%%i,	%1		; This is so you can pre-calculate it beforehand and make more complex chains.
+ %endif
+ %rotate	-1		; Register stack where previous register is assigned to previous argument.
+ %endrep
+ jmp	%%init
 %endmacro
 
-; Does the same thing as margc but with argv
-%macro margv 1
-	lea rsi, [rsp+16]
-	mov rdi, %1
-	movsq
-%endmacro 
-
-;gets the index address of argv using the pointer in a register and puts into a register
-%macro	riargvr	3
-	;output - input - index
-	mov	%1,	[%2+(8*%3)]
+%macro tcallr	1-8	; Do tail calls like tailcall but always return to same location.
+ mov	r15,	%%ret
+ %define	%%init	%1
+ %rotate	-1
+ %assign	%%i	14
+ %rep	%0-1
+ %ifnidni	%i,	-pc
+ mov	r%%i,	%1
+ %endif
+ %rotate	-1
+ %endrep
+ jmp	%%init
+%%ret:
 %endmacro
 
-; integrated bss. Use these for bss reservation, instead of resb, while using custom header.
-%macro bsb 2
-	%ifndef startbss
-		%define startbss 1
-		start_bss:
-	%endif
-	%1:	resb %2
-%endmacro
-%macro bsw 2
-	%ifndef startbss
-		%define startbss 1
-		start_bss:
-	%endif
-	%1:	resw %2
-%endmacro
-%macro bsd 2
-	%ifndef startbss
-		%define startbss 1
-		start_bss:
-	%endif
-	%1:	resd %2
-%endmacro
-%macro bsq 2
-	%ifndef startbss
-		%define startbss 1
-		start_bss:
-	%endif
-	%1:	resq %2
+%macro spic 1-8		; Setup position independent call.
+ mov	r8,	%1	; Save location of target function for proper PIC.
+ %if	%0 > 1		; Fuck Sys V ABI
+  mov	rax,	%2
+ %endif
+ %if	%0 > 2
+  mov	rbx,	%3
+ %endif
+ %if	%0 > 3
+  mov	rcx,	%4
+ %endif
+ %if	%0 > 4
+  mov	rdx,	%5
+ %endif
+ %if	%0 > 5
+  mov	rdi,	%6
+ %endif
+ %if	%0 > 6
+  mov	rsi,	%7
+ %endif
+ %if	%0 > 7		; Stack data/argument size/count. Which one depends on specific function.
+  mov	r9,	%8	; For when you don't have enough arguments or you want to pass structs on stack.
+ %endif			; You can also use this as a regular data passing register if you don't need/want that.
 %endmacro
 
-%macro e_bss 0		; must use this to end bss
-	bss_size equ $-start_bss
+%macro spicr 1-8	; Version of spic that does single argument tcallr at the end for convenience.
+ mov	r8,	%1
+ %if	%0 > 1	
+  mov	rax,	%2
+ %endif
+ %if	%0 > 2
+  mov	rbx,	%3
+ %endif
+ %if	%0 > 3
+  mov	rcx,	%4
+ %endif
+ %if	%0 > 4
+  mov	rdx,	%5
+ %endif
+ %if	%0 > 5
+  mov	rdi,	%6
+ %endif
+ %if	%0 > 6
+  mov	rsi,	%7
+ %endif
+ %if	%0 > 7
+  mov	r9,	%8
+ %endif	
+ tcallr	%[%1]
+%endmacro
+
+; Declare a label for incbin data in a single line.
+%macro dincbin 2
+%[%1]:
+ incbin %2
 %endmacro
 
 ; clears whole bss
@@ -179,4 +290,191 @@ loop %%loop
 	inc rdi
 loop %%loop2
 	
+%endmacro
+
+%macro cjmp 4	; Compared jump | label,	comparand,	qualifier,	comparator
+ cmp	%2,	%4
+ j%[%3] %1
+%endmacro
+;macro for handling easy string constants in the .data section
+
+;example:	
+;	newstr	string_name,	"string you want here"
+
+;output:
+;sstringname:	db	"string you want here"
+;lstringname:	dq	20
+
+;base newstring macro
+%macro	newstr	2
+s%1:	db	%2
+%strlen	l%[%1]	%2
+%endmacro
+
+;appends a linebreak to the end
+%macro	newstrla	2
+%[s%1]:	db	%2,0x0A
+%strlen	l%[%1]	%2
+%assign	l%[%1]	l%[%1] + 1
+%endmacro
+
+;prepends a linebreak to the beginning
+%macro	newstrlp	2
+s%1:	db	0x0A,%2
+%strlen	l%[%1]	%2
+%assign	l%[%1]	l%[%1] + 1
+%endmacro
+
+; Macros for saving, accessing, handling and searching both argv and argc.
+
+%macro rstartdata 0
+argc: resq 1
+argv: resq 1
+envc: resq 1
+envv: resq 1
+%endmacro
+
+%macro savestartdata 0  ; requires rstartdata or its reserved/declared labels
+mov rax, [rsp]
+mov [argc], rax
+lea rbx, [rsp+8]
+mov [argv], rbx
+%if %0 > 1 ; Only skip environment calculation if you are certain you don't want it.
+ %ifidni %1 noenv
+  %define %%skip
+ %endif
+%endif
+%ifndef %%skip
+add rax, 1 ; the argv pointer list is postfixed with a 0 quad before the start of envv to allow scasq processing.
+shl rax, 3
+add rax, rbx
+mov [envv], rax
+%endif
+%define SAVEDSTARTDATA
+%endmacro
+
+; Used in argument and env calculation macros, redefine them within the program if they are known to be too much or too little.
+%define MAXPROGRAMARGCOUNT 1024
+%define MAXPROGRAMENVCOUNT 1024
+%define MAXPROGRAMARGLENGTH 1024
+%define MAXPROGRAMENVLENGTH 1024
+
+
+%macro countenv 0  ; A minor convenience to count the amount of environment variables.
+%ifndef SAVEDSTARTDATA
+ %error countenv needs the macro savestartdata to be run before it.
+%endif
+mov rdi, [envv]
+mov ecx, MAXPROGRAMENVCOUNT
+xor eax, eax
+mov ebx, ecx
+repne scasq
+inc ecx
+sub ebx, ecx
+mov [envc], rbx
+; Define this so that the ENVH and EENVH macros can reference it and change accordingly.
+%define DONECOUNTENV
+%endmacro
+
+; Organizes a user-written argument handling stream using two macros, context labels and two stack variables.
+%macro ARGH 0-1
+%ifndef SAVEDSTARTDATA
+ %error ARGH needs the macro savestartdata to be run before it.
+%endif
+%if %0 > 0 ; Do strlen and argc calculation by default.
+ %ifidni %1, nostrlen
+  %define %%nostrlen 
+ %elseifidni %1, noargc
+  %define %%noargc
+ %elseifidni %1, noargcnostrlen
+  %define %%noargc
+  %define %%nostrlen 
+ %endif
+%endif
+%push arghandle
+mov rax, [argc]
+push rax
+mov rax, [argv]
+push rax
+%$ahandleloop:
+mov rsi, [rsp]
+mov rsi, [rsi]
+%ifndef %%noargc
+mov rdx, [argc]
+sub rdx, [rsp]
+%endif
+%ifndef %%nostrlen
+mov rdi, rsi
+xor eax, eax
+mov rcx, MAXPROGRAMARGLENGTH
+mov rbx, rcx
+repne scasb
+sub rbx, rcx
+xchg rcx, rbx
+%endif
+%define INARGHANDLER
+%endmacro
+; Put user argument handling code between these macros
+; rsi is argv and rdx is argc
+; rcx is strlen of argument and rdi is pointer to just after null char, usually also the start of the next argument
+; rbx by happensance of strlen becomes the miss magnitude from maximum arglenth
+%macro EARGH 0
+add qword [rsp], 8
+sub qword [rsp+8], 1
+jnz %$ahandleloop
+add rsp, 16
+%pop
+%endmacro
+
+%macro ENVH 0-1
+%ifndef SAVEDSTARTDATA
+ %error ENVH needs the macro savestartdata to be run before it.
+%endif
+%ifndef DONECOUNTENV
+ %error ENVH requires the countenv macro to be run before it.
+%endif
+%if %0 > 0
+ %ifidni %1, nostrlen
+  %define %%nostrlen 
+ %elseifidni %1, noenvc
+  %define %%noenvc
+ %elseifidni %1, noenvcnostrlen
+  %define %%noenvc
+  %define %%nostrlen 
+ %endif
+%endif
+%push envhandle
+mov rax, [envc]
+push rax
+mov rax, [envv]
+push rax
+%$ehandleloop:
+mov rsi, [rsp]
+mov rsi, [rsi]
+%ifndef %%nostrlen
+mov rdi, rsi
+mov eax, '='
+mov ecx, MAXPROGRAMENVLENGTH
+mov ebx, ecx
+repne scasb
+sub ebx, ecx
+xor eax, eax
+mov r9, rdi
+mov ecx, MAXPROGRAMENVLENGTH
+mov r8, rcx
+repne scasb
+xchg r9, rdi
+sub r8, rcx
+mov ecx, ebx
+%endif
+%endmacro
+; Put env handling code between these macros.
+; rsi, rcx, and rdi are the same as arg handling but now r8 and r9 may have the second string's length and end point.
+; rdi will be the end of the first string always but may be the start of the second string, if you didn't disable last strlen.
+%macro EENVH 0
+add qword [rsp], 8
+sub qword [rsp+8], 1
+jnz %$ehandleloop
+%pop
+add rsp, 16
 %endmacro
